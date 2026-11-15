@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "anthropic.claude-code",
+        "bruno-api-client.bruno",
+        "bierner.markdown-mermaid",
+        "mermaidchart.vscode-mermaid-chart"
+    ],
+    "unwantedRecommendations": []
+}
