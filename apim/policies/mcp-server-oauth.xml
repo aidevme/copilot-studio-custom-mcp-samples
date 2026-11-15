@@ -1,0 +1,79 @@
+<policies>
+    <inbound>
+        <base />
+        <!-- 1. Drop any customer ID header the client sent. Only the gateway sets it. -->
+        <set-header name="Contoso-Customer-Id" exists-action="delete" />
+        <!-- 2. Only tokens from Contoso's External ID tenant for the Order Management app get in.
+                The issuer and signing keys come from the tenant's OpenID configuration. -->
+        <validate-jwt header-name="Authorization" require-scheme="Bearer"
+                      failed-validation-httpcode="401"
+                      failed-validation-error-message="Unauthorized. Access token is missing or invalid."
+                      output-token-variable-name="jwt">
+            <openid-config url="https://{{external-id-tenant-name}}.ciamlogin.com/{{external-id-tenant-id}}/v2.0/.well-known/openid-configuration" />
+            <audiences>
+                <audience>{{orders-api-client-id}}</audience>
+                <audience>api://{{orders-api-client-id}}</audience>
+            </audiences>
+            <required-claims>
+                <claim name="scp" match="any" separator=" ">
+                    <value>Orders.ReadWrite</value>
+                </claim>
+            </required-claims>
+        </validate-jwt>
+        <!-- 3. The token carries the customer's object ID (oid), not the CU- number. -->
+        <set-variable name="userOid"
+                      value="@(((Jwt)context.Variables["jwt"]).Claims.GetValueOrDefault("oid", ""))" />
+        <!-- 4. Map oid to the CU- customer ID: cache first, then the backend's internal lookup. -->
+        <cache-lookup-value key="@("contoso-customer-" + (string)context.Variables["userOid"])"
+                            variable-name="customerId" />
+        <choose>
+            <when condition="@(!context.Variables.ContainsKey("customerId"))">
+                <send-request mode="new" response-variable-name="customerLookup" timeout="10" ignore-error="true">
+                    <set-url>@("{{orders-api-base-url}}/customers/by-identity/" + Uri.EscapeDataString((string)context.Variables["userOid"]))</set-url>
+                    <set-method>GET</set-method>
+                    <authentication-managed-identity resource="{{orders-api-app-id-uri}}" />
+                </send-request>
+                <choose>
+                    <when condition="@(context.Variables["customerLookup"] == null || ((IResponse)context.Variables["customerLookup"]).StatusCode != 200)">
+                        <return-response>
+                            <set-status code="403" reason="Forbidden" />
+                        </return-response>
+                    </when>
+                </choose>
+                <set-variable name="customerId"
+                              value="@((string)((IResponse)context.Variables["customerLookup"]).Body.As<JObject>()["customerId"])" />
+                <cache-store-value key="@("contoso-customer-" + (string)context.Variables["userOid"])"
+                                   value="@((string)context.Variables["customerId"])" duration="3600" />
+            </when>
+        </choose>
+        <!-- 5. Reject anything that isn't a CU- number, so the value is safe in a URL path. -->
+        <choose>
+            <when condition="@(!System.Text.RegularExpressions.Regex.IsMatch((string)context.Variables["customerId"] ?? "", "^CU-[0-9]{4}$"))">
+                <return-response>
+                    <set-status code="403" reason="Forbidden" />
+                </return-response>
+            </when>
+        </choose>
+        <!-- 6. Throttle per customer, not per IP address. -->
+        <rate-limit-by-key calls="30" renewal-period="60"
+                           counter-key="@("orders-mcp-" + (string)context.Variables["customerId"])" />
+        <!-- 7. Pass the customer ID to the backend, which checks order ownership. -->
+        <set-header name="Contoso-Customer-Id" exists-action="override">
+            <value>@((string)context.Variables["customerId"])</value>
+        </set-header>
+        <!-- 8. A custom trace row, without reading the MCP response body. -->
+        <trace source="orders-mcp" severity="information">
+            <message>Order MCP request</message>
+            <metadata name="customer-id" value="@((string)context.Variables["customerId"])" />
+        </trace>
+    </inbound>
+    <backend>
+        <forward-request />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

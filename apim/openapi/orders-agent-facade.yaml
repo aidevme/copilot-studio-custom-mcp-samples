@@ -1,0 +1,250 @@
+openapi: 3.0.3
+info:
+  title: Contoso Order Management API (agent facade)
+  version: 1.0.0
+  description: >-
+    Order status and returns for Contoso, a fictional retailer of home and kitchen
+    appliances. Demo data only. This is the description imported into API Management.
+    It differs from the backend in one path: the backend serves
+    GET /customers/{customerId}/orders, and API Management rewrites /me/orders to it
+    with the customer ID from the caller's identity.
+servers:
+  - url: https://orders-api.contoso.com
+paths:
+  /me/orders:
+    get:
+      operationId: find_orders
+      summary: Find the customer's orders
+      description: >-
+        Lists the signed-in customer's Contoso orders, newest first. Use it when
+        the customer doesn't know the order number.
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Order status to filter by, one of Any, Open, Shipped, Delivered or Cancelled. Default Any.
+          schema:
+            type: string
+            enum: [Any, Open, Shipped, Delivered, Cancelled]
+            default: Any
+        - name: from
+          in: query
+          required: false
+          description: Earliest order date, ISO 8601 date, for example 2026-10-01. Leave empty for no lower limit.
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          description: Latest order date, ISO 8601 date, for example 2026-11-13. Leave empty for no upper limit.
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: The customer's orders, newest first.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderList'
+        '400':
+          description: A filter value is invalid, for example a date that isn't ISO 8601.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /orders/{orderId}:
+    get:
+      operationId: get_order_status
+      summary: Get the status of an order
+      description: >-
+        Returns the status of one Contoso order by its number (for example SO-10023):
+        order lines, carrier, tracking number and expected delivery date.
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          description: Order number, for example SO-10023.
+          schema:
+            type: string
+            pattern: '^SO-[0-9]{5}$'
+      responses:
+        '200':
+          description: The order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: No order with this number exists for the signed-in customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /orders/{orderId}/returns:
+    post:
+      operationId: create_return
+      summary: Start a return
+      description: >-
+        Starts a return for one line of a delivered Contoso order and returns the
+        return number (RMA). Confirm the item, quantity and reason with the customer
+        before calling it.
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          description: Order number, for example SO-10023.
+          schema:
+            type: string
+            pattern: '^SO-[0-9]{5}$'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReturnRequest'
+      responses:
+        '201':
+          description: The return was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Return'
+        '404':
+          description: No order with this number exists for the signed-in customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: The order or line can't be returned, for example not delivered or more than 30 days ago.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    OrderSummary:
+      type: object
+      required: [orderId, orderDate, status, total]
+      properties:
+        orderId:
+          type: string
+          description: Order number, for example SO-10023.
+        orderDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [Open, Shipped, Delivered, Cancelled]
+        total:
+          type: string
+          description: Order total with currency, for example "89.99 EUR".
+    OrderList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderSummary'
+    OrderLine:
+      type: object
+      required: [lineNumber, product, quantity]
+      properties:
+        lineNumber:
+          type: integer
+          description: Line number within the order, starting at 1.
+          minimum: 1
+        product:
+          type: string
+          description: Product name, for example "Electric kettle 1.7 l".
+        quantity:
+          type: integer
+          minimum: 1
+    Order:
+      type: object
+      required: [orderId, orderDate, status, warehouse, lines]
+      properties:
+        orderId:
+          type: string
+          description: Order number, for example SO-10023.
+        orderDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [Open, Shipped, Delivered, Cancelled]
+        warehouse:
+          type: string
+          enum: [Hamburg, Utrecht]
+        carrier:
+          type: string
+          description: Carrier name, empty until the order ships.
+        trackingNumber:
+          type: string
+          description: Carrier tracking number, empty until the order ships.
+        expectedDelivery:
+          type: string
+          format: date
+          description: Expected delivery date, ISO 8601.
+        deliveredOn:
+          type: string
+          format: date
+          description: Delivery date, empty until the order is delivered.
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderLine'
+    CreateReturnRequest:
+      type: object
+      required: [lineNumber, quantity, reason]
+      properties:
+        lineNumber:
+          type: integer
+          description: The order line to return, for example 1.
+          minimum: 1
+        quantity:
+          type: integer
+          description: How many items of that line to return. At most the quantity ordered.
+          minimum: 1
+        reason:
+          type: string
+          description: Return reason, one of Damaged, WrongItem, NotAsDescribed or NoLongerNeeded.
+          enum: [Damaged, WrongItem, NotAsDescribed, NoLongerNeeded]
+        comment:
+          type: string
+          description: The customer's own words about the problem, optional. Leave empty if none.
+          maxLength: 500
+          default: ''
+    Return:
+      type: object
+      required: [returnId, orderId, lineNumber, quantity, reason, status]
+      properties:
+        returnId:
+          type: string
+          description: Return number (RMA), for example RMA-5001.
+        orderId:
+          type: string
+        lineNumber:
+          type: integer
+        quantity:
+          type: integer
+        reason:
+          type: string
+          enum: [Damaged, WrongItem, NotAsDescribed, NoLongerNeeded]
+        status:
+          type: string
+          enum: [Requested, Approved, Rejected]
+          description: Return status. New returns start as Requested.
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, for example order_not_found.
+        message:
+          type: string
+          description: A sentence the agent can show to the customer.

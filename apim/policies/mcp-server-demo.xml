@@ -1,0 +1,25 @@
+<policies>
+    <inbound>
+        <base />
+        <!-- Demo mode: dev instance with demo data only. Every caller acts as one fixed demo customer. -->
+        <set-header name="Contoso-Customer-Id" exists-action="override">
+            <value>{{demo-customer-id}}</value>
+        </set-header>
+        <!-- One counter per subscription (per agent), not per IP address. -->
+        <rate-limit-by-key calls="30" renewal-period="60"
+                           counter-key="@("orders-mcp-" + context.Subscription.Id)" />
+        <trace source="orders-mcp" severity="information">
+            <message>Order MCP request (demo mode)</message>
+            <metadata name="subscription" value="@(context.Subscription.Name)" />
+        </trace>
+    </inbound>
+    <backend>
+        <forward-request />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

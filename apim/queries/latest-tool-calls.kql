@@ -1,0 +1,13 @@
+requests
+| where customDimensions["api.type"] == "Mcp"
+  and customDimensions["service.name"] == "orders-mcp"
+  and customDimensions["gen_ai.operation.name"] == "tools/call"
+| project timestamp,
+          tool       = customDimensions["gen_ai.tool.name"],
+          session    = customDimensions["gen_ai.conversation.id"],
+          client     = strcat(customDimensions["user_agent.name"], "/",
+                              customDimensions["user_agent.version"]),
+          durationMs = duration,
+          success
+| order by timestamp desc
+| take 50
