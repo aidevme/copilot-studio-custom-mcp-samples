@@ -1,7 +1,7 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
-using Contoso.OrdersMcp.Data;
-using Contoso.OrdersMcp.Resources;
-using Contoso.OrdersMcp.Tools;
+using AIDevMe.OrdersMcp.Data;
+using AIDevMe.OrdersMcp.Resources;
+using AIDevMe.OrdersMcp.Tools;
 using ModelContextProtocol.AspNetCore;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -29,9 +29,9 @@ builder.Services.AddHealthChecks();
 builder.Services
     .AddMcpServer(o =>
     {
-        o.ServerInfo = new() { Name = "contoso-orders", Version = "1.0.0" };
+        o.ServerInfo = new() { Name = "aidevme-orders", Version = "1.0.0" };
         o.ServerInstructions =
-            "Contoso customer service tools for order status and returns. " +
+            "AIDevMe customer service tools for order status and returns. " +
             "Only the signed-in customer's orders are visible. Confirm every return with the customer first.";
     })
     .WithHttpTransport(o =>

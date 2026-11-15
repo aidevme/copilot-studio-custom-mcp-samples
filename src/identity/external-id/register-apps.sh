@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Register the Contoso Orders MCP API and connector apps in the External ID tenant
+# Register the AIDevMe Orders MCP API and connector apps in the External ID tenant
 # Commands from the post; replace the placeholders before running.
 
 # --- Part 5: https://aidevme.com/copilot-studio-custom-mcp-server-security-oauth-entra-id/
@@ -8,7 +8,7 @@ az login --tenant "<external-tenant-id>" --allow-no-subscriptions
 
 # 1. API app: the MCP server as a resource, with v2 access tokens
 API_APP_ID=$(az ad app create \
-  --display-name "Contoso Orders MCP API" \
+  --display-name "AIDevMe Orders MCP API" \
   --sign-in-audience AzureADMyOrg \
   --requested-access-token-version 2 \
   --query appId -o tsv)
@@ -23,7 +23,7 @@ cat > scopes.json <<EOF
     "oauth2PermissionScopes": [
       {
         "id": "$READ_ID", "value": "Orders.Read", "type": "Admin", "isEnabled": true,
-        "adminConsentDisplayName": "Read the customer's Contoso orders",
+        "adminConsentDisplayName": "Read the customer's AIDevMe orders",
         "adminConsentDescription": "Lets the agent list and read the signed-in customer's orders."
       },
       {
@@ -43,7 +43,7 @@ az ad sp create --id "$API_APP_ID"
 
 # 3. Connector app: the client that Copilot Studio uses
 CONNECTOR_APP_ID=$(az ad app create \
-  --display-name "Contoso Orders MCP Connector" \
+  --display-name "AIDevMe Orders MCP Connector" \
   --sign-in-audience AzureADMyOrg \
   --query appId -o tsv)
 az ad sp create --id "$CONNECTOR_APP_ID"
@@ -55,7 +55,7 @@ az ad app permission admin-consent --id "$CONNECTOR_APP_ID"   # customers can't 
 SECRET=$(az ad app credential reset --id "$CONNECTOR_APP_ID" --append \
            --display-name "copilot-studio" --years 1 --query password -o tsv)
 az login --tenant "<workforce-tenant-id>"
-az keyvault secret set --vault-name "kv-contoso-mcp" --name "orders-connector-secret" --value "$SECRET" -o none
+az keyvault secret set --vault-name "kv-aidevme-mcp" --name "orders-connector-secret" --value "$SECRET" -o none
 unset SECRET
 
 # 5. After the wizard shows the callback URL (back in the external tenant):

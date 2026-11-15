@@ -1,4 +1,4 @@
-<!-- cspell:ignore aidevme Contoso APIM Entra ciamlogin Kusto Bicep RMA oid azd pac containerapp -->
+<!-- cspell:ignore aidevme AIDevMe APIM Entra ciamlogin Kusto Bicep RMA oid azd pac containerapp -->
 
 # Research: sample code and repository plan for "Custom MCP servers for Copilot Studio"
 
@@ -50,7 +50,7 @@ Learn in this run. Facts that the drafts themselves mark `[VERIFY]` stay open.
 1. **Order Management API (the backend).** Needed: the three operations from Part 1 (`GET
    /customers/{customerId}/orders`, `GET /orders/{orderId}`, `POST /orders/{orderId}/returns`), the full OpenAPI 3.0
    file (Part 3 shows only the agent facade without `{customerId}`), in-memory demo data, the internal endpoint
-   `GET /customers/by-identity/{oid}` that the Part 3 policy calls, and the `Contoso-Customer-Id` header that API
+   `GET /customers/by-identity/{oid}` that the Part 3 policy calls, and the `AIDevMe-Customer-Id` header that API
    Management sets. It must accept Entra tokens from managed identities, because the Logic Apps HTTP actions
    (`ManagedServiceIdentity`, audience `OrderApi_Audience`) and the API Management policy
    (`authentication-managed-identity`) both call it that way.
@@ -58,14 +58,14 @@ Learn in this run. Facts that the drafts themselves mark `[VERIFY]` stay open.
    exist as trigger schemas and one HTTP action. Also missing: `connections.json` (if any), `local.settings.json`
    template and the logic app's infrastructure.
 3. **The rest of the C# project.** Part 5 says "the repo's version adds the records, the demo stores and the return
-   policy resource". `OrderTools.cs` uses `Contoso.OrdersMcp.Data` and `Contoso.OrdersMcp.Resources`, so the
+   policy resource". `OrderTools.cs` uses `AIDevMe.OrdersMcp.Data` and `AIDevMe.OrdersMcp.Resources`, so the
    record types and namespaces have to be written to match.
 4. **Infrastructure as code.** Part 3's Bicep "needs the `apim` resource from the earlier file", which isn't shown.
    There's no IaC for the logic app, the Container Apps environment (CLI only), Key Vault, Log Analytics or
    Application Insights.
 5. **Contract snapshots.** Part 7's Node check compares a baseline and a candidate `tools/list`; the repo needs a
    committed baseline (`contract/tools.json` is the natural one).
-6. **Copilot Studio solutions.** Part 7 exports `ContosoOrderMcpConnector` and `ContosoCustomerServiceAgent` from
+6. **Copilot Studio solutions.** Part 7 exports `AIDevMeOrderMcpConnector` and `AIDevMeCustomerServiceAgent` from
    Dev. They exist only once you build them in an environment; the unpacked solutions can then go into the repo.
 
 ## Inconsistencies to resolve
@@ -79,7 +79,7 @@ Learn in this run. Facts that the drafts themselves mark `[VERIFY]` stay open.
 | Tool contract | `part-1/01` and `part-6/02` are not the same JSON | Make `contract/tools.json` the single source; regenerate the snippets from it |
 | Two contract checks | PowerShell (Part 6) and Node (Part 7) | Keep both if both posts stay as they are; each in `tests/contract/` |
 | `host.json` | Part 2's sample sets the SSE-only `AllowCrossWorkerCommunication` setting that the same post says Copilot Studio doesn't need | Leave it out of the repo file, or comment it as SSE only |
-| Resource names | `rg-contoso-mcp` and `rg-contoso-orders`; `kv-contoso-mcp` and `kv-contoso-demo` | Pick one naming set (below) and align the posts |
+| Resource names | `rg-aidevme-mcp` and `rg-aidevme-orders`; `kv-aidevme-mcp` and `kv-aidevme-demo` | Pick one naming set (below) and align the posts |
 | Placeholders | `{{external-id-tenant-id}}` and `{{external-tenant-id}}`; `{{orders-api-client-id}}` and `{{orders-mcp-api-client-id}}` | One placeholder list in the repo's `README.md` |
 
 ## Proposed repository
@@ -109,8 +109,8 @@ copilot-studio-custom-mcp-samples/
 │   │   ├── queries/latest-tool-calls.kql
 │   │   └── test/smoke.sh
 │   ├── dotnet-mcp-server/        # Parts 4–6 (the posts must say src/dotnet-mcp-server/)
-│   │   ├── src/Contoso.OrdersMcp/
-│   │   ├── tests/Contoso.OrdersMcp.Tests/   # NEW: unit tests for ownership and the return window
+│   │   ├── src/AIDevMe.OrdersMcp/
+│   │   ├── tests/AIDevMe.OrdersMcp.Tests/   # NEW: unit tests for ownership and the return window
 │   │   ├── infra/                # deploy-containerapp.sh, probes.yaml (later: Bicep)
 │   │   ├── Dockerfile
 │   │   └── test/                 # smoke.sh, inspector.sh, requests.http
@@ -137,7 +137,7 @@ copilot-studio-custom-mcp-samples/
   and in Azure.
 - **No secrets in the repo.** `.env.example` and `local.settings.example.json` only. Deploy workflows, if you add
   them, sign in with OpenID Connect (a federated credential on an Entra app), not a stored client secret.
-- **Demo data only**, the same `Contoso` data as the posts.
+- **Demo data only**, the same `AIDevMe` data as the posts.
 - **CI on every pull request:** `dotnet build` and `dotnet test`, the contract test against a locally started C#
   server, `az bicep build` for every Bicep file, markdown lint.
 - **Dependabot** for NuGet, npm and GitHub Actions; the posts pin versions (`ModelContextProtocol.AspNetCore`
@@ -173,16 +173,16 @@ Suggested naming set, built from the names the posts already use. Region `westeu
 | Resource | Name | For | Cost note from the drafts |
 | --- | --- | --- | --- |
 | Subscription | (yours) | Everything below | Set a budget alert |
-| Resource group | `rg-contoso-mcp` | All demo resources, so one delete removes them | — |
-| Log Analytics workspace + Application Insights | `log-contoso-mcp`, `appi-contoso-mcp` | Telemetry for all three paths (Parts 2, 3, 4) | Pay per GB `[VERIFY]` |
-| Key Vault | `kv-contoso-mcp` | Connector client secret (Part 5), Logic Apps MCP key | Small |
-| Order Management API host | e.g. a container app `contoso-orders-api` in the same environment | Backend for Parts 2 and 3 | — |
-| Container Apps environment | `cae-contoso-mcp` | C# MCP server and the order API | — |
-| Container app | `contoso-orders-mcp`, min and max replicas 1 (in-memory store) | Part 4 server | `[VERIFY: Container Apps price for one always-on replica]` |
-| Standard logic app + Workflow Service Plan WS1 | `logic-contoso-orders-mcp` | Part 2 | About $175 a month (Learn's illustration, per Part 2) |
-| API Management, Developer tier | `apim-contoso-orders` | Part 3; Consumption isn't supported | About $48 a month (Part 3, West Europe list price) |
+| Resource group | `rg-aidevme-mcp` | All demo resources, so one delete removes them | — |
+| Log Analytics workspace + Application Insights | `log-aidevme-mcp`, `appi-aidevme-mcp` | Telemetry for all three paths (Parts 2, 3, 4) | Pay per GB `[VERIFY]` |
+| Key Vault | `kv-aidevme-mcp` | Connector client secret (Part 5), Logic Apps MCP key | Small |
+| Order Management API host | e.g. a container app `aidevme-orders-api` in the same environment | Backend for Parts 2 and 3 | — |
+| Container Apps environment | `cae-aidevme-mcp` | C# MCP server and the order API | — |
+| Container app | `aidevme-orders-mcp`, min and max replicas 1 (in-memory store) | Part 4 server | `[VERIFY: Container Apps price for one always-on replica]` |
+| Standard logic app + Workflow Service Plan WS1 | `logic-aidevme-orders-mcp` | Part 2 | About $175 a month (Learn's illustration, per Part 2) |
+| API Management, Developer tier | `apim-aidevme-orders` | Part 3; Consumption isn't supported | About $48 a month (Part 3, West Europe list price) |
 | Managed identities | System-assigned on the logic app and API Management | Calls to the order API (Parts 2 and 3) | — |
-| Entra app registration (workforce) | "Contoso Order Management API", App ID URI | The audience the managed identities request (`OrderApi_Audience`, `{{orders-api-app-id-uri}}`) | — |
+| Entra app registration (workforce) | "AIDevMe Order Management API", App ID URI | The audience the managed identities request (`OrderApi_Audience`, `{{orders-api-app-id-uri}}`) | — |
 
 The Developer tier and WS1 bill per hour while they exist. Deploy them for a test session and delete them
 afterwards if you don't need them running; the Bicep files make that cheap to repeat.
@@ -192,8 +192,8 @@ afterwards if you don't need them running; the Bicep files make that cheap to re
 | Item | Detail |
 | --- | --- |
 | External tenant | Its own tenant, `https://<tenant-subdomain>.ciamlogin.com`; linked to your subscription for billing `[VERIFY: External ID free tier for the demo's few users]` |
-| App registration "Contoso Orders MCP API" | Application ID URI, scopes `Orders.Read` and `Returns.Create`, `accessTokenAcceptedVersion` 2 |
-| App registration "Contoso Orders MCP Connector" | Client secret (into `kv-contoso-mcp`), Copilot Studio redirect URL, delegated permissions with admin consent |
+| App registration "AIDevMe Orders MCP API" | Application ID URI, scopes `Orders.Read` and `Returns.Create`, `accessTokenAcceptedVersion` 2 |
+| App registration "AIDevMe Orders MCP Connector" | Client secret (into `kv-aidevme-mcp`), Copilot Studio redirect URL, delegated permissions with admin consent |
 | Sign-up and sign-in user flow | The connector app added to it (one user flow per app) |
 | Two demo customer accounts | Mapped to `CU-3001` and `CU-3002` through `oid` for the ownership test Part 5 asks for |
 
@@ -201,11 +201,11 @@ afterwards if you don't need them running; the Bicep files make that cheap to re
 
 | Item | Detail |
 | --- | --- |
-| Environments | `contoso-dev`, `contoso-test`, `contoso-prod` (Part 7 uses `contoso-dev.crm4.dynamics.com` and `contoso-test.crm4.dynamics.com`), each with Dataverse and Copilot Studio |
+| Environments | `aidevme-dev`, `aidevme-test`, `aidevme-prod` (Part 7 uses `aidevme-dev.crm4.dynamics.com` and `aidevme-test.crm4.dynamics.com`), each with Dataverse and Copilot Studio |
 | Licensing | Copilot Studio capacity (Copilot Credits) or a trial for the demo; customer-facing use consumes credits for every tool call (Part 7) `[VERIFY: what your tenant has; trial limits]` |
 | Publisher | Prefix `cts` (Part 7, environment variable `cts_OrderMcpHost`) |
-| Solutions | `ContosoOrderMcpConnector` (custom MCP connector, environment variable) and `ContosoCustomerServiceAgent` (the agent, connection reference) |
-| Data policy | Tenant-level policy "Contoso - Agents - Production" with URL patterns (Part 7); test it in a non-production tenant or environment group first |
+| Solutions | `AIDevMeOrderMcpConnector` (custom MCP connector, environment variable) and `AIDevMeCustomerServiceAgent` (the agent, connection reference) |
+| Data policy | Tenant-level policy "AIDevMe - Agents - Production" with URL patterns (Part 7); test it in a non-production tenant or environment group first |
 | Channel | Custom Website channel for the External ID sign-in test (Part 5) |
 | Monthly limit | A consumption limit per agent in the Power Platform admin center (Part 7) |
 | Agent 365 (optional) | Only for the BYO server registration and the hunting query in Part 7 |

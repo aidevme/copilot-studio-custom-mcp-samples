@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
 
-namespace Contoso.OrdersMcp;
+namespace AIDevMe.OrdersMcp;
 
 [JsonConverter(typeof(JsonStringEnumConverter<OrderStatus>))]
 public enum OrderStatus { Open, Shipped, Delivered, Cancelled }
@@ -29,11 +29,11 @@ public sealed partial class OrderTools(OrderStore store, ICustomerContext custom
 {
     // The customer ID never comes from a tool input; it comes from the caller's identity (Part 5).
     private string CustomerId => customer.CustomerId
-        ?? throw new McpException("The customer isn't signed in. Ask them to sign in on the Contoso website.");
+        ?? throw new McpException("The customer isn't signed in. Ask them to sign in on the AIDevMe website.");
 
     [McpServerTool(Name = "find_orders", Title = "Find my orders",
         ReadOnly = true, Idempotent = true, OpenWorld = false, UseStructuredContent = true)]
-    [Description("Lists the signed-in customer's Contoso orders, newest first. " +
+    [Description("Lists the signed-in customer's AIDevMe orders, newest first. " +
                  "Use it when the customer doesn't know the order number.")]
     public FindOrdersResult FindOrders(
         [Description("Order status: Any, Open, Shipped, Delivered or Cancelled. Use Any unless the customer names a status.")]
@@ -53,7 +53,7 @@ public sealed partial class OrderTools(OrderStore store, ICustomerContext custom
 
     [McpServerTool(Name = "get_order_status", Title = "Get order status",
         ReadOnly = true, Idempotent = true, OpenWorld = false, UseStructuredContent = true)]
-    [Description("Returns the status of one Contoso order by its number (for example SO-10023): " +
+    [Description("Returns the status of one AIDevMe order by its number (for example SO-10023): " +
                  "order lines, carrier, tracking number and expected delivery date.")]
     public OrderStatusResult GetOrderStatus(
         [Description("Order number in the format SO-<digits>, for example SO-10023. Take it from the customer or from find_orders.")]
@@ -65,7 +65,7 @@ public sealed partial class OrderTools(OrderStore store, ICustomerContext custom
 
     [McpServerTool(Name = "create_return", Title = "Start a return",
         ReadOnly = false, Destructive = false, Idempotent = false, OpenWorld = false, UseStructuredContent = true)]
-    [Description("Starts a return for one line of a delivered Contoso order and returns the return number (RMA). " +
+    [Description("Starts a return for one line of a delivered AIDevMe order and returns the return number (RMA). " +
                  "Confirm the item, quantity and reason with the customer before calling it.")]
     public ReturnResult CreateReturn(
         [Description("Order number in the format SO-<digits>, for example SO-10023.")]
@@ -109,7 +109,7 @@ public sealed partial class OrderTools(OrderStore store, ICustomerContext custom
     private static void ValidateOrderId(string orderId)
     {
         if (!OrderIdPattern().IsMatch(orderId))
-            throw new McpException($"'{orderId}' isn't a Contoso order number. Order numbers look like SO-10023.");
+            throw new McpException($"'{orderId}' isn't a AIDevMe order number. Order numbers look like SO-10023.");
     }
 
     // Same answer for "doesn't exist" and "belongs to another customer", so order numbers can't be probed.

@@ -2,8 +2,8 @@
     <inbound>
         <base />
         <!-- 1. Drop any customer ID header the client sent. Only the gateway sets it. -->
-        <set-header name="Contoso-Customer-Id" exists-action="delete" />
-        <!-- 2. Only tokens from Contoso's External ID tenant for the Order Management app get in.
+        <set-header name="AIDevMe-Customer-Id" exists-action="delete" />
+        <!-- 2. Only tokens from AIDevMe's External ID tenant for the Order Management app get in.
                 The issuer and signing keys come from the tenant's OpenID configuration. -->
         <validate-jwt header-name="Authorization" require-scheme="Bearer"
                       failed-validation-httpcode="401"
@@ -24,7 +24,7 @@
         <set-variable name="userOid"
                       value="@(((Jwt)context.Variables["jwt"]).Claims.GetValueOrDefault("oid", ""))" />
         <!-- 4. Map oid to the CU- customer ID: cache first, then the backend's internal lookup. -->
-        <cache-lookup-value key="@("contoso-customer-" + (string)context.Variables["userOid"])"
+        <cache-lookup-value key="@("aidevme-customer-" + (string)context.Variables["userOid"])"
                             variable-name="customerId" />
         <choose>
             <when condition="@(!context.Variables.ContainsKey("customerId"))">
@@ -42,7 +42,7 @@
                 </choose>
                 <set-variable name="customerId"
                               value="@((string)((IResponse)context.Variables["customerLookup"]).Body.As<JObject>()["customerId"])" />
-                <cache-store-value key="@("contoso-customer-" + (string)context.Variables["userOid"])"
+                <cache-store-value key="@("aidevme-customer-" + (string)context.Variables["userOid"])"
                                    value="@((string)context.Variables["customerId"])" duration="3600" />
             </when>
         </choose>
@@ -58,7 +58,7 @@
         <rate-limit-by-key calls="30" renewal-period="60"
                            counter-key="@("orders-mcp-" + (string)context.Variables["customerId"])" />
         <!-- 7. Pass the customer ID to the backend, which checks order ownership. -->
-        <set-header name="Contoso-Customer-Id" exists-action="override">
+        <set-header name="AIDevMe-Customer-Id" exists-action="override">
             <value>@((string)context.Variables["customerId"])</value>
         </set-header>
         <!-- 8. A custom trace row, without reading the MCP response body. -->

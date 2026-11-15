@@ -4,7 +4,7 @@ Guidance for AI coding agents working in this repository. Humans: start with [RE
 
 ## What this repo is
 
-Sample code for the aidevme.com blog series **Custom MCP servers for Copilot Studio** (7 parts). One demo, a Contoso
+Sample code for the aidevme.com blog series **Custom MCP servers for Copilot Studio** (7 parts). One demo, a AIDevMe
 customer service agent that looks up orders and starts returns, is built three ways:
 
 - `src/logic-apps/`: Logic Apps Standard workflows as an MCP server (Part 2)
@@ -45,13 +45,14 @@ repo must find the same thing.
    Names, descriptions and input schemas must stay in sync across all paths. Description changes alter how the
    Copilot Studio orchestrator routes, so treat them as behavior changes. Classify contract changes as BREAKING,
    REVIEW or ADDITIVE (see `.github/pull_request_template.md`) and update `src/contract/tools.json` with them.
-4. The `Contoso-Demo-Customer` header (`Demo:AllowCustomerHeader`) is a local-testing shortcut. Never enable it in
+4. The `AIDevMe-Demo-Customer` header (`Demo:AllowCustomerHeader`) is a local-testing shortcut. Never enable it in
    anything meant for deployment, and never widen what it can do.
 
 ## Data and secrets
 
-- Demo data only: Contoso, customers like `CU-3001`, orders like `SO-10023`, returns like `RMA-5001`. No real names,
-  tenants, domains or URLs other than Microsoft/aidevme public docs.
+- Demo data only: AIDevMe as the fictional retailer, customers like `CU-3001`, orders like `SO-10023`, returns like
+  `RMA-5001`. Example hosts are `aidevme.com` subdomains such as `orders-mcp.aidevme.com`, used as placeholders. No
+  real names or tenants, and no other domains or URLs than Microsoft's and aidevme.com's public docs.
 - No keys, client secrets, connection strings, tokens, tenant or subscription IDs. Use placeholders such as
   `<external-tenant-id>`, and `*.example` files for local settings.
 
@@ -61,8 +62,8 @@ Toolchain: .NET 10 SDK, Node.js 22.19+ (MCP Inspector), Azure CLI with Bicep, Po
 
 ```sh
 # C# server (Part 4)
-dotnet build src/dotnet-mcp-server/src/Contoso.OrdersMcp
-dotnet run --project src/dotnet-mcp-server/src/Contoso.OrdersMcp --urls http://localhost:5080
+dotnet build src/dotnet-mcp-server/src/AIDevMe.OrdersMcp
+dotnet run --project src/dotnet-mcp-server/src/AIDevMe.OrdersMcp --urls http://localhost:5080
 
 # Contract test against a running server
 pwsh ./src/tests/contract/Test-McpToolContract.ps1 -Endpoint http://localhost:5080/mcp

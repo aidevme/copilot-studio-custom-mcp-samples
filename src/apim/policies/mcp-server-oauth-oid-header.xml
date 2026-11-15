@@ -19,9 +19,9 @@
         </required-claims>
     </validate-jwt>
     <!-- Never trust a customer header from the caller; set it from the validated token. -->
-    <set-header name="Contoso-Customer-Oid" exists-action="delete" />
-    <set-header name="Contoso-Demo-Customer" exists-action="delete" />
-    <set-header name="Contoso-Customer-Oid" exists-action="override">
+    <set-header name="AIDevMe-Customer-Oid" exists-action="delete" />
+    <set-header name="AIDevMe-Demo-Customer" exists-action="delete" />
+    <set-header name="AIDevMe-Customer-Oid" exists-action="override">
         <value>@(((Jwt)context.Variables["jwt"]).Claims.GetValueOrDefault("oid", ""))</value>
     </set-header>
 </inbound>

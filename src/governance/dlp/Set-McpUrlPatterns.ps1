@@ -2,7 +2,7 @@
 # Module: Microsoft.PowerApps.Administration.PowerShell
 param(
     [Parameter(Mandatory)] [string] $TenantId,
-    [string] $PolicyDisplayName = "Contoso - Agents - Production"
+    [string] $PolicyDisplayName = "AIDevMe - Agents - Production"
 )
 Import-Module Microsoft.PowerApps.Administration.PowerShell
 Add-PowerAppsAccount -Endpoint prod -TenantID $TenantId
@@ -20,7 +20,7 @@ $UrlPatterns = @{
         @{
             order                             = 1
             customConnectorRuleClassification = "Confidential"
-            pattern                           = "https://mcp-prod.contoso.com*"
+            pattern                           = "https://mcp-prod.aidevme.com*"
         },
         @{
             order                             = 2

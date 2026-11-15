@@ -1,2 +1,2 @@
 npx @modelcontextprotocol/inspector --cli "https://<copied-mcp-server-url>" --transport http \
-  --header "X-API-KEY: $CONTOSO_MCP_KEY" --header "Contoso-Demo-Customer: CU-3001" --method tools/list
+  --header "X-API-KEY: $AIDEVME_MCP_KEY" --header "AIDevMe-Demo-Customer: CU-3001" --method tools/list

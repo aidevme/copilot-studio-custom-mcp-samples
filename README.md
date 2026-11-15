@@ -10,7 +10,7 @@
 ![Custom MCP servers for Copilot Studio: samples](assets/copilot-studio-custom-mcp-samples-social-preview.png)
 
 Sample code for the [aidevme.com](https://aidevme.com) series **Custom MCP servers for Copilot Studio**. One demo,
-a Contoso customer service agent that answers order questions and starts returns, is built three ways: with
+a AIDevMe customer service agent that answers order questions and starts returns, is built three ways: with
 Logic Apps Standard, Azure API Management and a C# server on Azure Container Apps. Customer sign-in with
 Microsoft Entra External ID, tool contract tests and Power Platform ALM scripts complete it.
 
@@ -32,8 +32,8 @@ Microsoft Entra External ID, tool contract tests and Power Platform ALM scripts 
 
 ## The demo
 
-Contoso is a fictional retailer of home and kitchen appliances. Its customer service agent in Copilot Studio runs on
-the Contoso website and handles questions such as "Where is my order SO-10023?" and "The kettle arrived broken, I
+In this demo, AIDevMe is a fictional retailer of home and kitchen appliances. Its customer service agent in Copilot Studio runs on
+the AIDevMe website and handles questions such as "Where is my order SO-10023?" and "The kettle arrived broken, I
 want to return it."
 
 The order data lives outside Dataverse, in an order management system with a REST API. Every build path exposes
@@ -93,9 +93,9 @@ copilot-studio-custom-mcp-samples/
 │   │   ├── queries/latest-tool-calls.kql
 │   │   └── test/smoke.sh
 │   ├── dotnet-mcp-server/                # Parts 4 to 6
-│   │   ├── src/Contoso.OrdersMcp/        # the Part 4 server: Program.cs, Tools/, Data/, Resources/
+│   │   ├── src/AIDevMe.OrdersMcp/        # the Part 4 server: Program.cs, Tools/, Data/, Resources/
 │   │   ├── variants/                     # part-5-customer-sign-in/, part-6-tool-design/
-│   │   ├── tests/Contoso.OrdersMcp.Tests/  # unit tests (planned)
+│   │   ├── tests/AIDevMe.OrdersMcp.Tests/  # unit tests (planned)
 │   │   ├── infra/                        # deploy-containerapp.sh, probes.yaml
 │   │   ├── test/                         # smoke.sh, inspector.sh
 │   │   └── Dockerfile
@@ -122,7 +122,7 @@ The tools and cloud resources each part needs are listed in [DEVELOPER.md](DEVEL
 
 ## Demo data and secrets
 
-- All data is fictional demo data: Contoso, customers such as `CU-3001`, orders such as `SO-10023`, returns such as
+- All order data is fictional demo data: AIDevMe as the retailer, customers such as `CU-3001`, orders such as `SO-10023`, returns such as
   `RMA-5001`.
 - The repo contains no keys, secrets or tenant IDs. Settings use placeholders such as `<external-tenant-id>`;
   copy the `*.example` files and fill in your own values locally.

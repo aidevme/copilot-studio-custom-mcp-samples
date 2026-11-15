@@ -22,7 +22,7 @@
 
 - [ ] Builds and runs locally (`dotnet build`, `az bicep build`, or the folder's own README steps)
 - [ ] Contract test passes, or the contract change is described below
-- [ ] Demo data only: Contoso customers, orders and returns from `src/order-api/data/`; no real names, tenants or URLs
+- [ ] Demo data only: AIDevMe customers, orders and returns from `src/order-api/data/`; no real names, tenants or URLs
 - [ ] No secrets: no keys, client secrets, connection strings or tokens; placeholders such as `<external-tenant-id>` instead
 - [ ] Folder `README.md` updated if setup, commands or behavior changed
 - [ ] Package and API versions in the change match the post, or the post is listed for an update

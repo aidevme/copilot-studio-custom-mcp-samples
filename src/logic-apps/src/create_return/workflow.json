@@ -6,7 +6,7 @@
       "When_a_HTTP_request_is_received": {
         "type": "Request",
         "kind": "Http",
-        "description": "Starts a return for one line of a delivered Contoso order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.",
+        "description": "Starts a return for one line of a delivered AIDevMe order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.",
         "inputs": {
           "method": "POST",
           "schema": {
@@ -43,7 +43,7 @@
       "Get_caller_customer_id": {
         "type": "Compose",
         "runAfter": {},
-        "inputs": "@coalesce(triggerOutputs()?['headers']?['Contoso-Demo-Customer'], '')"
+        "inputs": "@coalesce(triggerOutputs()?['headers']?['AIDevMe-Demo-Customer'], '')"
       },
       "Get_order": {
         "type": "Http",

@@ -3,7 +3,7 @@
     "tools": [
       {
         "name": "create_return",
-        "description": "Starts a return for one line of a delivered Contoso order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.",
+        "description": "Starts a return for one line of a delivered AIDevMe order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.",
         "inputSchema": {
           "type": "object",
           "properties": {

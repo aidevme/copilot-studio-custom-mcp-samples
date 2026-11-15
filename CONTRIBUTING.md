@@ -1,6 +1,6 @@
 # Contributing
 
-<!-- cspell:ignore Contoso Entra Bicep -->
+<!-- cspell:ignore AIDevMe Entra Bicep -->
 
 Issues and pull requests are welcome. This repo holds the sample code for the aidevme.com series **Custom MCP
 servers for Copilot Studio**, so every change has one extra test: a reader who copies code from a post and then
@@ -51,7 +51,7 @@ Don't paste tokens, keys or tenant IDs into an issue. Replace them with placehol
    delivery.
 3. **`src/contract/tools.json` is the tool contract.** Names, descriptions and input schemas stay the same on every
    path.
-4. **The `Contoso-Demo-Customer` header is for local testing only.** Never enable it in anything meant for
+4. **The `AIDevMe-Demo-Customer` header is for local testing only.** Never enable it in anything meant for
    deployment.
 
 ### Tool contract changes
@@ -72,8 +72,8 @@ period, not as an in-place change.
 
 ```sh
 # C# server (Part 4)
-dotnet build src/dotnet-mcp-server/src/Contoso.OrdersMcp
-dotnet run --project src/dotnet-mcp-server/src/Contoso.OrdersMcp --urls http://localhost:5080
+dotnet build src/dotnet-mcp-server/src/AIDevMe.OrdersMcp
+dotnet run --project src/dotnet-mcp-server/src/AIDevMe.OrdersMcp --urls http://localhost:5080
 
 # Contract test against the running server
 pwsh ./src/tests/contract/Test-McpToolContract.ps1 -Endpoint http://localhost:5080/mcp
@@ -90,8 +90,9 @@ didn't test, for example "not deployed to Azure".
 
 ## Demo data and secrets
 
-- **Demo data only:** Contoso, customers such as `CU-3001`, orders such as `SO-10023`, returns such as `RMA-5001`.
-  No real names, tenants, domains or URLs.
+- **Demo data only:** AIDevMe as the fictional retailer, customers such as `CU-3001`, orders such as `SO-10023`,
+  returns such as `RMA-5001`. Example hosts are placeholder `aidevme.com` subdomains such as
+  `orders-mcp.aidevme.com`; use your own host when you deploy. No real names, tenants or other domains.
 - **No secrets:** no keys, client secrets, connection strings, tokens, tenant or subscription IDs. Use placeholders
   such as `<external-tenant-id>`, and `*.example` files for local settings.
 

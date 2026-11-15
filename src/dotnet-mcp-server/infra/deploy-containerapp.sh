@@ -3,10 +3,10 @@
 # Commands from the post; replace the placeholders before running.
 
 # --- Part 4: https://aidevme.com/copilot-studio-custom-mcp-server-azure-pro-code/
-RESOURCE_GROUP="rg-contoso-mcp"
+RESOURCE_GROUP="rg-aidevme-mcp"
 LOCATION="westeurope"
-ENVIRONMENT_NAME="cae-contoso-mcp"
-APP_NAME="contoso-orders-mcp"
+ENVIRONMENT_NAME="cae-aidevme-mcp"
+APP_NAME="aidevme-orders-mcp"
 
 az group create --name $RESOURCE_GROUP --location $LOCATION
 

@@ -7,9 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Microsoft Entra External ID (external tenant) settings, from configuration.
 var tenantId = builder.Configuration["ExternalId:TenantId"]!;        // external tenant ID (GUID)
-var tenantSubdomain = builder.Configuration["ExternalId:Subdomain"]!; // e.g. contosocustomers
+var tenantSubdomain = builder.Configuration["ExternalId:Subdomain"]!; // e.g. aidevmecustomers
 var apiClientId = builder.Configuration["ExternalId:ApiClientId"]!;   // client ID of the Orders MCP API app
-var serverUrl = builder.Configuration["Mcp:ServerUrl"]!;              // e.g. https://orders-mcp.contoso.com/mcp
+var serverUrl = builder.Configuration["Mcp:ServerUrl"]!;              // e.g. https://orders-mcp.aidevme.com/mcp
 var authority = $"https://{tenantSubdomain}.ciamlogin.com/{tenantId}/v2.0";
 
 builder.Services

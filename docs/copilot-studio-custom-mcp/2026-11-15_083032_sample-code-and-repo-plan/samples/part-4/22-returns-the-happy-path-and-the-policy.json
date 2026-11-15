@@ -1,4 +1,4 @@
 {"result":{"content":[
-  {"type":"text","text":"{\"returnId\":\"RMA-5002\",\"orderId\":\"SO-10023\",\"lineNumber\":1,\"product\":\"Contoso Kettle 1.7 l\",\"quantity\":1,\"reason\":\"Damaged\",\"comment\":\"Arrived with a cracked lid\",\"status\":\"Requested\",\"createdAt\":\"2026-11-13T06:58:25.2671744+00:00\"}"},
-  {"type":"resource_link","uri":"contoso://policies/returns","name":"return_policy","description":"What happens next: return label, refund and the 30-day rule.","mimeType":"text/markdown"}
+  {"type":"text","text":"{\"returnId\":\"RMA-5002\",\"orderId\":\"SO-10023\",\"lineNumber\":1,\"product\":\"AIDevMe Kettle 1.7 l\",\"quantity\":1,\"reason\":\"Damaged\",\"comment\":\"Arrived with a cracked lid\",\"status\":\"Requested\",\"createdAt\":\"2026-11-13T06:58:25.2671744+00:00\"}"},
+  {"type":"resource_link","uri":"aidevme://policies/returns","name":"return_policy","description":"What happens next: return label, refund and the 30-day rule.","mimeType":"text/markdown"}
 ]},"id":13,"jsonrpc":"2.0"}

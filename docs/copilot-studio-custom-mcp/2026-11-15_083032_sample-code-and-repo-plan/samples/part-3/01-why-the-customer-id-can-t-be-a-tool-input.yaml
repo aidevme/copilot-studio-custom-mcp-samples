@@ -1,22 +1,22 @@
 openapi: 3.0.3
 info:
-  title: Contoso Order Management API (agent facade)
+  title: AIDevMe Order Management API (agent facade)
   version: 1.0.0
   description: >-
-    Order status and returns for Contoso, a fictional retailer of home and kitchen
+    Order status and returns for AIDevMe, in this demo a fictional retailer of home and kitchen
     appliances. Demo data only. This is the description imported into API Management.
     It differs from the backend in one path: the backend serves
     GET /customers/{customerId}/orders, and API Management rewrites /me/orders to it
     with the customer ID from the caller's identity.
 servers:
-  - url: https://orders-api.contoso.com
+  - url: https://orders-api.aidevme.com
 paths:
   /me/orders:
     get:
       operationId: find_orders
       summary: Find the customer's orders
       description: >-
-        Lists the signed-in customer's Contoso orders, newest first. Use it when
+        Lists the signed-in customer's AIDevMe orders, newest first. Use it when
         the customer doesn't know the order number.
       parameters:
         - name: status
@@ -59,7 +59,7 @@ paths:
       operationId: get_order_status
       summary: Get the status of an order
       description: >-
-        Returns the status of one Contoso order by its number (for example SO-10023):
+        Returns the status of one AIDevMe order by its number (for example SO-10023):
         order lines, carrier, tracking number and expected delivery date.
       parameters:
         - name: orderId
@@ -87,7 +87,7 @@ paths:
       operationId: create_return
       summary: Start a return
       description: >-
-        Starts a return for one line of a delivered Contoso order and returns the
+        Starts a return for one line of a delivered AIDevMe order and returns the
         return number (RMA). Confirm the item, quantity and reason with the customer
         before calling it.
       parameters:
