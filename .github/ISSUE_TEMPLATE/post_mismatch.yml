@@ -1,0 +1,56 @@
+name: Post and repo don't match
+description: The code in a post differs from the code in the repo.
+title: "[Part N] Post and repo differ: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A reader who copies code from a post and then opens the repo should find the same thing. Use this form when they differ.
+  - type: dropdown
+    id: part
+    attributes:
+      label: Part
+      options:
+        - "Part 1: When to build one and how"
+        - "Part 2: Logic Apps Standard"
+        - "Part 3: Azure API Management"
+        - "Part 4: C# server on Azure Container Apps"
+        - "Part 5: Customer sign-in"
+        - "Part 6: Tool design and testing"
+        - "Part 7: Governance, DLP and ALM"
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section in the post
+      description: The heading the code is under, or a link to it.
+      placeholder: "Step 2: Write Program.cs"
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: File in the repo
+      placeholder: dotnet-mcp-server/src/Contoso.OrdersMcp/Program.cs
+    validations:
+      required: true
+  - type: textarea
+    id: difference
+    attributes:
+      label: What differs
+      description: Quote or describe both versions, for example a package version, a header name or demo data.
+    validations:
+      required: true
+  - type: dropdown
+    id: which
+    attributes:
+      label: Which one looks right?
+      options:
+        - The post
+        - The repo
+        - Neither
+        - Not sure
+    validations:
+      required: true

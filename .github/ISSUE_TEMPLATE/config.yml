@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contributing guide
+    url: https://github.com/aidevme/copilot-studio-custom-mcp-samples/blob/main/CONTRIBUTING.md
+    about: How to report a problem, make a change and class a tool contract change.
+  - name: The blog series
+    url: https://aidevme.com/copilot-studio-custom-mcp-servers-when-you-need-one/
+    about: Custom MCP servers for Copilot Studio, Parts 1 to 7, on aidevme.com.

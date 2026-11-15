@@ -1,0 +1,66 @@
+name: Tool contract change
+description: Change a tool's name, description, inputs or behavior in contract/tools.json.
+title: "Contract: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The Copilot Studio orchestrator chooses tools by their descriptions, so a description change is a behavior change.
+        `contract/tools.json` is the contract every build path implements.
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Tool
+      multiple: true
+      options:
+        - find_orders
+        - get_order_status
+        - create_return
+        - New tool
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: The change
+      description: The current and proposed name, description, input schema or behavior.
+    validations:
+      required: true
+  - type: dropdown
+    id: class
+    attributes:
+      label: Class
+      description: "BREAKING: a tool or input removed or renamed, an input made required, a type changed. REVIEW: a description changed. ADDITIVE: a new tool or a new optional input."
+      options:
+        - BREAKING
+        - REVIEW
+        - ADDITIVE
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: What goes wrong today, for example the agent picks the wrong tool or asks for the wrong input.
+    validations:
+      required: true
+  - type: textarea
+    id: side_effects
+    attributes:
+      label: Read or write, and side effects
+      description: For a new tool or a changed behavior. Is it reversible? Does it have a financial impact?
+  - type: textarea
+    id: rollout
+    attributes:
+      label: Rollout for a breaking change
+      description: A new tool or a deprecation period, not an in-place change.
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Rules every build path follows
+      options:
+        - label: No tool takes `customerId`, `userId` or `email`; another customer's order still returns "not found".
+          required: true
+        - label: Business rules stay on the server, not in the description.
+          required: true
