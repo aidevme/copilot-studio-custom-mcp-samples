@@ -1,5 +1,12 @@
 # Custom MCP servers for Copilot Studio: samples
 
+[![MCP contract test](https://github.com/aidevme/copilot-studio-custom-mcp-samples/actions/workflows/contract-test.yml/badge.svg?branch=main)](https://github.com/aidevme/copilot-studio-custom-mcp-samples/actions/workflows/contract-test.yml)
+[![License: MIT](https://img.shields.io/github/license/aidevme/copilot-studio-custom-mcp-samples)](LICENSE)
+[![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/download/dotnet/10.0)
+[![MCP C# SDK 2.4.0](https://img.shields.io/badge/ModelContextProtocol.AspNetCore-2.4.0-004880?logo=nuget&logoColor=white)](https://www.nuget.org/packages/ModelContextProtocol.AspNetCore/2.4.0)
+[![MCP protocol 2025-11-25](https://img.shields.io/badge/MCP%20protocol-2025--11--25-informational)](https://modelcontextprotocol.io/specification/2025-11-25)
+[![Blog series](https://img.shields.io/badge/aidevme.com-read%20the%20series-0A66C2)](https://aidevme.com/copilot-studio-custom-mcp-servers-when-you-need-one/)
+
 ![Custom MCP servers for Copilot Studio: samples](assets/copilot-studio-custom-mcp-samples-social-preview.png)
 
 Sample code for the [aidevme.com](https://aidevme.com) series **Custom MCP servers for Copilot Studio**. One demo,
