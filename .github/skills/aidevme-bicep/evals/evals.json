@@ -1,0 +1,83 @@
+{
+  "skill_name": "aidevme-bicep",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Add a Key Vault to src/apim/infra/mcp-server.bicep so the named values can come from it.",
+      "expected_output": "The MCP server is checked, best practices and the Key Vault schema are loaded from the tools, an AVM module or resource is proposed without changing existing API versions, the change is shown, written, and the file is built clean.",
+      "files": [],
+      "expectations": [
+        "Loads references/mcp-setup.md and checks the bicep MCP server is connected before writing",
+        "Calls get_bicep_best_practices and get_azure_resource_type_schema (or list_avm_metadata) instead of writing the resource from memory",
+        "Keeps every existing apiVersion in the file unchanged",
+        "Uses managed identity or RBAC and no secrets, tenant IDs or subscription IDs in the file",
+        "Runs build_bicep (or bicep build) on the changed file and reports the result"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Validate all the Bicep in this repo.",
+      "expected_output": "Every .bicep and .bicepparam file is built with build_bicep / build_bicepparam, diagnostics are reported per file with errors first, nothing is changed or formatted unasked.",
+      "files": [],
+      "expectations": [
+        "Loads references/validate.md",
+        "Finds every .bicep and .bicepparam file and builds each one, continuing past a file that fails",
+        "Reports a per-file table with ✅, ⚠️ or ❌ and the diagnostic codes and lines",
+        "Does not edit, format or upgrade any file without being asked",
+        "Does not run what-if, az deployment or any command that signs in to Azure"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Are the AVM modules in infra/main.bicep up to date? Update them.",
+      "expected_output": "Versions are compared via list_avm_metadata or the MCR tags list and reported in a table; the planned updates are named and confirmed before editing, breaking changes pause for approval, and the file is validated after.",
+      "files": [],
+      "expectations": [
+        "Loads references/modules.md",
+        "Shows a Module / Current / Latest / Status table before changing anything",
+        "Asks for confirmation of the target versions before editing the file",
+        "Reads the module docs or changelog and stops to ask when an update has removed or renamed parameters",
+        "Validates the file after the update and reports the final table with an Action column"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Run a what-if for src/apim/infra/mcp-passthrough.bicep.",
+      "expected_output": "The scope is read from targetScope, the resource group and subscription are asked for, the exact az deployment group what-if command is shown and run only after confirmation; nothing is deployed.",
+      "files": [],
+      "expectations": [
+        "Loads references/preview.md",
+        "Asks for the resource group (and subscription) instead of guessing or reading them from a committed file",
+        "Shows the exact what-if command with --validation-level Provider and waits for confirmation",
+        "Never runs az deployment group create, --confirm-with-what-if or azd up",
+        "Does not write the subscription or tenant ID into any file"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Convert legacy/azuredeploy.json and azuredeploy.parameters.json to Bicep.",
+      "expected_output": "Both files are decompiled with the MCP tools, saved next to the source without overwriting existing files, built, and the decompiler warnings are listed; the API versions stay the same.",
+      "files": [],
+      "expectations": [
+        "Loads references/decompile.md",
+        "Uses decompile_arm_template_file and decompile_arm_parameters_file (or the bicep decompile CLI fallback)",
+        "Asks before overwriting an existing .bicep or .bicepparam file",
+        "Builds the result and lists the warnings and any expressions the decompiler couldn't convert",
+        "Keeps the ARM template's API versions"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write me a Bicep file for a storage account. (The Bicep MCP server is not connected in this session.)",
+      "expected_output": "The skill says the server isn't connected and shows the setup command, then uses the Bicep CLI and fetched Microsoft docs for the schema instead of memory, and builds the file.",
+      "files": [],
+      "expectations": [
+        "Says the bicep MCP server isn't connected and shows 'claude mcp add bicep -- dnx -y Azure.Bicep.McpServer'",
+        "Does not run claude mcp add or edit MCP configuration itself",
+        "Fetches the template reference or AVM index for the schema instead of writing properties from memory",
+        "Builds the new file with bicep build (asking first if the repository requires it for az commands)",
+        "Uses a parameter for the name and secure defaults (HTTPS only, TLS 1.2, no public blob access)"
+      ]
+    }
+  ]
+}
