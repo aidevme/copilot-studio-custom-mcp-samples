@@ -1,0 +1,47 @@
+info:
+  name: List categories
+  type: http
+  seq: 1
+  tags:
+    - smoke
+
+http:
+  method: GET
+  url: "{{baseUrl}}/wp-json/wp/v2/categories?per_page=100&_fields=id,name,slug,parent,count,description,link"
+  params:
+    - name: per_page
+      value: "100"
+      type: query
+    - name: _fields
+      value: id,name,slug,parent,count,description,link
+      type: query
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+  scripts:
+    - type: tests
+      code: |-
+        test("returns categories with counts", function () {
+          const body = res.getBody();
+          expect(body).to.be.an("array");
+          body.forEach((category) => {
+            expect(category).to.have.property("slug");
+            expect(category.count).to.be.a("number");
+          });
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 30000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Every category with parent, post count, description and link (the pillars). If X-WP-TotalPages is above 1,
+  add a page parameter; for a full audit use aidevme-blog-categories, which paginates for you.
+
+  Auth: none. Expected: 200 with an array of categories.

@@ -1,0 +1,21 @@
+opencollection: "1.0.0"
+info:
+  name: aidevme-wordpress
+
+extensions:
+  bruno:
+    defaultEnvironment: Production
+    ignore:
+      - node_modules
+      - .git
+
+# Collection-level headers apply to every request. The site firewall answers 406 to a short or missing user
+# agent, so every request sends a full browser one.
+request:
+  headers:
+    - name: User-Agent
+      value: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+      enabled: true
+    - name: Accept
+      value: application/json
+      enabled: true

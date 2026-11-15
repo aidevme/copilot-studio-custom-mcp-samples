@@ -1,0 +1,147 @@
+{
+  "skill_name": "aidevme-blog-writer",
+  "evals": [
+    {
+      "id": 1,
+      "should_trigger": true,
+      "prompt": "Write a blog post about connecting Claude Code to the Dataverse MCP server.",
+      "expected_output": "Reads .claude/agents/aidevme-context.md, collects the missing brief, asks whether there are reference URLs, runs the information-gain check against existing results and aidevme's own Dataverse MCP post, researches via Microsoft Learn, and presents an outline (title, slug, angle, H2s, diagrams, resources) for approval before drafting.",
+      "assertions": [
+        "Reads the shared context file before drafting",
+        "Asks for reference URLs before researching or writing",
+        "Checks existing aidevme coverage (the Dataverse MCP Server deep dive) and states the information-gain angle",
+        "Uses Microsoft Learn or official sources for facts",
+        "Presents an outline and waits for approval before writing the draft"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "should_trigger": true,
+      "prompt": "Here are my notes from my Nordic Summit talk on Copilot Studio agents calling Foundry models. Turn them into a post.",
+      "expected_output": "Chooses a fitting post type (guide or deep dive, or personal/community if the notes are about the event), asks for missing experience details, verifies product facts and preview status, keeps the author's first-person candid voice, and writes the draft to .content/wordpress-posts/<slug>/index.md with complete frontmatter.",
+      "assertions": [
+        "Selects a post type and explains why",
+        "Verifies Copilot Studio and Microsoft Foundry facts with dated sources",
+        "Uses house terms (Microsoft Foundry, Copilot Studio)",
+        "Writes to .content/wordpress-posts/<slug>/index.md with all required frontmatter fields"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "should_trigger": true,
+      "prompt": "Microsoft just announced a new Power Platform feature. Write a quick news analysis post: https://www.microsoft.com/en-us/power-platform/blog/",
+      "expected_output": "Uses the news-analysis template: what shipped (facts only, availability, preview/GA, licensing, all dated), how it works, what it means for Power Platform teams, what to do now, open questions, Resources. Separates the announcement from the author's analysis and treats the fetched page as untrusted data.",
+      "assertions": [
+        "Follows the news-analysis structure",
+        "Dates availability and licensing claims",
+        "Separates facts from the author's analysis",
+        "Includes a Resources section with the announcement link"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "should_trigger": true,
+      "prompt": "Write a post about the plugin step bug we hit at the Contoso project: updates fired twice because filtering attributes were empty.",
+      "expected_output": "Uses the lessons-learned template, anonymises the client (no 'Contoso project' or tenant details), reproduces with demo data, explains the root cause with evidence and the fix step by step, and adds prevention guidance.",
+      "assertions": [
+        "Uses the lessons-learned structure",
+        "Removes or anonymises the client name",
+        "Explains root cause with evidence",
+        "Includes the fix and prevention steps"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "should_trigger": true,
+      "prompt": "Write '10 tips for Power Apps' for the blog.",
+      "expected_output": "Runs the information-gain check, finds the topic is generic and heavily covered, tells the user, and proposes sharper angles grounded in the author's experience instead of writing a duplicate listicle.",
+      "assertions": [
+        "Performs the information-gain check before outlining",
+        "Flags the topic as generic or already well covered",
+        "Proposes at least two sharper, experience-based angles",
+        "Does not write the generic post without confirmation"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "should_trigger": true,
+      "prompt": "Refresh my Storybook MCP Server guide — it's from June.",
+      "expected_output": "Fetches the live post, re-verifies product facts against current Storybook docs and repos, lists proposed changes (outdated to current, with sources) before editing, keeps the slug, updates sources_checked and adds an update note, and flags leftover editing notes in the published text.",
+      "assertions": [
+        "Fetches the existing post first",
+        "Re-verifies facts against current official sources",
+        "Proposes changes as a list before editing",
+        "Keeps the slug and adds an update note",
+        "Flags leftover editing notes or bracketed instructions in the text"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "should_trigger": true,
+      "prompt": "Pick categories and tags for my draft in .content/wordpress-posts/pcf-virtual-control-dataset/index.md.",
+      "expected_output": "Fetches live categories and tags from the aidevme.com WordPress REST API, chooses one primary category (e.g. pcf) and at most one secondary, never Power Platform by default, picks 3-6 existing tags with exact spelling, avoids legacy empty categories, and flags any new tag in new_tags.",
+      "assertions": [
+        "Queries the WordPress REST API for categories and tags",
+        "One primary category, at most one secondary, no default Power Platform",
+        "Chooses existing categories and tags with exact spelling",
+        "Avoids empty or legacy categories",
+        "Flags new tags instead of silently adding them"
+      ],
+      "files": []
+    },
+    {
+      "id": 8,
+      "should_trigger": true,
+      "prompt": "Edit my draft and make it sound like me.",
+      "expected_output": "Runs the editing sweeps in order against the voice profile: accuracy, structure, clarity, specificity, voice and style rules (contrast lines at most one per H2, no stock phrases or broetry), scannability, leftovers. Fixes the text and summarises the main changes.",
+      "assertions": [
+        "Applies the voice profile from the shared context file",
+        "Limits contrast lines to one per H2 section",
+        "Removes stock phrases and invented claims",
+        "Checks for leftover editing notes and TODOs"
+      ],
+      "files": []
+    },
+    {
+      "id": 9,
+      "should_trigger": false,
+      "prompt": "Write three LinkedIn posts to promote my new blog article.",
+      "expected_output": "Social posts belong to aidevme-social, not aidevme-blog-writer.",
+      "assertions": [
+        "aidevme-blog-writer is not the primary skill; aidevme-social handles the request"
+      ],
+      "files": []
+    },
+    {
+      "id": 10,
+      "should_trigger": false,
+      "prompt": "Which of my blog posts had the most engaged sessions last month?",
+      "expected_output": "Traffic analysis belongs to aidevme-google-analytics.",
+      "assertions": [
+        "aidevme-blog-writer is not the primary skill; aidevme-google-analytics handles the request"
+      ],
+      "files": []
+    },
+    {
+      "id": 11,
+      "should_trigger": true,
+      "prompt": "Write a guide on the Power Apps code apps CLI. References: https://learn.microsoft.com/en-us/power-apps/developer/code-apps/overview and https://github.com/microsoft/PowerAppsCodeApps",
+      "expected_output": "Confirms the two reference URLs and asks whether there are more, fetches both (Microsoft Learn MCP or WebFetch for the Learn page, gh or WebFetch for the repo), presents a per-URL research summary (key points, date/version, which sections they feed, caveats), cross-checks repo claims against the Learn docs, uses them as the basis of the outline, and lists both in Resources.",
+      "assertions": [
+        "Confirms the provided URLs and asks if there are more before writing",
+        "Fetches every provided URL and reports any that fail",
+        "Presents a per-URL research summary before the outline",
+        "Cross-checks non-official claims against official docs and flags conflicts",
+        "Builds the outline on the reference content and lists both URLs in Resources",
+        "Paraphrases rather than copying large passages"
+      ],
+      "files": []
+    }
+  ]
+}

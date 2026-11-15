@@ -1,0 +1,101 @@
+{
+  "skill_name": "aidevme-powershell-test",
+  "evals": [
+    {
+      "id": 1,
+      "should_trigger": true,
+      "prompt": "Set up Pester tests for the PowerShell scripts in scripts/wordpress-scripts/.",
+      "expected_output": "Checks that Pester 6.x is installed (gives the Install-Module command if not, without installing it), creates scripts/wordpress-scripts/tests/, copies BrunoFake.ps1 from the assets (or reports a difference if one exists), adds a first test file for get-published-posts.ps1 from Script.Tests.ps1, runs run-tests.ps1 from the repo root and reports the gate result and the Pester summary.",
+      "assertions": [
+        "Checks the installed Pester version live",
+        "Copies BrunoFake.ps1 into scripts/wordpress-scripts/tests/ without overwriting an existing one",
+        "Runs scripts/run-tests.ps1 and reports Gate: OK and the pass/fail counts",
+        "Makes no network call to aidevme.com"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "should_trigger": true,
+      "prompt": "Write unit tests for get-wordpress-tags.ps1.",
+      "expected_output": "Reads the script (paging with --env-var page=N, the fields it keeps, every throw), starts from Script.Tests.ps1, replaces the one-page test with per-page answers from Use-FakeBruno, adds tests for duplicates and the X-WP-Total check, HTTP errors, a missing report, masked values, the AIDEVME_WP_* restore and scratch-folder cleanup, writes output to $TestDrive, and runs the tests.",
+      "assertions": [
+        "Uses Use-FakeBruno and never Mock npx",
+        "Answers each page from $Call.EnvVars.page",
+        "Passes -OutFile under $TestDrive",
+        "Fixtures use demo data only"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "should_trigger": true,
+      "prompt": "My Pester test for sync-post-folders fails with 'call depth overflow' on Test-Path.",
+      "expected_output": "Explains that the default Test-Path mock calls the module-qualified cmdlet, which recurses into the mock, and replaces it with a CommandInfo captured by Get-Command Test-Path -CommandType Cmdlet, keeping the filtered mock for the admin .env.",
+      "assertions": [
+        "Identifies the module-qualified call in the default mock as the cause",
+        "Uses Get-Command Test-Path -CommandType Cmdlet in the default mock",
+        "Never reads or creates the real .env file"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "should_trigger": true,
+      "prompt": "Why does Mock npx not work in my test? The script still calls the live site.",
+      "expected_output": "Explains that npx resolves to npm's npx.ps1 (ExternalScript), which Pester's Mock doesn't replace, that the test therefore reached aidevme.com, and switches the test to BrunoFake.ps1 (Block-LiveNpx, Use-FakeBruno, Remove-BrunoFake); notes the run-tests.ps1 gate rejects Mock npx.",
+      "assertions": [
+        "Names npx.ps1 / ExternalScript as the cause",
+        "Replaces Mock npx with Use-FakeBruno",
+        "Says the earlier run reached the live site"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "should_trigger": true,
+      "prompt": "Run the PowerShell tests with coverage.",
+      "expected_output": "Runs pwsh -File .claude/skills/aidevme-powershell-test/scripts/run-tests.ps1 -Coverage from the repo root and reports the gate, passed/failed/skipped counts, the coverage percentage and the report paths under temp/pester/.",
+      "assertions": [
+        "Runs run-tests.ps1 with -Coverage from the repo root",
+        "Reports the coverage percentage and temp/pester/coverage.xml"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "should_trigger": true,
+      "prompt": "Refactor the scripts so the Bruno calls can be mocked properly.",
+      "expected_output": "Proposes moving the shared scaffolding into a module such as scripts/wordpress-scripts/AidevmeBruno.psm1 with Invoke-BrunoRequest, for one script first, with the tests that will prove it behaves the same; waits for approval before changing any script.",
+      "assertions": [
+        "Proposes before changing a script",
+        "Writes or runs tests against the current script before the change"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "should_trigger": false,
+      "prompt": "Add a Bruno test that checks the tags endpoint returns x-wp-total.",
+      "expected_output": "Not this skill: Bruno request tests belong to aidevme-bruno.",
+      "assertions": [],
+      "files": []
+    },
+    {
+      "id": 8,
+      "should_trigger": false,
+      "prompt": "Lint the markdown and fix the cspell errors in the research folder.",
+      "expected_output": "Not this skill: aidevme-docs-maintenance.",
+      "assertions": [],
+      "files": []
+    },
+    {
+      "id": 9,
+      "should_trigger": false,
+      "prompt": "Write tests for apply_tag_plan.py.",
+      "expected_output": "Not this skill: it covers PowerShell scripts only.",
+      "assertions": [],
+      "files": []
+    }
+  ]
+}

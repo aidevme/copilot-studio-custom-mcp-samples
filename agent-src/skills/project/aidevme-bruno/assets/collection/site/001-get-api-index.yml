@@ -1,0 +1,47 @@
+info:
+  name: Get API index
+  type: http
+  seq: 1
+  tags:
+    - smoke
+
+http:
+  method: GET
+  url: "{{baseUrl}}/wp-json/?_fields=name,description,url,namespaces"
+  params:
+    - name: _fields
+      value: name,description,url,namespaces
+      type: query
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+  scripts:
+    - type: tests
+      code: |-
+        test("returns JSON", function () {
+          expect(res.getHeader("content-type")).to.contain("application/json");
+        });
+
+        test("exposes the wp/v2 namespace", function () {
+          const body = res.getBody();
+          expect(body).to.have.property("namespaces");
+          expect(body.namespaces).to.include("wp/v2");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 30000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  The REST API index of aidevme.com: site name, description, URL and the registered namespaces.
+
+  Use it first when a request fails: if this one also fails, the problem is the site, the network or the
+  firewall (406 = user agent rejected), not the endpoint.
+
+  Auth: none. Expected: 200 with a namespaces array that includes wp/v2.

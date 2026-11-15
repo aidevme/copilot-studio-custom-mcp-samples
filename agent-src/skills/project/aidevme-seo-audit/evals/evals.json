@@ -1,0 +1,104 @@
+{
+  "skill_name": "aidevme-seo-audit",
+  "evals": [
+    {
+      "id": 1,
+      "should_trigger": true,
+      "prompt": "Do a full SEO audit of aidevme.com.",
+      "expected_output": "Clarifies data availability (Search Console/GA4), fetches robots.txt, sitemap_index.xml and all posts with yoast_head_json, runs technical checks and samples PageSpeed Insights, builds a per-post on-page table for all posts, checks content and cannibalization, marks position/CTR findings [NEEDS DATA] without Search Console, reports with evidence and an ordered action plan, hands structural issues to aidevme-blog-optimization, and saves the report as a new timestamped file in .audit/.",
+      "assertions": [
+        "Fetches robots.txt, the sitemap and the REST API with yoast_head_json",
+        "Produces a per-post on-page table",
+        "Every finding includes evidence",
+        "Marks position/CTR findings as NEEDS DATA instead of inventing numbers",
+        "Hands category/redirect issues to aidevme-blog-optimization",
+        "Saves the report as .audit/<YYYY-MM-DD_HHmmss>_seo-audit_<scope>.md"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "should_trigger": true,
+      "prompt": "Why isn't my Dataverse MCP Server post ranking for 'dataverse mcp server'?",
+      "expected_output": "Checks indexation, canonical, robots and status for the post, searches the query and compares the top three results (intent, sections, freshness, format, links), names concrete reasons, proposes the smallest changes, and records a baseline; says authority is the likely gap if no on-page reason is visible.",
+      "assertions": [
+        "Checks indexation/canonical/robots for the post",
+        "Compares against the top three results for the query",
+        "Names concrete reasons the top results win or identifies authority as the gap",
+        "Proposes minimal, attributable changes with a baseline"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "should_trigger": true,
+      "prompt": "Check the titles and meta descriptions of all my posts.",
+      "expected_output": "Reads yoast_head_json for every post, reports title and description lengths, duplicates and missing values, and returns an approvable table of proposed titles (key terms first, about 50-60 chars) and 150-160 character descriptions aligned with each post's H1, without changing slugs.",
+      "assertions": [
+        "Uses yoast_head_json title and description for every post",
+        "Flags duplicates, missing values and length problems",
+        "Proposes titles and descriptions in an approvable table",
+        "Does not propose slug changes"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "should_trigger": true,
+      "prompt": "Is my site slow? Check Core Web Vitals.",
+      "expected_output": "Runs PageSpeed Insights (mobile) on the homepage and key posts, reports LCP/INP/CLS against thresholds, labels field vs lab data, and checks WordPress-specific causes such as duplicate analytics tags, large images and heavy scripts.",
+      "assertions": [
+        "Uses PageSpeed Insights or Search Console Core Web Vitals",
+        "Reports LCP, INP and CLS against the good thresholds",
+        "Labels field data vs lab data",
+        "Checks WordPress-specific causes (e.g. duplicate gtag.js)"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "should_trigger": true,
+      "prompt": "Some of my posts are on page 2 of Google. Which ones should I push and how?",
+      "expected_output": "Asks for a Search Console export if not provided, filters positions 8-20 with impressions, checks cannibalization first, diagnoses against the top three, proposes the smallest changes, and sets a 3-4 week measurement window.",
+      "assertions": [
+        "Requests Search Console data rather than estimating positions",
+        "Filters striking-distance candidates (positions 8-20)",
+        "Checks cannibalization before editing",
+        "Sets a baseline and a 3-4 week wait"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "should_trigger": true,
+      "prompt": "curl says https://aidevme.com/pcf/ returns 406, is the page broken?",
+      "expected_output": "Explains that the site's firewall returns 406 to some scripted requests, retries with a browser user agent or a normal fetch before concluding, and notes /pcf/ duplicates the /category/pcf/ archive (a structural issue for aidevme-blog-optimization).",
+      "assertions": [
+        "Does not report the page as broken based on a 406 alone",
+        "Re-checks with a browser user agent or normal fetch",
+        "Flags the page vs category archive duplication and hands it to aidevme-blog-optimization"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "should_trigger": false,
+      "prompt": "Restructure my menu and merge the PCF categories.",
+      "expected_output": "Site structure and category changes belong to aidevme-blog-optimization.",
+      "assertions": [
+        "aidevme-seo-audit is not the primary skill; aidevme-blog-optimization handles it"
+      ],
+      "files": []
+    },
+    {
+      "id": 8,
+      "should_trigger": false,
+      "prompt": "Write a new article about Copilot Studio triggers.",
+      "expected_output": "Article writing belongs to aidevme-blog-writer.",
+      "assertions": [
+        "aidevme-seo-audit is not the primary skill; aidevme-blog-writer handles it"
+      ],
+      "files": []
+    }
+  ]
+}

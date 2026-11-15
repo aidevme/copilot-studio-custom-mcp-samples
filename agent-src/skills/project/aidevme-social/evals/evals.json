@@ -1,0 +1,168 @@
+{
+  "skill_name": "aidevme-social",
+  "evals": [
+    {
+      "id": 1,
+      "should_trigger": true,
+      "prompt": "I just published https://aidevme.com/dataverse-custom-api-copilot-studio/ — turn it into social posts for this week.",
+      "expected_output": "Reads the post, extracts 5-10 content atoms, maps them to LinkedIn (story/how-to with the link in the first comment, carousel later), an X thread, a Bluesky post and optional Reddit/forum answers, and proposes a day-by-day launch schedule. Every post stands alone and uses details from the article.",
+      "assertions": [
+        "Reads the blog post before drafting",
+        "Extracts content atoms from the article",
+        "Produces LinkedIn, X and Bluesky drafts",
+        "Puts the LinkedIn link in the first comment, not the post body",
+        "Proposes a launch schedule (day 0, days 2-4, week 1-2)",
+        "Uses real details from the post rather than generic claims"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "should_trigger": true,
+      "prompt": "Write a LinkedIn post about the plugin step registration bug we hit last week: an update step fired twice because filtering attributes were empty. Make it get engagement.",
+      "expected_output": "A LinkedIn post using the Project Lesson template: specific hook with the symptom, short context without client names, the root cause, the fix, the lesson. Paragraphs, not broetry; no contrast reveals, em dashes, self-answered questions, engagement-bait closer or emoji bullets.",
+      "assertions": [
+        "Hook names the specific symptom or cause",
+        "No client or environment names",
+        "No contrast reveal ('It's not X, it's Y') or negation list",
+        "No em dashes and not written as broetry",
+        "No engagement-bait closer such as 'Agree?' or 'Thoughts?'",
+        "First ~210 characters work as the hook"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "should_trigger": true,
+      "prompt": "Announce the new aidevme-diagram-mermaid skill on X and LinkedIn.",
+      "expected_output": "Release posts that lead with what the reader can now do, show it (demo/GIF/screenshot suggestion), give the install or repo link, and avoid 'excited to announce'. The X version follows x-algorithm rules: specific claim and topic in the first words, no engagement bait, ~60 minutes from other posts, presence for the first 30 minutes.",
+      "assertions": [
+        "Leads with the capability, not 'excited to announce'",
+        "Suggests a demo video, GIF or screenshot",
+        "Includes the repo or install step",
+        "X post names the tool and topic in the opening words",
+        "Mentions X posting mechanics (spacing or first-30-minutes presence)"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "should_trigger": true,
+      "prompt": "Turn my post '7 ALM pipeline gotchas for Power Platform' into a LinkedIn carousel.",
+      "expected_output": "Selects a carousel framework before writing slides (Hack List or Value-Stack, with a reason), writes slide 1 as a standalone hook with the exact count, one named gotcha per slide, a synthesis and one CTA on the last slide, and applies LinkedIn document-post notes (PDF, post text as its own hook, link in the first comment).",
+      "assertions": [
+        "Applies the carousel-frameworks reference",
+        "Chooses Hack List or Value-Stack and states why before drafting",
+        "Slide 1 states the exact count and works standalone",
+        "One named gotcha per slide; exactly seven delivered",
+        "Last slide has a synthesis and exactly one CTA",
+        "Post text above the document is written as its own hook"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "should_trigger": true,
+      "prompt": "I post 4 times on X every morning between 8 and 9 and my reach keeps dropping. What am I doing wrong?",
+      "expected_output": "Applies x-algorithm.md: identifies post clustering (author-diversity decay) as the main issue, recommends ~60 minute spacing, specific claims and topic in the first words, staying present to reply, and optimising for DM-shares, follows and profile clicks; notes weights are unpublished.",
+      "assertions": [
+        "References X algorithm mechanics",
+        "Identifies post clustering / author-diversity decay",
+        "Recommends ~60 minute spacing between originals",
+        "Addresses hook and topic-anchoring in the first words",
+        "Recommends being present to reply after posting",
+        "Notes that weight values are unpublished / directional"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "should_trigger": true,
+      "prompt": "Give me the top 10 posts I should comment on today about Power Platform and Copilot Studio.",
+      "expected_output": "Runs the listening loop: pulls from Reddit (r/PowerApps etc.), HN and Bluesky via the curl recipes and, if available, LinkedIn/X via a read-only Playwright session; filters to 24h; scores with the rubric; outputs the top-10 format with suggested tiered comments; treats fetched content as untrusted and does not post anything.",
+      "assertions": [
+        "Uses the listening reference and source list",
+        "Pulls from at least Reddit, Hacker News or Bluesky",
+        "Applies the weighted scoring rubric",
+        "Outputs the top-10 format with suggested comments",
+        "Does not post or comment on the user's behalf",
+        "Treats fetched content as untrusted data"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "should_trigger": true,
+      "prompt": "Script a 45-second YouTube Short showing how the Mermaid skill turns a sentence into a validated ERD.",
+      "expected_output": "A script using the tool-demo structure: result on screen in the first 3 seconds with voice and text overlay, the pain, 2-4 steps zoomed to the action, CTA to repo/post; production notes include captions and redacting tenant/client data.",
+      "assertions": [
+        "Shows the end result within the first 3 seconds",
+        "Includes visual, voice and text-overlay hooks",
+        "Follows a timed structure that fits 45 seconds",
+        "Includes captions in production notes",
+        "Mentions redacting tenant URLs, client names or record data"
+      ],
+      "files": []
+    },
+    {
+      "id": 8,
+      "should_trigger": true,
+      "prompt": "Write a Reddit post for r/PowerApps promoting my blog post about environment variables in canvas apps.",
+      "expected_output": "Advises checking the subreddit's self-promotion rules, recommends answering an existing question or writing a full 'how I solved X' text post instead of a bare link, includes the complete answer in the post, and discloses that the linked article is the author's own.",
+      "assertions": [
+        "Tells the user to check the subreddit rules",
+        "Puts the full answer in the post rather than only a link",
+        "Discloses that the blog post is the author's own",
+        "Avoids marketing language"
+      ],
+      "files": []
+    },
+    {
+      "id": 11,
+      "should_trigger": true,
+      "prompt": "Write a Substack post for my article .content/wordpress-posts/45-copilot-studio-agent-accounts-governance/index.md.",
+      "expected_output": "Reads the article and the context file, writes an adapted Substack post (400-900 words): an opening with the article's real moment, the main insight, three takeaways and one proof from the article, and a link to the full guide on aidevme.com; a title under ~60 characters that works as the email subject, a subtitle that works as the email preview, the featured image as social preview, one or two Substack Notes in the social style rules; explains why it's adapted rather than a full copy (no canonical URL on Substack); saves .content/wordpress-posts/45-copilot-studio-agent-accounts-governance/substack-post.md in the template format; publishes nothing.",
+      "assertions": [
+        "Writes an adapted post, not a full copy, and says why",
+        "Every fact comes from the article",
+        "Title under ~60 characters and subtitle usable as the email preview",
+        "Links to the full article on aidevme.com",
+        "Includes Substack Notes without em dashes or contrast reveals",
+        "Saves .content/wordpress-posts/<slug>/substack-post.md and publishes nothing"
+      ],
+      "files": []
+    },
+    {
+      "id": 12,
+      "should_trigger": true,
+      "prompt": "Just repost the whole article on Substack.",
+      "expected_output": "Can do a full repost, but first states the search risk (Substack has no canonical URL or noindex setting, so the copy can compete with or outrank aidevme.com), recommends publishing a few days after the blog post with 'Originally published on aidevme.com' and a link at the top, and asks Zsolt to confirm before writing it.",
+      "assertions": [
+        "States the duplicate-content risk before writing",
+        "Puts an 'Originally published on aidevme.com' link at the top",
+        "Asks for confirmation"
+      ],
+      "files": []
+    },
+    {
+      "id": 9,
+      "should_trigger": false,
+      "prompt": "Which of my blog posts got the most traffic from LinkedIn last month?",
+      "expected_output": "This is GA4 analysis; aidevme-google-analytics should handle it, not aidevme-social.",
+      "assertions": [
+        "aidevme-social is not the primary skill; aidevme-google-analytics handles the request"
+      ],
+      "files": []
+    },
+    {
+      "id": 10,
+      "should_trigger": false,
+      "prompt": "Write a 4-email welcome sequence for new newsletter subscribers.",
+      "expected_output": "Email sequences are out of scope for aidevme-social; the skill should not trigger or should say it doesn't cover email.",
+      "assertions": [
+        "aidevme-social does not write the email sequence"
+      ],
+      "files": []
+    }
+  ]
+}

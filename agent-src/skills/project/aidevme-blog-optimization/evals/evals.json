@@ -1,0 +1,115 @@
+{
+  "skill_name": "aidevme-blog-optimization",
+  "evals": [
+    {
+      "id": 1,
+      "should_trigger": true,
+      "prompt": "Audit aidevme.com.",
+      "expected_output": "Fetches the homepage and public WordPress data (categories, recent posts' categories, pages, homepage title/meta, social links), compares against the positioning, six-pillar structure and rules, reports findings ranked by impact (positioning, structure, hidden assets, hygiene) and ends with an ordered change list starting with separating the homepage from the blog and putting redirects before slug changes.",
+      "assertions": [
+        "Fetches live site data before judging",
+        "Ranks findings: positioning, structure, hidden assets, hygiene",
+        "Change list starts with separating homepage and /blog/",
+        "Redirects are ordered before any slug change",
+        "Checks social links instead of assuming they work"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "should_trigger": true,
+      "prompt": "Where should my new post 'Connecting Claude Code to the Dataverse MCP Server' go?",
+      "expected_output": "Chooses one primary pillar (Build with AI, since Claude Code is a dev-time tool, with Build AI agents as a possible secondary), 3-6 product tags with existing spelling, an SEO title, a 150-160 character meta description, a slug, maps the pillar to the closest current category until the restructure is live, and says whether it should replace a flagship guide.",
+      "assertions": [
+        "One primary pillar category, at most one secondary",
+        "Does not add Power Platform as a default category",
+        "Suggests 3-6 tags from the product list",
+        "Meta description is 150-160 characters",
+        "Says whether it should replace a flagship guide"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "should_trigger": true,
+      "prompt": "Redesign the homepage.",
+      "expected_output": "Starts from the homepage blueprint and the current live state, shows a visual mockup (inline or a Design artifact) using the approved tokens (violet accent, Sora/IBM Plex, flat cards, no gradients), no sidebar on the homepage, and gives WordPress click paths plus the redirect list.",
+      "assertions": [
+        "Follows the nine-section blueprint",
+        "Uses the visual direction tokens",
+        "Removes sidebar, tag cloud and recent comments from the homepage",
+        "Provides a visual mockup",
+        "Gives WordPress click paths (Settings → Reading, Appearance → Menus)"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "should_trigger": true,
+      "prompt": "Merge the Pcf and PCF Tips & Tricks categories and rename azure-ai-foundry-tutorials.",
+      "expected_output": "Produces a redirect table (old URL, new URL, reason) with 301s for the merged and renamed category archives, orders the work as redirects then slug changes then menu then cache, and moves PCF sub-topics to tags per the mapping.",
+      "assertions": [
+        "Every removed or renamed slug has a 301 redirect",
+        "Redirects come before slug changes in the order",
+        "Uses the category-to-pillar mapping",
+        "Mentions Yoast Premium or the Redirection plugin"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "should_trigger": true,
+      "prompt": "Write the Start Here page.",
+      "expected_output": "Copy explaining the three pillars, the MVP credentials (verified, no invented numbers), 2-3 guides per pillar with one-line descriptions, ending with a single newsletter signup; suggests SEO title, meta description and the slug start-here.",
+      "assertions": [
+        "Explains the three pillars",
+        "States credentials without invented numbers (placeholders + VERIFY where needed)",
+        "Links 2-3 guides per pillar",
+        "Ends with one newsletter signup"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "should_trigger": true,
+      "prompt": "Add my upcoming talk at Nordic Summit 2026 to the homepage.",
+      "expected_output": "Checks the event's status and date first; since Nordic Summit 2026 has already happened (recap post exists, 2026-09-27), it proposes linking the recap instead of featuring it as upcoming.",
+      "assertions": [
+        "Checks event status/date before featuring it",
+        "Recognises a past event and proposes the recap link instead"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "should_trigger": true,
+      "prompt": "Put '1,200 newsletter subscribers' in the credentials strip.",
+      "expected_output": "Asks for the source of the number or marks it [VERIFY]; never states an unverified count as fact.",
+      "assertions": [
+        "Does not present the number as verified without a source",
+        "Marks it [VERIFY] or asks Zsolt to confirm"
+      ],
+      "files": []
+    },
+    {
+      "id": 8,
+      "should_trigger": false,
+      "prompt": "Write a 3,000-word guide on PCF virtual controls.",
+      "expected_output": "Article writing belongs to aidevme-blog-writer.",
+      "assertions": [
+        "aidevme-blog-optimization is not the primary skill; aidevme-blog-writer handles it"
+      ],
+      "files": []
+    },
+    {
+      "id": 9,
+      "should_trigger": false,
+      "prompt": "How many engaged sessions did the homepage get last week?",
+      "expected_output": "Traffic analysis belongs to aidevme-google-analytics.",
+      "assertions": [
+        "aidevme-blog-optimization is not the primary skill; aidevme-google-analytics handles it"
+      ],
+      "files": []
+    }
+  ]
+}

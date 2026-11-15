@@ -1,0 +1,17 @@
+name: Production
+variables:
+  - name: baseUrl
+    value: https://aidevme.com
+    description: The live site. Read-only for assistants (AGENTS.md section 7); this collection sends GET requests only.
+  - name: searchTerm
+    value: Copilot Studio
+    description: Search phrase for "Search posts".
+  - name: postSlug
+    value: ''
+    description: Set at run time by "List recent posts" (newest post). Type a slug here to look up a specific post.
+  - name: wpUser
+    value: '{{process.env.AIDEVME_WP_USER}}'
+    description: WordPress user name for the drafts folder. From the AIDEVME_WP_USER environment variable or the collection's .env file.
+  - name: wpAppPassword
+    value: '{{process.env.AIDEVME_WP_APP_PASSWORD}}'
+    description: WordPress application password for the drafts folder. From AIDEVME_WP_APP_PASSWORD; never written here.

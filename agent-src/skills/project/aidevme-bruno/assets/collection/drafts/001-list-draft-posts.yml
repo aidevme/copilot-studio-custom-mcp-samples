@@ -1,0 +1,55 @@
+info:
+  name: List draft posts
+  type: http
+  seq: 1
+  tags:
+    - auth
+
+http:
+  method: GET
+  url: "{{baseUrl}}/wp-json/wp/v2/posts?status=draft&per_page=20&_fields=id,slug,status,modified,title"
+  params:
+    - name: status
+      value: draft
+      type: query
+    - name: per_page
+      value: "20"
+      type: query
+    - name: _fields
+      value: id,slug,status,modified,title
+      type: query
+  auth:
+    type: basic
+    username: "{{wpUser}}"
+    password: "{{wpAppPassword}}"
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+  scripts:
+    - type: tests
+      code: |-
+        test("returns drafts only", function () {
+          const body = res.getBody();
+          expect(body).to.be.an("array");
+          body.forEach((post) => expect(post.status).to.equal("draft"));
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 30000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Draft posts, newest first. Still a read: GET only.
+
+  Needs a WordPress application password: AIDEVME_WP_USER and AIDEVME_WP_APP_PASSWORD in your shell (Bruno
+  CLI) or in the collection's .env file (Bruno app). 401 rest_forbidden_status = not signed in (missing or
+  wrong credentials); 403 rest_forbidden_status = signed in, but the user can't read drafts.
+
+  Tagged auth, so default runs leave it out: bru run --env Production --exclude-tags auth.
+
+  Auth: basic (application password). Expected: 200 with an array of drafts.

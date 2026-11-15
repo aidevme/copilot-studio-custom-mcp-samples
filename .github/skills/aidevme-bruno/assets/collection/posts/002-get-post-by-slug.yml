@@ -1,0 +1,53 @@
+info:
+  name: Get post by slug
+  type: http
+  seq: 2
+  tags:
+    - smoke
+
+http:
+  method: GET
+  url: "{{baseUrl}}/wp-json/wp/v2/posts?slug={{postSlug}}&_fields=id,slug,link,title,excerpt,categories,tags,yoast_head_json"
+  params:
+    - name: slug
+      value: "{{postSlug}}"
+      type: query
+    - name: _fields
+      value: id,slug,link,title,excerpt,categories,tags,yoast_head_json
+      type: query
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+  scripts:
+    - type: tests
+      code: |-
+        test("finds exactly one post", function () {
+          const body = res.getBody();
+          expect(body).to.be.an("array");
+          expect(body).to.have.lengthOf(1);
+        });
+
+        test("returns the post with its Yoast SEO data", function () {
+          const post = res.getBody()[0];
+          expect(post.slug).to.equal(bru.getVar("postSlug") || bru.getEnvVar("postSlug"));
+          expect(post).to.have.property("yoast_head_json");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 30000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  One post looked up by slug, with its excerpt and the yoast_head_json block (SEO title, description,
+  canonical, Open Graph) that Yoast SEO adds to the REST API.
+
+  postSlug comes from "List recent posts" in the same run, or from the Production environment when you
+  run this request on its own. An empty array means no published post has that slug.
+
+  Auth: none. Expected: 200 with an array of exactly one post.
