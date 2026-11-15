@@ -16,7 +16,7 @@ opens the repo must find the same thing.
 
 Open an issue and include:
 
-- the part and the folder, for example "Part 4, `dotnet-mcp-server/`"
+- the part and the folder, for example "Part 4, `src/dotnet-mcp-server/`"
 - what you ran, what you expected and what happened, with the output
 - whether the problem is in the repo, the post, or both
 
@@ -37,7 +37,10 @@ Don't paste tokens, keys or tenant IDs into an issue. Replace them with placehol
   in the post must change.
 - Keep package versions, API versions, the MCP protocol version (`2025-11-25`), ports, resource names and header
   names as they are, unless the change is about them.
-- `dotnet-mcp-server/src/` is the Part 4 state. `dotnet-mcp-server/variants/part-5-*` and `part-6-*` hold the later
+- Dependabot opens a monthly pull request against `dev` for NuGet, Docker and GitHub Actions updates (no major
+  versions for NuGet and Docker). Don't merge one without checking which posts quote the changed version, and list
+  them for an update.
+- `src/dotnet-mcp-server/src/` is the Part 4 state. `src/dotnet-mcp-server/variants/part-5-*` and `part-6-*` hold the later
   versions of the changed files. Don't merge them into `src/`.
 
 ### Rules every build path follows
@@ -46,7 +49,7 @@ Don't paste tokens, keys or tenant IDs into an issue. Replace them with placehol
    `userId` or `email`. Another customer's order returns "not found", not "forbidden".
 2. **Business rules are enforced on the server.** Returns only for delivered orders, within 30 days after
    delivery.
-3. **`contract/tools.json` is the tool contract.** Names, descriptions and input schemas stay the same on every
+3. **`src/contract/tools.json` is the tool contract.** Names, descriptions and input schemas stay the same on every
    path.
 4. **The `Contoso-Demo-Customer` header is for local testing only.** Never enable it in anything meant for
    deployment.
@@ -62,24 +65,24 @@ Class every contract change in the pull request:
 | REVIEW | Agent behavior can change | A description changed |
 | ADDITIVE | Safe for existing agents | A new tool or a new optional input |
 
-Update `contract/tools.json` in the same pull request. Ship breaking changes as a new tool or with a deprecation
+Update `src/contract/tools.json` in the same pull request. Ship breaking changes as a new tool or with a deprecation
 period, not as an in-place change.
 
 ## Build and test
 
 ```sh
 # C# server (Part 4)
-dotnet build dotnet-mcp-server/src/Contoso.OrdersMcp
-dotnet run --project dotnet-mcp-server/src/Contoso.OrdersMcp --urls http://localhost:5080
+dotnet build src/dotnet-mcp-server/src/Contoso.OrdersMcp
+dotnet run --project src/dotnet-mcp-server/src/Contoso.OrdersMcp --urls http://localhost:5080
 
 # Contract test against the running server
-pwsh ./tests/contract/Test-McpToolContract.ps1 -Endpoint http://localhost:5080/mcp
+pwsh ./src/tests/contract/Test-McpToolContract.ps1 -Endpoint http://localhost:5080/mcp
 
 # Compare two tools/list snapshots; exits with 1 on a breaking change
-node tests/contract/check-tool-contract.js contract/tools-before.json contract/tools.json
+node src/tests/contract/check-tool-contract.js src/contract/tools-before.json src/contract/tools.json
 
 # Bicep
-az bicep build --file apim/infra/mcp-server.bicep
+az bicep build --file src/apim/infra/mcp-server.bicep
 ```
 
 The `MCP contract test` workflow runs the contract test on every pull request. Say in the pull request what you

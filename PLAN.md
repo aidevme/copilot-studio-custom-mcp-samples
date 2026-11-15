@@ -24,12 +24,12 @@ Legend: ✅ done · 🔄 in progress · ⬜ not started
 | Repo | Public repo, MIT license, `main` and `dev` branches, README with the series map, social preview image, `.gitignore` | ✅ |
 | Guidance | `AGENTS.md` (code must match the posts, the two rules, no secrets) and `CLAUDE.md` pointing to it; PR template with the contract change classes | ✅ |
 | Extracted samples | All 85 code blocks from the drafts in `docs/…/samples/`, with `INDEX.md`; read-only reference | ✅ |
-| Contract (Parts 1, 6) | `contract/tools.json` (three tools) and `tools-before.json` | ✅ |
-| C# server (Part 4) | `dotnet-mcp-server/src/Contoso.OrdersMcp/`: tools, in-memory store with Part 4's demo data, return policy resource, Dockerfile, Container Apps deploy script, probes; builds locally | ✅ |
-| C# server (Parts 5, 6) | `dotnet-mcp-server/variants/part-5-customer-sign-in/` and `part-6-tool-design/`: the changed files only, not buildable on their own | ✅ |
+| Contract (Parts 1, 6) | `src/contract/tools.json` (three tools) and `tools-before.json` | ✅ |
+| C# server (Part 4) | `src/dotnet-mcp-server/src/Contoso.OrdersMcp/`: tools, in-memory store with Part 4's demo data, return policy resource, Dockerfile, Container Apps deploy script, probes; builds locally | ✅ |
+| C# server (Parts 5, 6) | `src/dotnet-mcp-server/variants/part-5-customer-sign-in/` and `part-6-tool-design/`: the changed files only, not buildable on their own | ✅ |
 | API Management (Part 3) | Agent-facade OpenAPI, four policies, Bicep for the MCP server and passthrough, KQL query, import and smoke scripts | 🔄 |
 | Logic Apps (Part 2) | `create_return` workflow, `host.json`, `parameters.json`, `.vscode/mcp.json`, test scripts | 🔄 |
-| Identity (Part 5) | `identity/external-id/register-apps.sh` | ✅ |
+| Identity (Part 5) | `src/identity/external-id/register-apps.sh` | ✅ |
 | Copilot Studio | Four connector definitions, `agent-instructions.md` | 🔄 |
 | Governance (Part 7) | DLP URL patterns script, `pac` export/import script, deployment settings, Agent 365 hunting query | ✅ |
 | Contract tests (Parts 6, 7) | `Test-McpToolContract.ps1`, `check-tool-contract.js`, protocol examples; `contract-test.yml` runs the PowerShell test against the C# server on pushes to `main`/`dev` and on PRs | ✅ |
@@ -51,19 +51,21 @@ Legend: ✅ done · 🔄 in progress · ⬜ not started
 
 ### Missing code
 
-- ⬜ **Order Management API** (`order-api/`): the three operations, `GET /customers/by-identity/{oid}`, the
+- ⬜ **Order Management API** (`src/order-api/`): the three operations, `GET /customers/by-identity/{oid}`, the
   `Contoso-Customer-Id` header, Entra auth for managed identities, the full OpenAPI file, and
   `data/seed.json` as the one demo data set. Parts 2 and 3 can't run end to end without it.
 - ⬜ **Logic Apps:** the `find_orders` and `get_order_status` workflows, a `local.settings.example.json`, and Bicep
   for the Standard logic app and plan.
 - ⬜ **API Management:** `apim.bicep` (the `apim` resource the Part 3 Bicep depends on).
 - ⬜ **Infrastructure:** Bicep for the Container Apps environment, Key Vault, Log Analytics and Application Insights.
-- ⬜ **Unit tests:** `dotnet-mcp-server/tests/Contoso.OrdersMcp.Tests/` for ownership ("not found" for another
+- ⬜ **Unit tests:** `src/dotnet-mcp-server/tests/Contoso.OrdersMcp.Tests/` for ownership ("not found" for another
   customer's order) and the 30-day return window.
 - ⬜ **Copilot Studio solutions:** unpack `ContosoOrderMcpConnector` and `ContosoCustomerServiceAgent` into
-  `copilot-studio/solutions/` once they're built in Dev.
-- ⬜ **CI:** add `dotnet test`, `az bicep build` for every Bicep file and markdown lint; Dependabot for NuGet, npm
-  and GitHub Actions.
+  `src/copilot-studio/solutions/` once they're built in Dev.
+- ⬜ **CI:** add `dotnet test`, `az bicep build` for every Bicep file and markdown lint.
+- ✅ **Dependabot:** alerts and security updates on; `.github/dependabot.yml` runs monthly version updates for
+  NuGet, Docker and GitHub Actions against `dev`, without major versions for NuGet and Docker. Add `src/order-api/`
+  once it has a project.
 
 ### Inconsistencies between posts and repo
 
@@ -71,7 +73,7 @@ Fix the post or the file so they match; details in the research README.
 
 - ⬜ Part 6 says Part 4 calls the Order Management API; Part 4 keeps the in-memory store.
 - ⬜ API Management OAuth policy: Part 3 and Part 5 versions differ; keep one file, make the other an excerpt.
-- ⬜ Tool contract: `part-1/01` and `part-6/02` differ; regenerate the snippets from `contract/tools.json`.
+- ⬜ Tool contract: `part-1/01` and `part-6/02` differ; regenerate the snippets from `src/contract/tools.json`.
 - ⬜ `host.json`: Part 2 sets the SSE-only `AllowCrossWorkerCommunication` the post says isn't needed.
 - ⬜ Resource names (`rg-contoso-mcp` / `rg-contoso-orders`, `kv-contoso-mcp` / `kv-contoso-demo`) and placeholder
   names (`{{external-id-tenant-id}}` / `{{external-tenant-id}}`): pick one set and list it in the README.
@@ -88,8 +90,9 @@ Fix the post or the file so they match; details in the research README.
 
 ### Repo
 
-- ⬜ GitHub settings: branch protection on `main` (PRs, `contract-test` check), secret scanning and push protection,
-  topics.
+- ✅ GitHub settings: branch protection on `main` (PR required, `mcp-contract` check, applies to admins, no force
+  pushes), secret scanning and push protection.
+- ⬜ GitHub settings: repository topics.
 - ⬜ Line endings: add `.gitattributes` with LF for `*.sh` and `Dockerfile`, so scripts run on Linux.
 - ⬜ Agent layer: decide which of the 9 blog-only skills (`aidevme-blog-writer`, `-seo-audit`, `-social`, …) belong
   here, run `sync.ps1`, and commit `agent-src/`, `.claude/` and `.github/skills/` (not `settings.local.json`).
@@ -103,8 +106,8 @@ Newest first.
 
 | Date | Decision |
 | --- | --- |
-| 2026-11-15 | `dotnet-mcp-server/src/` is the Part 4 state; Parts 5 and 6 live in `variants/` as changed files only |
-| 2026-11-15 | `contract/tools.json` is the single tool contract; changes are classed BREAKING, REVIEW or ADDITIVE |
+| 2026-11-15 | `src/dotnet-mcp-server/src/` is the Part 4 state; Parts 5 and 6 live in `variants/` as changed files only |
+| 2026-11-15 | `src/contract/tools.json` is the single tool contract; changes are classed BREAKING, REVIEW or ADDITIVE |
 | 2026-11-15 | The customer ID comes from the caller's identity, never a tool input; another customer's order is "not found" |
 | 2026-11-15 | The `Contoso-Demo-Customer` header is for local testing only and never enabled in a deployment |
 | 2026-11-15 | `docs/` is a read-only snapshot of the drafts' code; fixes go to the component folders |

@@ -1,0 +1,43 @@
+# Dependabot version updates.
+#
+# The posts quote package and image versions, so every update is a reviewed pull request that also checks the
+# posts (see CONTRIBUTING.md). Updates run monthly, target dev, and skip major versions for NuGet and Docker:
+# a major update (MCP C# SDK 3.x, .NET 11) means rewriting posts and is done by hand.
+#
+# Security updates are separate: they are turned on in the repository settings and target main.
+
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: /src/dotnet-mcp-server/src/Contoso.OrdersMcp
+    target-branch: dev
+    schedule:
+      interval: monthly
+    groups:
+      nuget:
+        patterns:
+          - "*"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
+
+  - package-ecosystem: docker
+    directory: /src/dotnet-mcp-server
+    target-branch: dev
+    schedule:
+      interval: monthly
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns:
+          - "*"
