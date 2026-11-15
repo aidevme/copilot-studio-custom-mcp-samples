@@ -1,6 +1,6 @@
 # copilot-studio-custom-mcp-samples — Plan and progress
 
-<!-- cspell:ignore aidevme Zsolt Zombik Contoso APIM Entra Bicep Dataverse oid evals worklog -->
+<!-- cspell:ignore aidevme Zsolt Zombik Contoso APIM Entra Bicep Dataverse oid evals -->
 
 **Mission.** Give readers of the aidevme.com series **Custom MCP servers for Copilot Studio** (7 parts) working code
 that matches the posts: one Contoso order-and-returns agent, built with Logic Apps Standard, Azure API Management
