@@ -1,0 +1,17 @@
+<policies>
+    <inbound>
+        <base />
+        <!-- The agent calls /me/orders; the backend expects /customers/{customerId}/orders. -->
+        <rewrite-uri template="@("/customers/" + context.Request.Headers.GetValueOrDefault("Contoso-Customer-Id", "unknown") + "/orders")"
+                     copy-unmatched-params="true" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

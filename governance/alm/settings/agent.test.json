@@ -1,0 +1,10 @@
+{
+  "EnvironmentVariables": [],
+  "ConnectionReferences": [
+    {
+      "LogicalName": "cts_ContosoOrderManagementMcp",
+      "ConnectionId": "3f2b7c9e0d4a4e1f8a6b5c4d3e2f1a0b",
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_cts-5fcontoso-20order-20management-20mcp-5f1a2b3c4d5e6f7a8b"
+    }
+  ]
+}

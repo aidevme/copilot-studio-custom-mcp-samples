@@ -1,0 +1,9 @@
+{
+  "EnvironmentVariables": [
+    {
+      "SchemaName": "cts_OrderMcpHost",
+      "Value": "mcp-test.contoso.com"
+    }
+  ],
+  "ConnectionReferences": []
+}

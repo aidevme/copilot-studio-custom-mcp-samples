@@ -1,0 +1,10 @@
+{
+  "OrderApiBaseUrl": {
+    "type": "String",
+    "value": "@appsetting('OrderApi_BaseUrl')"
+  },
+  "OrderApiAudience": {
+    "type": "String",
+    "value": "@appsetting('OrderApi_Audience')"
+  }
+}

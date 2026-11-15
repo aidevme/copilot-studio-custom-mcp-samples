@@ -1,0 +1,28 @@
+# MCP requests from Part 1: https://aidevme.com/copilot-studio-custom-mcp-servers-when-you-need-one/
+POST /mcp HTTP/1.1
+Host: localhost:5288
+Content-Type: application/json
+Accept: application/json, text/event-stream
+MCP-Protocol-Version: 2025-11-25
+Contoso-Demo-Customer: CU-3001
+
+{"jsonrpc":"2.0","id":1,"method":"tools/list"}
+
+###
+
+POST /mcp HTTP/1.1
+Host: localhost:5288
+Content-Type: application/json
+Accept: application/json, text/event-stream
+MCP-Protocol-Version: 2025-11-25
+Contoso-Demo-Customer: CU-3001
+
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/call",
+  "params": {
+    "name": "get_order_status",
+    "arguments": { "orderId": "SO-10023" }
+  }
+}

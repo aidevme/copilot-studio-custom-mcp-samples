@@ -1,0 +1,3 @@
+CloudAppEvents
+| where ActionType in ( "ExecuteToolByGateway")
+| where RawEventData contains "tool name"

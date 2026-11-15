@@ -1,0 +1,81 @@
+{
+  "tools": [
+    {
+      "name": "find_orders",
+      "description": "Lists the signed-in customer's Contoso orders, newest first. Use it when the customer doesn't know the order number.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "default": "Any",
+            "description": "Order status filter: Any, Open, Shipped, Delivered or Cancelled. Default Any."
+          },
+          "from": {
+            "type": "string",
+            "default": "",
+            "description": "Earliest order date as an ISO 8601 date, for example 2026-10-01. Leave empty for no lower limit."
+          },
+          "to": {
+            "type": "string",
+            "default": "",
+            "description": "Latest order date as an ISO 8601 date. Leave empty for no upper limit."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_order_status",
+      "description": "Returns the status of one Contoso order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "pattern": "^SO-[0-9]{5}$",
+            "description": "Order number, for example SO-10023."
+          }
+        },
+        "required": ["orderId"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_return",
+      "description": "Starts a return for one line of a delivered Contoso order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "pattern": "^SO-[0-9]{5}$",
+            "description": "Order number, for example SO-10023."
+          },
+          "lineNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Order line to return, as shown by get_order_status, for example 1."
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Number of items to return from that line, at least 1."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Return reason: Damaged, WrongItem, NotAsDescribed or NoLongerNeeded."
+          },
+          "comment": {
+            "type": "string",
+            "default": "",
+            "maxLength": 500,
+            "description": "Optional details from the customer, for example what is damaged."
+          }
+        },
+        "required": ["orderId", "lineNumber", "quantity", "reason"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+swagger: '2.0'
+info:
+  title: Contoso Order Management MCP
+  description: >-
+    MCP server for Contoso order status and returns (find_orders,
+    get_order_status, create_return). Streamable HTTP transport.
+  version: 1.0.0
+# Host comes from the environment variable cts_OrderMcpHost
+# (for example mcp-test.contoso.com). Set it on the General tab.
+host: '@environmentVariables("cts_OrderMcpHost")'
+basePath: /
+schemes:
+  - https
+paths:
+  /mcp:
+    post:
+      summary: Contoso Order Management MCP server
+      description: Finds the signed-in customer's Contoso orders, reads order status and starts returns.
+      x-ms-agentic-protocol: mcp-streamable-1.0
+      operationId: InvokeMCP
+      responses:
+        '200':
+          description: Success
