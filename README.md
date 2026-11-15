@@ -67,15 +67,7 @@ Each folder has its own `README.md` with what it needs and how to run it.
 
 ## What you need
 
-Not every part needs everything. Each folder's README lists its own prerequisites.
-
-- **Local:** .NET 10 SDK, Node.js 22.19 or newer (MCP Inspector), Azure CLI with Bicep, PowerShell 7, Power
-  Platform CLI (`pac`), VS Code with the Azure Logic Apps (Standard) extension.
-- **Azure:** a subscription for Container Apps, a Standard logic app and an API Management instance (Developer tier
-  or above; the Consumption tier doesn't support MCP servers). These resources bill per hour while they exist, so
-  delete them when you're done.
-- **Microsoft Entra:** an External ID tenant for customer sign-in (Part 5).
-- **Power Platform:** an environment with Copilot Studio; Dev, Test and Prod environments for the ALM part (Part 7).
+The tools and cloud resources each part needs are listed in [DEVELOPER.md](DEVELOPER.md#what-you-need).
 
 ## Demo data and secrets
 
@@ -86,8 +78,8 @@ Not every part needs everything. Each folder's README lists its own prerequisite
 
 ## Contributing
 
-Issues and pull requests are welcome. The pull request template asks which post a change belongs to, and how a
-tool contract change affects existing agents. Please keep to demo data and never commit secrets.
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to report a problem, make a
+change and class a tool contract change.
 
 ## License
 
