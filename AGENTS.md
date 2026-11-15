@@ -7,13 +7,13 @@ Guidance for AI coding agents working in this repository. Humans: start with [RE
 Sample code for the aidevme.com blog series **Custom MCP servers for Copilot Studio** (7 parts). One demo, a Contoso
 customer service agent that looks up orders and starts returns, is built three ways:
 
-- `logic-apps/`: Logic Apps Standard workflows as an MCP server (Part 2)
-- `apim/`: Azure API Management exposing a REST API as MCP tools (Part 3)
-- `dotnet-mcp-server/`: a C# server (ASP.NET Core, `ModelContextProtocol.AspNetCore`) on Azure Container Apps (Parts 4 to 6)
+- `src/logic-apps/`: Logic Apps Standard workflows as an MCP server (Part 2)
+- `src/apim/`: Azure API Management exposing a REST API as MCP tools (Part 3)
+- `src/dotnet-mcp-server/`: a C# server (ASP.NET Core, `ModelContextProtocol.AspNetCore`) on Azure Container Apps (Parts 4 to 6)
 
-Supporting folders: `contract/` (the shared tool contract), `order-api/` (backend, not written yet), `identity/`
-(Entra External ID, Part 5), `copilot-studio/` (custom connectors, agent instructions), `governance/` (DLP, ALM,
-monitoring, Part 7), `tests/` (contract tests). Each folder has a `README.md`; read it before changing the folder.
+Supporting folders: `src/contract/` (the shared tool contract), `src/order-api/` (backend, not written yet), `src/identity/`
+(Entra External ID, Part 5), `src/copilot-studio/` (custom connectors, agent instructions), `src/governance/` (DLP, ALM,
+monitoring, Part 7), `src/tests/` (contract tests). Each folder has a `README.md`; read it before changing the folder.
 
 `docs/copilot-studio-custom-mcp/<timestamp>_sample-code-and-repo-plan/` holds the code blocks extracted verbatim
 from the blog drafts plus a plan with known gaps and inconsistencies. Treat `docs/` as a read-only reference
@@ -29,7 +29,7 @@ repo must find the same thing.
   what in the post must change.
 - Keep package versions, API versions, protocol version (`2025-11-25`), ports, resource names and header names as
   they are unless asked. Don't "upgrade" them.
-- `dotnet-mcp-server/src/` is the **Part 4** state. `dotnet-mcp-server/variants/part-5-*` and `part-6-*` are the later
+- `src/dotnet-mcp-server/src/` is the **Part 4** state. `src/dotnet-mcp-server/variants/part-5-*` and `part-6-*` are the later
   versions of the changed files; they use different types and are not meant to build on their own. Don't merge them
   into `src/` unless asked.
 - Scripts under `*/test/*.sh` are mostly command collections from the posts, with placeholders. They aren't all
@@ -41,10 +41,10 @@ repo must find the same thing.
    `userId` or `email`. Another customer's order returns "not found", not "forbidden".
 2. **Business rules are enforced on the server, not left to the model.** Returns only for delivered orders, within
    30 days after delivery.
-3. **The tool contract is `contract/tools.json`.** Three tools: `find_orders`, `get_order_status`, `create_return`.
+3. **The tool contract is `src/contract/tools.json`.** Three tools: `find_orders`, `get_order_status`, `create_return`.
    Names, descriptions and input schemas must stay in sync across all paths. Description changes alter how the
    Copilot Studio orchestrator routes, so treat them as behavior changes. Classify contract changes as BREAKING,
-   REVIEW or ADDITIVE (see `.github/pull_request_template.md`) and update `contract/tools.json` with them.
+   REVIEW or ADDITIVE (see `.github/pull_request_template.md`) and update `src/contract/tools.json` with them.
 4. The `Contoso-Demo-Customer` header (`Demo:AllowCustomerHeader`) is a local-testing shortcut. Never enable it in
    anything meant for deployment, and never widen what it can do.
 
@@ -61,19 +61,19 @@ Toolchain: .NET 10 SDK, Node.js 22.19+ (MCP Inspector), Azure CLI with Bicep, Po
 
 ```sh
 # C# server (Part 4)
-dotnet build dotnet-mcp-server/src/Contoso.OrdersMcp
-dotnet run --project dotnet-mcp-server/src/Contoso.OrdersMcp --urls http://localhost:5080
+dotnet build src/dotnet-mcp-server/src/Contoso.OrdersMcp
+dotnet run --project src/dotnet-mcp-server/src/Contoso.OrdersMcp --urls http://localhost:5080
 
 # Contract test against a running server
-pwsh ./tests/contract/Test-McpToolContract.ps1 -Endpoint http://localhost:5080/mcp
+pwsh ./src/tests/contract/Test-McpToolContract.ps1 -Endpoint http://localhost:5080/mcp
 # Compare two tools/list snapshots; exit 1 on a breaking change
-node tests/contract/check-tool-contract.js contract/tools-before.json contract/tools.json
+node src/tests/contract/check-tool-contract.js src/contract/tools-before.json src/contract/tools.json
 
 # Bicep
-az bicep build --file apim/infra/mcp-server.bicep
+az bicep build --file src/apim/infra/mcp-server.bicep
 ```
 
-There are no unit tests yet (`dotnet-mcp-server/tests/` is a placeholder). Nothing in this repo has been deployed
+There are no unit tests yet (`src/dotnet-mcp-server/tests/` is a placeholder). Nothing in this repo has been deployed
 to Azure as part of CI; don't claim something works in Azure or Copilot Studio unless you ran it there.
 
 CI: `.github/workflows/contract-test.yml` starts the C# server and runs the PowerShell contract test on every push to

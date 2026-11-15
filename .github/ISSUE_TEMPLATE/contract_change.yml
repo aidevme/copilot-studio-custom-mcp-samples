@@ -1,5 +1,5 @@
 name: Tool contract change
-description: Change a tool's name, description, inputs or behavior in contract/tools.json.
+description: Change a tool's name, description, inputs or behavior in src/contract/tools.json.
 title: "Contract: "
 labels: ["enhancement"]
 body:
@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         The Copilot Studio orchestrator chooses tools by their descriptions, so a description change is a behavior change.
-        `contract/tools.json` is the contract every build path implements.
+        `src/contract/tools.json` is the contract every build path implements.
   - type: dropdown
     id: tool
     attributes:

@@ -6,15 +6,15 @@
 
 <!-- Tick every folder this pull request touches. -->
 
-- [ ] `contract/`: tool contract (Parts 1 and 6)
-- [ ] `order-api/`: Order Management API and demo data
-- [ ] `logic-apps/`: Logic Apps Standard (Part 2)
-- [ ] `apim/`: API Management (Part 3)
-- [ ] `dotnet-mcp-server/`: C# server on Container Apps (Parts 4 to 6)
-- [ ] `identity/`: Entra External ID (Part 5)
-- [ ] `copilot-studio/`: connectors and solutions
-- [ ] `governance/`: data policies, ALM, monitoring (Part 7)
-- [ ] `tests/`, `.github/`: contract tests and workflows
+- [ ] `src/contract/`: tool contract (Parts 1 and 6)
+- [ ] `src/order-api/`: Order Management API and demo data
+- [ ] `src/logic-apps/`: Logic Apps Standard (Part 2)
+- [ ] `src/apim/`: API Management (Part 3)
+- [ ] `src/dotnet-mcp-server/`: C# server on Container Apps (Parts 4 to 6)
+- [ ] `src/identity/`: Entra External ID (Part 5)
+- [ ] `src/copilot-studio/`: connectors and solutions
+- [ ] `src/governance/`: data policies, ALM, monitoring (Part 7)
+- [ ] `src/tests/`, `.github/`: contract tests and workflows
 
 **Post the change belongs to:** <!-- e.g. Part 4. Does the post's code still match? If not, say what must change in the post. -->
 
@@ -22,7 +22,7 @@
 
 - [ ] Builds and runs locally (`dotnet build`, `az bicep build`, or the folder's own README steps)
 - [ ] Contract test passes, or the contract change is described below
-- [ ] Demo data only: Contoso customers, orders and returns from `order-api/data/`; no real names, tenants or URLs
+- [ ] Demo data only: Contoso customers, orders and returns from `src/order-api/data/`; no real names, tenants or URLs
 - [ ] No secrets: no keys, client secrets, connection strings or tokens; placeholders such as `<external-tenant-id>` instead
 - [ ] Folder `README.md` updated if setup, commands or behavior changed
 - [ ] Package and API versions in the change match the post, or the post is listed for an update
@@ -41,7 +41,7 @@ REVIEW:   description changed. The orchestrator routes on descriptions, so agent
 ADDITIVE: new tool or new optional input. Safe for existing agents, but a new tool appears in every agent with "Allow all".
 -->
 
-- [ ] `contract/tools.json` updated to the new `tools/list` output
+- [ ] `src/contract/tools.json` updated to the new `tools/list` output
 - [ ] Read or write and side effects stated for every new tool (reversible? financial impact?)
 - [ ] The customer ID still comes from the caller's identity, never from a tool input; other customers' orders return "not found"
 - [ ] Business rules (delivered orders only, 30-day return window) are enforced on the server, not left to the model

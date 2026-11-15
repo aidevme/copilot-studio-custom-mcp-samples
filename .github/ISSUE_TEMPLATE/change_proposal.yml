@@ -26,15 +26,15 @@ body:
       label: Folders affected
       multiple: true
       options:
-        - contract/
-        - order-api/
-        - logic-apps/
-        - apim/
-        - dotnet-mcp-server/
-        - identity/
-        - copilot-studio/
-        - governance/
-        - tests/
+        - src/contract/
+        - src/order-api/
+        - src/logic-apps/
+        - src/apim/
+        - src/dotnet-mcp-server/
+        - src/identity/
+        - src/copilot-studio/
+        - src/governance/
+        - src/tests/
         - .github/
     validations:
       required: true
