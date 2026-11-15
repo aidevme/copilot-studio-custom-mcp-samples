@@ -1,0 +1,111 @@
+name: Problem with a sample
+description: A sample doesn't build, run or behave as the post says.
+title: "[Part N] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Please check [CONTRIBUTING.md](https://github.com/aidevme/copilot-studio-custom-mcp-samples/blob/main/CONTRIBUTING.md) first.
+
+        **Don't paste tokens, keys, connection strings or tenant IDs.** Replace them with placeholders such as `<external-tenant-id>`.
+  - type: dropdown
+    id: part
+    attributes:
+      label: Part
+      description: Which post of the series does the problem belong to?
+      options:
+        - "Part 1: When to build one and how"
+        - "Part 2: Logic Apps Standard"
+        - "Part 3: Azure API Management"
+        - "Part 4: C# server on Azure Container Apps"
+        - "Part 5: Customer sign-in"
+        - "Part 6: Tool design and testing"
+        - "Part 7: Governance, DLP and ALM"
+        - "Not sure"
+    validations:
+      required: true
+  - type: dropdown
+    id: folder
+    attributes:
+      label: Folder
+      description: Select every folder involved.
+      multiple: true
+      options:
+        - src/contract/
+        - src/order-api/
+        - src/logic-apps/
+        - src/apim/
+        - src/dotnet-mcp-server/
+        - src/identity/
+        - src/copilot-studio/
+        - src/governance/
+        - src/tests/
+        - .github/
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: ran
+    attributes:
+      label: What you ran
+      description: The commands or steps, in order.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened
+      description: Include the error and the output. Remove secrets first.
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where is the problem?
+      options:
+        - In the repo
+        - In the post
+        - In both
+        - Not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Where you ran it
+      multiple: true
+      options:
+        - Locally
+        - Azure
+        - Copilot Studio
+        - GitHub Actions
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      description: Only the tools that matter for this problem.
+      placeholder: |
+        .NET SDK: 10.0.300
+        Node.js: 22.19.0
+        Azure CLI: 2.87.0
+        PowerShell: 7.5
+        OS: Windows 11
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I read the folder's `README.md`.
+          required: true
+        - label: I removed all tokens, keys, connection strings and tenant IDs from this issue.
+          required: true

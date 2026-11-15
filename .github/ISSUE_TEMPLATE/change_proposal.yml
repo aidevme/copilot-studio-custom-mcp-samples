@@ -1,0 +1,66 @@
+name: Propose a change
+description: Suggest a larger change or a new sample before you write the code.
+title: "Proposal: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a larger change, let's agree on it here first. For a change to a tool's name, description or inputs, use **Tool contract change** instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What you want to change
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: The problem it solves for readers of the series.
+    validations:
+      required: true
+  - type: dropdown
+    id: folder
+    attributes:
+      label: Folders affected
+      multiple: true
+      options:
+        - src/contract/
+        - src/order-api/
+        - src/logic-apps/
+        - src/apim/
+        - src/dotnet-mcp-server/
+        - src/identity/
+        - src/copilot-studio/
+        - src/governance/
+        - src/tests/
+        - .github/
+    validations:
+      required: true
+  - type: textarea
+    id: posts
+    attributes:
+      label: Effect on the posts
+      description: Which parts would need an update so the post's code still matches the repo? Write "none" if none.
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Rules every build path follows
+      options:
+        - label: The customer ID still comes from the caller's identity, never from a tool input.
+          required: true
+        - label: Business rules (delivered orders only, 30-day return window) stay on the server.
+          required: true
+        - label: The change uses demo data only and adds no secrets.
+          required: true
+  - type: dropdown
+    id: help
+    attributes:
+      label: Will you open the pull request?
+      options:
+        - "Yes"
+        - "Yes, with help"
+        - "No"

@@ -16,8 +16,8 @@ jobs:
           dotnet-version: '10.0.x'
       - name: Start the MCP server
         run: |
-          dotnet run --project dotnet-mcp-server/src/Contoso.OrdersMcp --urls http://localhost:5080 &
+          dotnet run --project src/dotnet-mcp-server/src/Contoso.OrdersMcp --urls http://localhost:5080 &
           for i in $(seq 1 30); do curl -s -o /dev/null http://localhost:5080/mcp && break; sleep 2; done
       - name: Check the tool contract
         shell: pwsh
-        run: ./tests/contract/Test-McpToolContract.ps1 -Endpoint http://localhost:5080/mcp
+        run: ./src/tests/contract/Test-McpToolContract.ps1 -Endpoint http://localhost:5080/mcp

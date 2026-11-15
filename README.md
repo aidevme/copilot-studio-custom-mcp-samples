@@ -22,13 +22,13 @@ Microsoft Entra External ID, tool contract tests and Power Platform ALM scripts 
 
 | Part | Post | Folder | Status |
 | --- | --- | --- | --- |
-| 1 | [Copilot Studio Custom MCP Servers: When to Build One and How](https://aidevme.com/copilot-studio-custom-mcp-servers-when-you-need-one/) | [`contract/`](contract/), [`order-api/`](order-api/) | Planned |
-| 2 | [Logic Apps Standard MCP Server for Copilot Studio: Low-Code Guide](https://aidevme.com/copilot-studio-custom-mcp-server-logic-apps/) | [`logic-apps/`](logic-apps/) | Planned |
-| 3 | [Azure API Management as an MCP Server for Copilot Studio: REST APIs as Tools](https://aidevme.com/copilot-studio-custom-mcp-server-api-management/) | [`apim/`](apim/) | Planned |
-| 4 | [Build a Pro-Code MCP Server in C# on Azure for Copilot Studio](https://aidevme.com/copilot-studio-custom-mcp-server-azure-pro-code/) | [`dotnet-mcp-server/`](dotnet-mcp-server/) | Planned |
-| 5 | [Securing Custom MCP Servers for Copilot Studio: Customer Sign-In](https://aidevme.com/copilot-studio-custom-mcp-server-security-oauth-entra-id/) | [`identity/`](identity/), [`dotnet-mcp-server/`](dotnet-mcp-server/), [`apim/`](apim/) | Planned |
-| 6 | [Copilot Studio MCP Tool Design: Descriptions, Tool Count and Testing](https://aidevme.com/copilot-studio-custom-mcp-tool-design-testing/) | [`contract/`](contract/), [`tests/`](tests/), [`dotnet-mcp-server/`](dotnet-mcp-server/) | Planned |
-| 7 | [Governing Custom MCP Servers in Copilot Studio: DLP, ALM and Approval](https://aidevme.com/copilot-studio-custom-mcp-governance-alm/) | [`governance/`](governance/), [`copilot-studio/`](copilot-studio/) | Planned |
+| 1 | [Copilot Studio Custom MCP Servers: When to Build One and How](https://aidevme.com/copilot-studio-custom-mcp-servers-when-you-need-one/) | [`src/contract/`](src/contract/), [`src/order-api/`](src/order-api/) | Planned |
+| 2 | [Logic Apps Standard MCP Server for Copilot Studio: Low-Code Guide](https://aidevme.com/copilot-studio-custom-mcp-server-logic-apps/) | [`src/logic-apps/`](src/logic-apps/) | Planned |
+| 3 | [Azure API Management as an MCP Server for Copilot Studio: REST APIs as Tools](https://aidevme.com/copilot-studio-custom-mcp-server-api-management/) | [`src/apim/`](src/apim/) | Planned |
+| 4 | [Build a Pro-Code MCP Server in C# on Azure for Copilot Studio](https://aidevme.com/copilot-studio-custom-mcp-server-azure-pro-code/) | [`src/dotnet-mcp-server/`](src/dotnet-mcp-server/) | Planned |
+| 5 | [Securing Custom MCP Servers for Copilot Studio: Customer Sign-In](https://aidevme.com/copilot-studio-custom-mcp-server-security-oauth-entra-id/) | [`src/identity/`](src/identity/), [`src/dotnet-mcp-server/`](src/dotnet-mcp-server/), [`src/apim/`](src/apim/) | Planned |
+| 6 | [Copilot Studio MCP Tool Design: Descriptions, Tool Count and Testing](https://aidevme.com/copilot-studio-custom-mcp-tool-design-testing/) | [`src/contract/`](src/contract/), [`src/tests/`](src/tests/), [`src/dotnet-mcp-server/`](src/dotnet-mcp-server/) | Planned |
+| 7 | [Governing Custom MCP Servers in Copilot Studio: DLP, ALM and Approval](https://aidevme.com/copilot-studio-custom-mcp-governance-alm/) | [`src/governance/`](src/governance/), [`src/copilot-studio/`](src/copilot-studio/) | Planned |
 
 ## The demo
 
@@ -51,31 +51,74 @@ delivery, and the server enforces that, not the model.
 
 ## Repository layout
 
+The sample code lives under [`src/`](src/), one folder per component:
+
 | Folder | Content |
 | --- | --- |
-| [`contract/`](contract/) | The tool contract every path implements: names, descriptions, input schemas |
-| [`order-api/`](order-api/) | The Order Management API with in-memory demo data, and its OpenAPI description |
-| [`logic-apps/`](logic-apps/) | Logic Apps Standard workflows as an MCP server |
-| [`apim/`](apim/) | API Management: the agent facade, policies, Bicep, telemetry query |
-| [`dotnet-mcp-server/`](dotnet-mcp-server/) | The C# MCP server (ASP.NET Core, MCP C# SDK) for Azure Container Apps |
-| [`identity/`](identity/) | Entra External ID app registrations for customer sign-in |
-| [`copilot-studio/`](copilot-studio/) | Custom connector definitions and the agent and connector solutions |
-| [`governance/`](governance/) | Data policy URL patterns, solution export and import, monitoring queries |
-| [`tests/`](tests/) | Contract tests that compare a server's `tools/list` with the contract |
+| [`src/contract/`](src/contract/) | The tool contract every path implements: names, descriptions, input schemas |
+| [`src/order-api/`](src/order-api/) | The Order Management API with in-memory demo data, and its OpenAPI description |
+| [`src/logic-apps/`](src/logic-apps/) | Logic Apps Standard workflows as an MCP server |
+| [`src/apim/`](src/apim/) | API Management: the agent facade, policies, Bicep, telemetry query |
+| [`src/dotnet-mcp-server/`](src/dotnet-mcp-server/) | The C# MCP server (ASP.NET Core, MCP C# SDK) for Azure Container Apps |
+| [`src/identity/`](src/identity/) | Entra External ID app registrations for customer sign-in |
+| [`src/copilot-studio/`](src/copilot-studio/) | Custom connector definitions and the agent and connector solutions |
+| [`src/governance/`](src/governance/) | Data policy URL patterns, solution export and import, monitoring queries |
+| [`src/tests/`](src/tests/) | Contract tests that compare a server's `tools/list` with the contract |
 
 Each folder has its own `README.md` with what it needs and how to run it.
 
+In detail, with the parts each file belongs to. Folders marked *planned* are empty for now.
+
+```text
+copilot-studio-custom-mcp-samples/
+├── README.md, DEVELOPER.md, CONTRIBUTING.md, LICENSE
+├── src/
+│   ├── contract/
+│   │   ├── tools.json                    # the tool contract (Parts 1 and 6)
+│   │   └── tools-before.json             # the "before" tool list (Part 6)
+│   ├── order-api/                        # the Order Management API (planned)
+│   │   ├── src/                          # three operations, /customers/by-identity/{oid} (planned)
+│   │   ├── data/                         # seed.json, the one demo data set (planned)
+│   │   └── openapi/                      # orders-api.yaml (planned)
+│   ├── logic-apps/                       # Part 2
+│   │   ├── src/                          # host.json, parameters.json, create_return/
+│   │   ├── infra/                        # Bicep for the logic app and its plan (planned)
+│   │   ├── test/                         # inspector.sh, smoke.sh, requests.http
+│   │   └── .vscode/mcp.json
+│   ├── apim/                             # Part 3
+│   │   ├── openapi/orders-agent-facade.yaml
+│   │   ├── policies/                     # OAuth, OAuth with oid header, demo key, find_orders rewrite
+│   │   ├── infra/                        # mcp-server.bicep, mcp-passthrough.bicep
+│   │   ├── scripts/import-api.sh
+│   │   ├── queries/latest-tool-calls.kql
+│   │   └── test/smoke.sh
+│   ├── dotnet-mcp-server/                # Parts 4 to 6
+│   │   ├── src/Contoso.OrdersMcp/        # the Part 4 server: Program.cs, Tools/, Data/, Resources/
+│   │   ├── variants/                     # part-5-customer-sign-in/, part-6-tool-design/
+│   │   ├── tests/Contoso.OrdersMcp.Tests/  # unit tests (planned)
+│   │   ├── infra/                        # deploy-containerapp.sh, probes.yaml
+│   │   ├── test/                         # smoke.sh, inspector.sh
+│   │   └── Dockerfile
+│   ├── identity/
+│   │   └── external-id/register-apps.sh  # Part 5
+│   ├── copilot-studio/
+│   │   ├── connectors/                   # custom connector definitions (Parts 1, 4, 5 and 7)
+│   │   ├── agent-instructions.md         # Part 6
+│   │   └── solutions/                    # unpacked solutions (Part 7, planned)
+│   ├── governance/                       # Part 7
+│   │   ├── dlp/Set-McpUrlPatterns.ps1
+│   │   ├── alm/                          # deploy-mcp-solutions.ps1, settings/
+│   │   └── queries/agent365-mcp-hunting.kql
+│   └── tests/
+│       ├── contract/                     # Test-McpToolContract.ps1 (Part 6), check-tool-contract.js (Part 7)
+│       └── http/protocol-examples.http   # raw MCP requests (Part 1)
+├── docs/                                 # the code blocks from the posts, as a read-only reference
+└── .github/                              # contract test workflow, issue forms, pull request template
+```
+
 ## What you need
 
-Not every part needs everything. Each folder's README lists its own prerequisites.
-
-- **Local:** .NET 10 SDK, Node.js 22.19 or newer (MCP Inspector), Azure CLI with Bicep, PowerShell 7, Power
-  Platform CLI (`pac`), VS Code with the Azure Logic Apps (Standard) extension.
-- **Azure:** a subscription for Container Apps, a Standard logic app and an API Management instance (Developer tier
-  or above; the Consumption tier doesn't support MCP servers). These resources bill per hour while they exist, so
-  delete them when you're done.
-- **Microsoft Entra:** an External ID tenant for customer sign-in (Part 5).
-- **Power Platform:** an environment with Copilot Studio; Dev, Test and Prod environments for the ALM part (Part 7).
+The tools and cloud resources each part needs are listed in [DEVELOPER.md](DEVELOPER.md#what-you-need).
 
 ## Demo data and secrets
 
@@ -86,8 +129,8 @@ Not every part needs everything. Each folder's README lists its own prerequisite
 
 ## Contributing
 
-Issues and pull requests are welcome. The pull request template asks which post a change belongs to, and how a
-tool contract change affects existing agents. Please keep to demo data and never commit secrets.
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to report a problem, make a
+change and class a tool contract change.
 
 ## License
 

@@ -1,6 +1,6 @@
 # tests
 
-Contract tests that check a server's `tools/list` against the tool contract (`contract/`).
+Contract tests that check a server's `tools/list` against the tool contract ([`src/contract/`](../contract/)).
 
 - `contract/`: the PowerShell contract test (Part 6), the Node contract check (Part 7) and MCP Inspector commands
 - `http/`: raw MCP requests from Part 1

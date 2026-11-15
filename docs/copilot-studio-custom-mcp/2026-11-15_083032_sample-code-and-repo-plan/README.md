@@ -1,4 +1,4 @@
-<!-- cspell:ignore aidevme Contoso APIM Entra ciamlogin Kusto Bicep RMA oid azd pac -->
+<!-- cspell:ignore aidevme Contoso APIM Entra ciamlogin Kusto Bicep RMA oid azd pac containerapp -->
 
 # Research: sample code and repository plan for "Custom MCP servers for Copilot Studio"
 
@@ -88,42 +88,43 @@ Learn in this run. Facts that the drafts themselves mark `[VERIFY]` stay open.
 
 ```text
 copilot-studio-custom-mcp-samples/
-├── README.md                 # series map: which folder matches which post, placeholders, demo data
+├── README.md                     # series map: which folder matches which post, placeholders, demo data
 ├── LICENSE
-├── contract/
-│   └── tools.json            # the tool contract: names, descriptions, input schemas (Parts 1 and 6)
-├── order-api/                # NEW: the backend REST API (ASP.NET Core minimal API)
-│   ├── src/                  # three operations, /customers/by-identity/{oid}, Entra auth
-│   ├── data/seed.json        # the one demo data set for every path
-│   └── openapi/orders-api.yaml
-├── logic-apps/               # Part 2 (folder name fixed in the post)
-│   ├── src/                  # host.json, parameters.json, find_orders/, get_order_status/, create_return/
-│   ├── infra/                # NEW: Bicep for the Standard logic app and its plan
-│   ├── test/                 # inspector.sh, smoke.sh, requests.http
-│   └── .vscode/mcp.json
-├── apim/                     # Part 3 (folder name fixed in the post)
-│   ├── openapi/orders-agent-facade.yaml
-│   ├── policies/             # mcp-server-oauth.xml, mcp-server-demo.xml, find-orders-operation.xml
-│   ├── infra/                # NEW apim.bicep + mcp-server.bicep + mcp-passthrough.bicep
-│   ├── queries/latest-tool-calls.kql
-│   └── test/smoke.sh
-├── dotnet-mcp-server/        # Parts 4–6 (folder name fixed in the post)
-│   ├── src/Contoso.OrdersMcp/
-│   ├── tests/Contoso.OrdersMcp.Tests/   # NEW: unit tests for ownership and the return window
-│   ├── infra/                # deploy-containerapp.sh, probes.yaml (later: Bicep)
-│   ├── Dockerfile
-│   └── test/                 # smoke.sh, inspector.sh, requests.http
-├── identity/
-│   └── external-id/register-apps.sh     # Part 5
-├── copilot-studio/
-│   ├── connectors/           # swagger files from Parts 1, 4, 5 and 7
-│   ├── agent-instructions.md # Part 6
-│   └── solutions/            # NEW: unpacked solutions once built (Part 7)
-├── governance/               # Part 7
-│   ├── dlp/Set-McpUrlPatterns.ps1
-│   ├── alm/deploy-mcp-solutions.ps1, settings/
-│   └── queries/agent365-mcp-hunting.kql
-├── tests/contract/           # Test-McpToolContract.ps1 (Part 6), check-tool-contract.js (Part 7)
+├── src/                          # all sample code; the posts must use these src/ paths
+│   ├── contract/
+│   │   └── tools.json            # the tool contract: names, descriptions, input schemas (Parts 1 and 6)
+│   ├── order-api/                # NEW: the backend REST API (ASP.NET Core minimal API)
+│   │   ├── src/                  # three operations, /customers/by-identity/{oid}, Entra auth
+│   │   ├── data/seed.json        # the one demo data set for every path
+│   │   └── openapi/orders-api.yaml
+│   ├── logic-apps/               # Part 2 (the post must say src/logic-apps/)
+│   │   ├── src/                  # host.json, parameters.json, find_orders/, get_order_status/, create_return/
+│   │   ├── infra/                # NEW: Bicep for the Standard logic app and its plan
+│   │   ├── test/                 # inspector.sh, smoke.sh, requests.http
+│   │   └── .vscode/mcp.json
+│   ├── apim/                     # Part 3 (the post must say src/apim/)
+│   │   ├── openapi/orders-agent-facade.yaml
+│   │   ├── policies/             # mcp-server-oauth.xml, mcp-server-demo.xml, find-orders-operation.xml
+│   │   ├── infra/                # NEW apim.bicep + mcp-server.bicep + mcp-passthrough.bicep
+│   │   ├── queries/latest-tool-calls.kql
+│   │   └── test/smoke.sh
+│   ├── dotnet-mcp-server/        # Parts 4–6 (the posts must say src/dotnet-mcp-server/)
+│   │   ├── src/Contoso.OrdersMcp/
+│   │   ├── tests/Contoso.OrdersMcp.Tests/   # NEW: unit tests for ownership and the return window
+│   │   ├── infra/                # deploy-containerapp.sh, probes.yaml (later: Bicep)
+│   │   ├── Dockerfile
+│   │   └── test/                 # smoke.sh, inspector.sh, requests.http
+│   ├── identity/
+│   │   └── external-id/register-apps.sh     # Part 5
+│   ├── copilot-studio/
+│   │   ├── connectors/           # swagger files from Parts 1, 4, 5 and 7
+│   │   ├── agent-instructions.md # Part 6
+│   │   └── solutions/            # NEW: unpacked solutions once built (Part 7)
+│   ├── governance/               # Part 7
+│   │   ├── dlp/Set-McpUrlPatterns.ps1
+│   │   ├── alm/deploy-mcp-solutions.ps1, settings/
+│   │   └── queries/agent365-mcp-hunting.kql
+│   └── tests/contract/           # Test-McpToolContract.ps1 (Part 6), check-tool-contract.js (Part 7)
 └── .github/
     ├── workflows/            # build.yml, contract-test.yml (Part 6), bicep-lint.yml
     ├── ISSUE_TEMPLATE/
