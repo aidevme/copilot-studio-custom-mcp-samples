@@ -1,5 +1,7 @@
 # Custom MCP servers for Copilot Studio: samples
 
+![Custom MCP servers for Copilot Studio: samples](assets/copilot-studio-custom-mcp-samples-social-preview.png)
+
 Sample code for the [aidevme.com](https://aidevme.com) series **Custom MCP servers for Copilot Studio**. One demo,
 a Contoso customer service agent that answers order questions and starts returns, is built three ways: with
 Logic Apps Standard, Azure API Management and a C# server on Azure Container Apps. Customer sign-in with
