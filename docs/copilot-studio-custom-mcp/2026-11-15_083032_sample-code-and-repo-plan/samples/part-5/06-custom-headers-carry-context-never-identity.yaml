@@ -1,0 +1,15 @@
+paths:
+  /mcp:
+    post:
+      summary: Contoso Orders MCP server
+      x-ms-agentic-protocol: mcp-streamable-1.0
+      operationId: InvokeMCP
+      parameters:
+        - name: Contoso-Market
+          in: header
+          type: string
+          required: false
+          description: Shop market for this agent, DE or NL.
+      responses:
+        '200':
+          description: Success

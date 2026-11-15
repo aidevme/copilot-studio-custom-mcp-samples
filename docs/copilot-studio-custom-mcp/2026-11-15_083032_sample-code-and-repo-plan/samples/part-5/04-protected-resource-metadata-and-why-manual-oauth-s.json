@@ -1,0 +1,8 @@
+{
+  "resource": "https://orders-mcp.contoso.com/mcp",
+  "authorization_servers": [
+    "https://contosocustomers.ciamlogin.com/<tenant-id>/v2.0"
+  ],
+  "scopes_supported": ["Orders.Read"],
+  "bearer_methods_supported": ["header"]
+}

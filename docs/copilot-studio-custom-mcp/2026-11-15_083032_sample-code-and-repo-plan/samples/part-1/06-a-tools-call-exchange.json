@@ -1,0 +1,13 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "An error occurred invoking 'get_order_status': Order SO-10031 was not found."
+      }
+    ],
+    "isError": true
+  },
+  "id": 3,
+  "jsonrpc": "2.0"
+}

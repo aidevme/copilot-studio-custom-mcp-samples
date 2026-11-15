@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":13,"method":"tools/call","params":{"name":"create_return","arguments":{"orderId":"SO-10023","lineNumber":1,"quantity":1,"reason":"Damaged","comment":"Arrived with a cracked lid"}}}

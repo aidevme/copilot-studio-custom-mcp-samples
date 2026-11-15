@@ -1,0 +1,11 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "An error occurred invoking 'create_return': Line 3 (Descaler, 250 ml) has quantity 2. Ask the customer for a quantity from 1 to 2."
+      }
+    ],
+    "isError": true
+  }
+}

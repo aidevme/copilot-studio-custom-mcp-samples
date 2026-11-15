@@ -1,0 +1,29 @@
+{
+  "tools": [
+    {
+      "name": "getOrder",
+      "description": "Gets an order.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "customerId": { "type": "string" },
+          "status": { "type": ["string", "null"], "enum": ["Open", "Shipped", "Delivered", "Cancelled", null] }
+        },
+        "required": ["id", "customerId"]
+      }
+    },
+    {
+      "name": "processReturn",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "order": { "type": "string" },
+          "item": { "type": "string" },
+          "details": { "type": "string" }
+        },
+        "required": ["order", "item", "details"]
+      }
+    }
+  ]
+}

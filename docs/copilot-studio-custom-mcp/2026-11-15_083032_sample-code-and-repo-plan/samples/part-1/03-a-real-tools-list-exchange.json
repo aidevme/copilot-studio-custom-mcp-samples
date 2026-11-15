@@ -1,0 +1,42 @@
+{
+  "result": {
+    "tools": [
+      {
+        "name": "create_return",
+        "description": "Starts a return for one line of a delivered Contoso order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "orderId": {
+              "description": "Order number, for example SO-10023.",
+              "type": "string"
+            },
+            "lineNumber": {
+              "description": "Order line to return, as shown by get_order_status, for example 1.",
+              "type": "integer"
+            },
+            "quantity": {
+              "description": "Number of items to return from that line, at least 1.",
+              "type": "integer"
+            },
+            "reason": {
+              "description": "Return reason: Damaged, WrongItem, NotAsDescribed or NoLongerNeeded.",
+              "type": "string"
+            },
+            "comment": {
+              "description": "Optional details from the customer, for example what is damaged.",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "required": ["orderId", "lineNumber", "quantity", "reason"]
+        },
+        "annotations": {
+          "destructiveHint": false
+        }
+      }
+    ]
+  },
+  "id": 1,
+  "jsonrpc": "2.0"
+}

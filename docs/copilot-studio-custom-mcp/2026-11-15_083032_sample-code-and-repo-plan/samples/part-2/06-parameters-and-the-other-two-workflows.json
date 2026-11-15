@@ -1,0 +1,21 @@
+{
+  "Find_customer_orders": {
+    "type": "Http",
+    "runAfter": {
+      "Get_caller_customer_id": ["Succeeded"]
+    },
+    "inputs": {
+      "method": "GET",
+      "uri": "@{parameters('OrderApiBaseUrl')}/customers/@{encodeUriComponent(outputs('Get_caller_customer_id'))}/orders",
+      "queries": {
+        "status": "@{coalesce(triggerBody()?['status'], 'Any')}",
+        "from": "@{coalesce(triggerBody()?['from'], '')}",
+        "to": "@{coalesce(triggerBody()?['to'], '')}"
+      },
+      "authentication": {
+        "type": "ManagedServiceIdentity",
+        "audience": "@parameters('OrderApiAudience')"
+      }
+    }
+  }
+}

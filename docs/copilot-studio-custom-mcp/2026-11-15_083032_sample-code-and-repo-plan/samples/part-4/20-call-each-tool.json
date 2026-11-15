@@ -1,0 +1,1 @@
+{"result":{"content":[{"type":"text","text":"An error occurred invoking 'get_order_status': No order SO-10027 was found for this customer. Check the number, or use find_orders."}],"isError":true},"id":11,"jsonrpc":"2.0"}

@@ -1,0 +1,4 @@
+[{"orderId":"SO-10035","status":"Open","orderedAt":"2026-11-12","items":["Contoso Stand Mixer"]},
+ {"orderId":"SO-10031","status":"Shipped","orderedAt":"2026-11-11","items":["Contoso Espresso Machine"]},
+ {"orderId":"SO-10023","status":"Delivered","orderedAt":"2026-11-03","items":["Contoso Kettle 1.7 l","Contoso Toaster 2-slice","Contoso Glass Set, 6 pcs"]},
+ {"orderId":"SO-10019","status":"Delivered","orderedAt":"2026-09-26","items":["Contoso Blender 1.5 l"]}]

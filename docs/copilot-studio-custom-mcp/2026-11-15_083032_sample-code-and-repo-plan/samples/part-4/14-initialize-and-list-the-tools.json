@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "orderId": { "description": "Order number, for example SO-10023.", "type": "string" },
+    "lineNumber": { "description": "Line number of the item on the order (1, 2, 3...), from get_order_status.", "type": "integer" },
+    "quantity": { "description": "How many units to return, at least 1.", "type": "integer" },
+    "reason": { "description": "Return reason: Damaged, WrongItem, NotAsDescribed or NoLongerNeeded.", "type": "string" },
+    "comment": { "description": "Optional. The customer's own words about the problem.", "type": "string", "default": "" }
+  },
+  "required": ["orderId", "lineNumber", "quantity", "reason"]
+}

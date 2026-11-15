@@ -1,0 +1,65 @@
+{
+  "tools": [
+    {
+      "name": "get_order_status",
+      "title": "Get order status",
+      "description": "Returns the status of one Contoso order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "description": "Order number in the format SO-<digits>, for example SO-10023. Take it from the customer or from find_orders.",
+            "type": "string"
+          }
+        },
+        "required": ["orderId"]
+      },
+      "annotations": {
+        "title": "Get order status",
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "create_return",
+      "title": "Start a return",
+      "description": "Starts a return for one line of a delivered Contoso order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "description": "Order number in the format SO-<digits>, for example SO-10023.",
+            "type": "string"
+          },
+          "lineNumber": {
+            "description": "Line number of the item, taken from get_order_status (1, 2, 3 ...). Never guess it from how the customer counts items.",
+            "type": "integer"
+          },
+          "quantity": {
+            "description": "How many units to return: at least 1 and at most the quantity on that order line.",
+            "type": "integer"
+          },
+          "reason": {
+            "description": "Return reason: Damaged, WrongItem, NotAsDescribed or NoLongerNeeded.",
+            "type": "string",
+            "enum": ["Damaged", "WrongItem", "NotAsDescribed", "NoLongerNeeded"]
+          },
+          "comment": {
+            "description": "Optional note in the customer's words, for example 'Lid cracked on arrival'. Max 500 characters.",
+            "type": "string",
+            "default": ""
+          }
+        },
+        "required": ["orderId", "lineNumber", "quantity", "reason"]
+      },
+      "annotations": {
+        "title": "Start a return",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

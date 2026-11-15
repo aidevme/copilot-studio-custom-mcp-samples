@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "orderId": {
+      "type": "string",
+      "description": "The order number, for example SO-10023. Use get_order_status first if the line number is unknown."
+    },
+    "lineNumber": {
+      "type": "integer",
+      "description": "The order line to return, numbered 1, 2, 3 as listed by get_order_status."
+    },
+    "quantity": {
+      "type": "integer",
+      "description": "How many items of that line to return. At least 1 and not more than ordered."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Return reason: Damaged, WrongItem, NotAsDescribed or NoLongerNeeded."
+    },
+    "comment": {
+      "type": "string",
+      "default": "",
+      "description": "Optional note from the customer, for example what is damaged. Leave it empty if there is none."
+    }
+  },
+  "required": ["orderId", "lineNumber", "quantity", "reason"]
+}

@@ -1,0 +1,16 @@
+properties:
+  template:
+    containers:
+      - name: contoso-orders-mcp
+        probes:
+          - type: startup
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          - type: liveness
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 30

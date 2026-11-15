@@ -1,0 +1,11 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "An error occurred invoking 'create_return': The 30-day return window for SO-10019 ended on 2026-10-15. Tell the customer the order can't be returned; don't retry."
+      }
+    ],
+    "isError": true
+  }
+}

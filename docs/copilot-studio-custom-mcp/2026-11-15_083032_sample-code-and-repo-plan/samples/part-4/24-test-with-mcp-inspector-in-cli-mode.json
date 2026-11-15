@@ -1,0 +1,15 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"returnId\":\"RMA-5003\",\"orderId\":\"SO-10023\",\"lineNumber\":2,\"product\":\"Contoso Toaster 2-slice\",\"quantity\":1,\"reason\":\"NoLongerNeeded\",\"comment\":\"\",\"status\":\"Requested\",\"createdAt\":\"2026-11-13T07:00:18.2083526+00:00\"}"
+    },
+    {
+      "name": "return_policy",
+      "uri": "contoso://policies/returns",
+      "description": "What happens next: return label, refund and the 30-day rule.",
+      "mimeType": "text/markdown",
+      "type": "resource_link"
+    }
+  ]
+}

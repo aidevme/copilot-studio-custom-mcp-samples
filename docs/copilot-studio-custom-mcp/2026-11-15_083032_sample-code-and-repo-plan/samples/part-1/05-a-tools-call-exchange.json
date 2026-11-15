@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"OrderId\":\"SO-10023\",\"Status\":\"Delivered\",\"Carrier\":\"DHL\",\"TrackingNumber\":\"00340434161094000000\",\"ExpectedDelivery\":\"2026-11-10\",\"Lines\":[{\"LineNumber\":1,\"Product\":\"Electric kettle 1.7 l\",\"Quantity\":1},{\"LineNumber\":2,\"Product\":\"Toaster, 2 slots\",\"Quantity\":1}]}"
+      }
+    ]
+  },
+  "id": 2,
+  "jsonrpc": "2.0"
+}

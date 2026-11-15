@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "default": "Any",
+      "description": "Order status filter: Any, Open, Shipped, Delivered or Cancelled. Use Any when the customer doesn't say."
+    },
+    "from": {
+      "type": "string",
+      "default": "",
+      "description": "Optional earliest order date as an ISO 8601 date, for example 2026-10-01. Leave it empty for no lower limit."
+    },
+    "to": {
+      "type": "string",
+      "default": "",
+      "description": "Optional latest order date as an ISO 8601 date, for example 2026-11-13. Leave it empty for no upper limit."
+    }
+  }
+}

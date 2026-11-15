@@ -1,0 +1,13 @@
+Checked 5 tool(s) at http://localhost:5081/mcp
+FAIL  getOrder: description is shorter than 40 characters
+FAIL  getOrder: readOnlyHint isn't set
+FAIL  getOrder.id: parameter has no description
+FAIL  getOrder.customerId: identity must come from the caller, not a tool input
+FAIL  getOrder.customerId: parameter has no description
+FAIL  getOrder.status: parameter has no description
+FAIL  getOrder.status: 'type' is an array; Copilot Studio truncates the schema
+FAIL  processReturn: tool has no description
+FAIL  processReturn: readOnlyHint isn't set
+FAIL  processReturn.order: parameter has no description
+FAIL  processReturn.item: parameter has no description
+FAIL  processReturn.details: parameter has no description

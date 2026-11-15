@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "orderId": {
+      "type": "string",
+      "description": "The order number, for example SO-10023. Order numbers start with SO- followed by five digits."
+    }
+  },
+  "required": ["orderId"]
+}
