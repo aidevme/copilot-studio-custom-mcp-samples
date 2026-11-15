@@ -1,0 +1,12 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"orderId\":\"SO-10023\",\"status\":\"Delivered\",\"orderedAt\":\"2026-11-05\",\"warehouse\":\"Hamburg\",\"carrier\":\"DHL\",\"trackingNumber\":\"DEMO-DHL-0010023\",\"expectedDelivery\":\"2026-11-08\",\"deliveredAt\":\"2026-11-08\",\"lines\":[{\"lineNumber\":1,\"product\":\"AIDevMe Kettle 1.7 l\",\"quantity\":1,\"returnedQuantity\":0},{\"lineNumber\":2,\"product\":\"AIDevMe Toaster 2-slice\",\"quantity\":1,\"returnedQuantity\":0},{\"lineNumber\":3,\"product\":\"AIDevMe Glass Set, 6 pcs\",\"quantity\":2,\"returnedQuantity\":1}]}"
+      }
+    ]
+  },
+  "id": 2,
+  "jsonrpc": "2.0"
+}
