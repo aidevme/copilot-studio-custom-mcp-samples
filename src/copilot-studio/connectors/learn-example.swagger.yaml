@@ -6,7 +6,7 @@ info:
   title: AIDevMe Order Service MCP
   description: MCP server for AIDevMe order status and returns in Germany and the Netherlands
   version: 1.0.0
-host: orders-mcp.aidevme.com
+host: orders-mcp.aidevme-samples.com
 basePath: /
 schemes:
   - https

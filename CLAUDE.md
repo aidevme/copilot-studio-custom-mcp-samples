@@ -17,7 +17,7 @@ Guidance for AI coding agents working in this repository. Humans: start with [RE
 
 ## What this repo is
 
-Sample code for the aidevme.com blog series **Custom MCP servers for Copilot Studio** (7 parts). One demo, a AIDevMe
+Sample code for the aidevme.com blog series **Custom MCP servers for Copilot Studio** (7 parts). One demo, an AIDevMe
 customer service agent that looks up orders and starts returns, is built three ways:
 
 - `src/logic-apps/`: Logic Apps Standard workflows as an MCP server (Part 2)
@@ -64,8 +64,8 @@ repo must find the same thing.
 ## Data and secrets
 
 - Demo data only: AIDevMe as the fictional retailer, customers like `CU-3001`, orders like `SO-10023`, returns like
-  `RMA-5001`. Example hosts are `aidevme.com` subdomains such as `orders-mcp.aidevme.com`, used as placeholders. No
-  real names or tenants, and no other domains or URLs than Microsoft's and aidevme.com's public docs.
+  `RMA-5001`. Example hosts are `aidevme-samples.com` subdomains such as `orders-mcp.aidevme-samples.com`. No
+  real names or tenants. Never use the production domain or tenant, `aidevme.com`, for sample resources; it appears only in links to the blog.
 - No keys, client secrets, connection strings, tokens, tenant or subscription IDs. Use placeholders such as
   `<external-tenant-id>`, and `*.example` files for local settings.
 

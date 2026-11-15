@@ -109,7 +109,7 @@ public sealed partial class OrderTools(OrderStore store, ICustomerContext custom
     private static void ValidateOrderId(string orderId)
     {
         if (!OrderIdPattern().IsMatch(orderId))
-            throw new McpException($"'{orderId}' isn't a AIDevMe order number. Order numbers look like SO-10023.");
+            throw new McpException($"'{orderId}' isn't an AIDevMe order number. Order numbers look like SO-10023.");
     }
 
     // Same answer for "doesn't exist" and "belongs to another customer", so order numbers can't be probed.

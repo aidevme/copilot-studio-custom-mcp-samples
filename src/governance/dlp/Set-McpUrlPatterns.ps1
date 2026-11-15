@@ -20,7 +20,7 @@ $UrlPatterns = @{
         @{
             order                             = 1
             customConnectorRuleClassification = "Confidential"
-            pattern                           = "https://mcp-prod.aidevme.com*"
+            pattern                           = "https://mcp-prod.aidevme-samples.com*"
         },
         @{
             order                             = 2

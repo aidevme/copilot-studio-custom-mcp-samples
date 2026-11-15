@@ -9,7 +9,7 @@ info:
     GET /customers/{customerId}/orders, and API Management rewrites /me/orders to it
     with the customer ID from the caller's identity.
 servers:
-  - url: https://orders-api.aidevme.com
+  - url: https://orders-api.aidevme-samples.com
 paths:
   /me/orders:
     get:

@@ -91,8 +91,8 @@ didn't test, for example "not deployed to Azure".
 ## Demo data and secrets
 
 - **Demo data only:** AIDevMe as the fictional retailer, customers such as `CU-3001`, orders such as `SO-10023`,
-  returns such as `RMA-5001`. Example hosts are placeholder `aidevme.com` subdomains such as
-  `orders-mcp.aidevme.com`; use your own host when you deploy. No real names, tenants or other domains.
+  returns such as `RMA-5001`. Example hosts are placeholder `aidevme-samples.com` subdomains such as
+  `orders-mcp.aidevme-samples.com`; use your own host when you deploy. No real names, tenants or other domains.
 - **No secrets:** no keys, client secrets, connection strings, tokens, tenant or subscription IDs. Use placeholders
   such as `<external-tenant-id>`, and `*.example` files for local settings.
 

@@ -9,6 +9,6 @@ az apim api import \
   --display-name "AIDevMe Order Management API" \
   --specification-format OpenApi \
   --specification-path ./order-management-agent.yaml \
-  --service-url https://orders-api.aidevme.com \
+  --service-url https://orders-api.aidevme-samples.com \
   --protocols https \
   --subscription-required true

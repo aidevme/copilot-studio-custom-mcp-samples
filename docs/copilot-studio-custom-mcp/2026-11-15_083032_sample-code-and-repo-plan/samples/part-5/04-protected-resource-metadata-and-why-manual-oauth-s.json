@@ -1,5 +1,5 @@
 {
-  "resource": "https://orders-mcp.aidevme.com/mcp",
+  "resource": "https://orders-mcp.aidevme-samples.com/mcp",
   "authorization_servers": [
     "https://aidevmecustomers.ciamlogin.com/<tenant-id>/v2.0"
   ],

@@ -6,7 +6,7 @@ info:
     get_order_status, create_return). Streamable HTTP transport.
   version: 1.0.0
 # Host comes from the environment variable cts_OrderMcpHost
-# (for example mcp-test.aidevme.com). Set it on the General tab.
+# (for example mcp-test.aidevme-samples.com). Set it on the General tab.
 host: '@environmentVariables("cts_OrderMcpHost")'
 basePath: /
 schemes:
