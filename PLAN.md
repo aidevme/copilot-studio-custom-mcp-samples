@@ -27,13 +27,14 @@ Legend: ✅ done · 🔄 in progress · ⬜ not started
 | Contract (Parts 1, 6) | `src/contract/tools.json` (three tools) and `tools-before.json` | ✅ |
 | C# server (Part 4) | `src/dotnet-mcp-server/src/AIDevMe.OrdersMcp/`: tools, in-memory store with Part 4's demo data, return policy resource, Dockerfile, Container Apps deploy script, probes; builds locally | ✅ |
 | C# server (Parts 5, 6) | `src/dotnet-mcp-server/variants/part-5-customer-sign-in/` and `part-6-tool-design/`: the changed files only, not buildable on their own | ✅ |
-| API Management (Part 3) | Agent-facade OpenAPI, four policies, Bicep for the MCP server and passthrough, KQL query, import and smoke scripts | 🔄 |
-| Logic Apps (Part 2) | `create_return` workflow, `host.json`, `parameters.json`, `.vscode/mcp.json`, test scripts | 🔄 |
+| API Management (Part 3) | Agent-facade OpenAPI, four policies, `apim.bicep` (instance, named values, product, facade), `mcp-server.bicep`, `deploy.sh`, KQL query, import and smoke scripts; not deployed yet | 🔄 |
+| Logic Apps (Part 2) | All three workflows, `host.json`, `parameters.json`, `local.settings.example.json`, `main.bicep` and `deploy.sh`, `.vscode/mcp.json`, test scripts; not deployed yet | 🔄 |
 | Identity (Part 5) | `src/identity/external-id/register-apps.sh` | ✅ |
 | Copilot Studio | Four connector definitions, `agent-instructions.md` | 🔄 |
 | Governance (Part 7) | DLP URL patterns script, `pac` export/import script, deployment settings, Agent 365 hunting query | ✅ |
 | Contract tests (Parts 6, 7) | `Test-McpToolContract.ps1`, `check-tool-contract.js`, protocol examples; `contract-test.yml` runs the PowerShell test against the C# server on pushes to `main`/`dev` and on PRs | ✅ |
-| Order Management API | Folder and README only | ⬜ |
+| Order Management API | `src/order-api/`: ASP.NET Core minimal API with Entra auth for managed identities, `data/seed.json`, full OpenAPI, Dockerfile, register and deploy scripts; tested locally, not deployed yet | ✅ |
+| Shared Azure base | `src/infra/base.bicep` and `deploy-base.sh`: Log Analytics, Application Insights, Key Vault, Container Apps environment; deploy order in `DEVELOPER.md` | ✅ |
 | Agent layer | `agent-src/` with 16 skills and 1 agent, synced to `.claude/` and `.github/` by `sync.ps1`; parity check clean | ✅ |
 
 ---
@@ -46,7 +47,7 @@ Legend: ✅ done · 🔄 in progress · ⬜ not started
   the final state on `main` with a tag per post (the research run's option A)?
 - ⬜ **Demo data:** the C# server uses Part 4's set (`CU-3001`: `SO-10019`, `SO-10023`, `SO-10031`, `SO-10035`;
   `CU-3002`: `SO-10027`). Confirm it, then align Parts 2 (`SO-10099`), 3 (`SO-10024`) and 6 (`SO-10040`) to it.
-- ⬜ **Order Management API stack:** ASP.NET Core like the C# server, sharing the seed data?
+- ✅ **Order Management API stack:** ASP.NET Core minimal API on .NET 10, demo data in `src/order-api/data/seed.json`.
 - ⬜ **CI and Azure:** build and test only, or deploy too (OIDC, no secrets)?
 - ⬜ **The one tool contract:** `src/contract/tools.json` is Part 1's version; the C# server differs in 14 places
   (no `pattern`, `minimum`, `maxLength` or `additionalProperties`; other parameter descriptions) and adds `title`
@@ -55,13 +56,16 @@ Legend: ✅ done · 🔄 in progress · ⬜ not started
 
 ### Missing code
 
-- ⬜ **Order Management API** (`src/order-api/`): the three operations, `GET /customers/by-identity/{oid}`, the
-  `AIDevMe-Customer-Id` header, Entra auth for managed identities, the full OpenAPI file, and
-  `data/seed.json` as the one demo data set. Parts 2 and 3 can't run end to end without it.
-- ⬜ **Logic Apps:** the `find_orders` and `get_order_status` workflows, a `local.settings.example.json`, and Bicep
-  for the Standard logic app and plan.
-- ⬜ **API Management:** `apim.bicep` (the `apim` resource the Part 3 Bicep depends on).
-- ⬜ **Infrastructure:** Bicep for the Container Apps environment, Key Vault, Log Analytics and Application Insights.
+- ✅ **Order Management API, Logic Apps workflows and Bicep, `apim.bicep`, shared base:** written and checked
+  locally (`dotnet build`, `az bicep build`, `bash -n`); none deployed yet.
+- ⬜ **API Management forwards tool calls without a token:** the OAuth policy uses `authentication-managed-identity`
+  only for the `by-identity` lookup, so with `Auth__Enabled=true` the Order Management API answers `401` to the
+  forwarded `find_orders`, `get_order_status` and `create_return` calls. Add `authentication-managed-identity` for
+  the backend to the policies (and the Part 3 post), or test Part 3 against the API with auth off.
+- ⬜ **Verify on the first deployment:** that importing the facade names the operations `find-orders`,
+  `get-order-status` and `create-return`, as `mcp-server.bicep` expects (the facade's operationIds use underscores).
+- ⬜ **Order Management API container image:** `docker build` wasn't run locally (no Docker); `az containerapp up`
+  builds it in Azure.
 - ⬜ **Unit tests:** `src/dotnet-mcp-server/tests/AIDevMe.OrdersMcp.Tests/` for ownership ("not found" for another
   customer's order) and the 30-day return window.
 - ⬜ **Copilot Studio solutions:** unpack `AIDevMeOrderMcpConnector` and `AIDevMeCustomerServiceAgent` into
@@ -83,6 +87,9 @@ Fix the post or the file so they match; details in the research README.
   the real responses into the post.
 - ✅ Part 1's Learn-style connector is in `src/copilot-studio/connectors/learn-example.swagger.yaml`.
 - ⬜ `host.json`: Part 2 sets the SSE-only `AllowCrossWorkerCommunication` the post says isn't needed.
+- ⬜ Part 3 post: `mcp-server.bicep` now loads the policies from `../policies/` with the repo's file names (it
+  pointed to files that didn't exist), and `scripts/import-api.sh` still uses `rg-aidevme-orders` and
+  `./order-management-agent.yaml`. Align the post's Bicep and import commands with the repo.
 - ⬜ Resource names (`rg-aidevme-mcp` / `rg-aidevme-orders`, `kv-aidevme-mcp` / `kv-aidevme-demo`) and placeholder
   names (`{{external-id-tenant-id}}` / `{{external-tenant-id}}`): pick one set and list it in the README.
 

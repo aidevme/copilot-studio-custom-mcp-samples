@@ -1,0 +1,115 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "When_a_HTTP_request_is_received": {
+        "type": "Request",
+        "kind": "Http",
+        "description": "Returns the status of one AIDevMe order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.",
+        "inputs": {
+          "method": "POST",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "orderId": {
+                "type": "string",
+                "description": "The order number, for example SO-10023. Order numbers start with SO- followed by five digits."
+              }
+            },
+            "required": ["orderId"]
+          }
+        }
+      }
+    },
+    "actions": {
+      "Get_caller_customer_id": {
+        "type": "Compose",
+        "runAfter": {},
+        "inputs": "@coalesce(triggerOutputs()?['headers']?['AIDevMe-Demo-Customer'], '')"
+      },
+      "Get_order": {
+        "type": "Http",
+        "runAfter": {
+          "Get_caller_customer_id": ["Succeeded"]
+        },
+        "inputs": {
+          "method": "GET",
+          "uri": "@{parameters('OrderApiBaseUrl')}/orders/@{encodeUriComponent(triggerBody()?['orderId'])}",
+          "authentication": {
+            "type": "ManagedServiceIdentity",
+            "audience": "@parameters('OrderApiAudience')"
+          }
+        }
+      },
+      "Respond_order_lookup_failed": {
+        "type": "Response",
+        "kind": "Http",
+        "runAfter": {
+          "Get_order": ["Failed", "TimedOut"]
+        },
+        "inputs": {
+          "statusCode": 404,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "error": "Order not found. Ask the customer to check the order number, or use find_orders."
+          }
+        }
+      },
+      "Check_order_belongs_to_caller": {
+        "type": "If",
+        "runAfter": {
+          "Get_order": ["Succeeded"]
+        },
+        "expression": {
+          "and": [
+            {
+              "not": {
+                "equals": ["@outputs('Get_caller_customer_id')", ""]
+              }
+            },
+            {
+              "equals": ["@body('Get_order')?['customerId']", "@outputs('Get_caller_customer_id')"]
+            }
+          ]
+        },
+        "actions": {
+          "Respond_order": {
+            "type": "Response",
+            "kind": "Http",
+            "runAfter": {},
+            "inputs": {
+              "statusCode": 200,
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "body": "@body('Get_order')"
+            }
+          }
+        },
+        "else": {
+          "actions": {
+            "Respond_not_found": {
+              "type": "Response",
+              "kind": "Http",
+              "runAfter": {},
+              "inputs": {
+                "statusCode": 404,
+                "headers": {
+                  "Content-Type": "application/json"
+                },
+                "body": {
+                  "error": "Order not found. Ask the customer to check the order number, or use find_orders."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "outputs": {}
+  },
+  "kind": "Stateful"
+}

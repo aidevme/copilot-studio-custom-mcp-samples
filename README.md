@@ -10,7 +10,7 @@
 ![Custom MCP servers for Copilot Studio: samples](assets/copilot-studio-custom-mcp-samples-social-preview.png)
 
 Sample code for the [aidevme.com](https://aidevme.com) series **Custom MCP servers for Copilot Studio**. One demo,
-a AIDevMe customer service agent that answers order questions and starts returns, is built three ways: with
+an AIDevMe customer service agent that answers order questions and starts returns, is built three ways: with
 Logic Apps Standard, Azure API Management and a C# server on Azure Container Apps. Customer sign-in with
 Microsoft Entra External ID, tool contract tests and Power Platform ALM scripts complete it.
 
@@ -55,6 +55,7 @@ The sample code lives under [`src/`](src/), one folder per component:
 
 | Folder | Content |
 | --- | --- |
+| [`src/infra/`](src/infra/) | The shared Azure base: logs, telemetry, Key Vault, Container Apps environment |
 | [`src/contract/`](src/contract/) | The tool contract every path implements: names, descriptions, input schemas |
 | [`src/order-api/`](src/order-api/) | The Order Management API with in-memory demo data, and its OpenAPI description |
 | [`src/logic-apps/`](src/logic-apps/) | Logic Apps Standard workflows as an MCP server |
@@ -73,22 +74,26 @@ In detail, with the parts each file belongs to. Folders marked *planned* are emp
 copilot-studio-custom-mcp-samples/
 ├── README.md, DEVELOPER.md, CONTRIBUTING.md, LICENSE
 ├── src/
+│   ├── infra/                            # shared Azure base: base.bicep, deploy-base.sh
 │   ├── contract/
 │   │   ├── tools.json                    # the tool contract (Parts 1 and 6)
 │   │   └── tools-before.json             # the "before" tool list (Part 6)
-│   ├── order-api/                        # the Order Management API (planned)
-│   │   ├── src/                          # three operations, /customers/by-identity/{oid} (planned)
-│   │   ├── data/                         # seed.json, the one demo data set (planned)
-│   │   └── openapi/                      # orders-api.yaml (planned)
+│   ├── order-api/                        # the Order Management API (Parts 2 and 3 call it)
+│   │   ├── src/AIDevMe.OrderApi/         # three operations, /customers/by-identity/{oid}
+│   │   ├── data/seed.json                # the one demo data set
+│   │   ├── openapi/orders-api.yaml
+│   │   ├── infra/                        # register-api-app.sh, deploy-containerapp.sh
+│   │   ├── test/requests.http
+│   │   └── Dockerfile
 │   ├── logic-apps/                       # Part 2
-│   │   ├── src/                          # host.json, parameters.json, create_return/
-│   │   ├── infra/                        # Bicep for the logic app and its plan (planned)
+│   │   ├── src/                          # host.json, parameters.json, find_orders/, get_order_status/, create_return/
+│   │   ├── infra/                        # main.bicep (WS1 plan, storage, logic app), deploy.sh
 │   │   ├── test/                         # inspector.sh, smoke.sh, requests.http
 │   │   └── .vscode/mcp.json
 │   ├── apim/                             # Part 3
 │   │   ├── openapi/orders-agent-facade.yaml
 │   │   ├── policies/                     # OAuth, OAuth with oid header, demo key, find_orders rewrite
-│   │   ├── infra/                        # mcp-server.bicep, mcp-passthrough.bicep
+│   │   ├── infra/                        # apim.bicep, mcp-server.bicep, mcp-passthrough.bicep, deploy.sh
 │   │   ├── scripts/import-api.sh
 │   │   ├── queries/latest-tool-calls.kql
 │   │   └── test/smoke.sh

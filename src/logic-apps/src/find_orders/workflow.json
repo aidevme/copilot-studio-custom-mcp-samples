@@ -1,0 +1,126 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "When_a_HTTP_request_is_received": {
+        "type": "Request",
+        "kind": "Http",
+        "description": "Lists the signed-in customer's AIDevMe orders, newest first. Use it when the customer doesn't know the order number.",
+        "inputs": {
+          "method": "POST",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "default": "Any",
+                "description": "Order status filter: Any, Open, Shipped, Delivered or Cancelled. Use Any when the customer doesn't say."
+              },
+              "from": {
+                "type": "string",
+                "default": "",
+                "description": "Optional earliest order date as an ISO 8601 date, for example 2026-10-01. Leave it empty for no lower limit."
+              },
+              "to": {
+                "type": "string",
+                "default": "",
+                "description": "Optional latest order date as an ISO 8601 date, for example 2026-11-13. Leave it empty for no upper limit."
+              }
+            }
+          }
+        }
+      }
+    },
+    "actions": {
+      "Get_caller_customer_id": {
+        "type": "Compose",
+        "runAfter": {},
+        "inputs": "@coalesce(triggerOutputs()?['headers']?['AIDevMe-Demo-Customer'], '')"
+      },
+      "Check_caller_is_known": {
+        "type": "If",
+        "runAfter": {
+          "Get_caller_customer_id": ["Succeeded"]
+        },
+        "expression": {
+          "and": [
+            {
+              "equals": ["@outputs('Get_caller_customer_id')", ""]
+            }
+          ]
+        },
+        "actions": {
+          "Respond_unauthorized": {
+            "type": "Response",
+            "kind": "Http",
+            "runAfter": {},
+            "inputs": {
+              "statusCode": 401,
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "body": {
+                "error": "The customer isn't signed in. Ask them to sign in before you look up their orders."
+              }
+            }
+          }
+        },
+        "else": {
+          "actions": {
+            "Find_customer_orders": {
+              "type": "Http",
+              "runAfter": {},
+              "inputs": {
+                "method": "GET",
+                "uri": "@{parameters('OrderApiBaseUrl')}/customers/@{encodeUriComponent(outputs('Get_caller_customer_id'))}/orders",
+                "queries": {
+                  "status": "@{coalesce(triggerBody()?['status'], 'Any')}",
+                  "from": "@{coalesce(triggerBody()?['from'], '')}",
+                  "to": "@{coalesce(triggerBody()?['to'], '')}"
+                },
+                "authentication": {
+                  "type": "ManagedServiceIdentity",
+                  "audience": "@parameters('OrderApiAudience')"
+                }
+              }
+            },
+            "Respond_orders": {
+              "type": "Response",
+              "kind": "Http",
+              "runAfter": {
+                "Find_customer_orders": ["Succeeded"]
+              },
+              "inputs": {
+                "statusCode": 200,
+                "headers": {
+                  "Content-Type": "application/json"
+                },
+                "body": "@body('Find_customer_orders')"
+              }
+            },
+            "Respond_lookup_failed": {
+              "type": "Response",
+              "kind": "Http",
+              "runAfter": {
+                "Find_customer_orders": ["Failed", "TimedOut"]
+              },
+              "inputs": {
+                "statusCode": "@coalesce(outputs('Find_customer_orders')?['statusCode'], 502)",
+                "headers": {
+                  "Content-Type": "application/json"
+                },
+                "body": {
+                  "error": "The orders couldn't be loaded. Check the filters, or try again later.",
+                  "details": "@body('Find_customer_orders')"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "outputs": {}
+  },
+  "kind": "Stateful"
+}

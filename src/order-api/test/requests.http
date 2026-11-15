@@ -1,0 +1,28 @@
+# AIDevMe Order Management API, local run without authentication:
+#   ASPNETCORE_ENVIRONMENT=Development dotnet run --project src/order-api/src/AIDevMe.OrderApi --urls http://localhost:5090
+@base = http://localhost:5090
+
+### find_orders: the customer's orders, newest first
+GET {{base}}/customers/CU-3001/orders?status=Any
+
+### get_order_status: includes customerId, so Logic Apps can check ownership
+GET {{base}}/orders/SO-10023
+
+### Another customer's order, with the header API Management sets: 404
+GET {{base}}/orders/SO-10027
+AIDevMe-Customer-Id: CU-3001
+
+### create_return: 201 and the RMA
+POST {{base}}/orders/SO-10023/returns
+Content-Type: application/json
+
+{ "lineNumber": 1, "quantity": 1, "reason": "Damaged", "comment": "The kettle arrived broken." }
+
+### Outside the 30-day window: 422 return_window_closed
+POST {{base}}/orders/SO-10019/returns
+Content-Type: application/json
+
+{ "lineNumber": 1, "quantity": 1, "reason": "Damaged" }
+
+### Internal: External ID oid -> customer ID (API Management's OAuth policy, Part 3)
+GET {{base}}/customers/by-identity/00000000-0000-0000-0000-000000003001

@@ -51,7 +51,7 @@ resource findOrdersPolicy 'Microsoft.ApiManagement/service/apis/operations/polic
   name: 'policy'
   properties: {
     format: 'rawxml'
-    value: loadTextContent('find-orders-operation-policy.xml')
+    value: loadTextContent('../policies/find-orders-operation.xml')
   }
 }
 
@@ -83,7 +83,7 @@ resource mcpPolicy 'Microsoft.ApiManagement/service/apis/policies@2025-09-01-pre
   name: 'policy'
   properties: {
     format: 'rawxml'
-    value: useOAuth ? loadTextContent('mcp-policy-oauth.xml') : loadTextContent('mcp-policy-demo-key.xml')
+    value: useOAuth ? loadTextContent('../policies/mcp-server-oauth.xml') : loadTextContent('../policies/mcp-server-demo.xml')
   }
 }
 
