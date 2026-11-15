@@ -1,0 +1,112 @@
+# copilot-studio-custom-mcp-samples — Plan and progress
+
+<!-- cspell:ignore aidevme Zsolt Zombik Contoso APIM Entra Bicep Dataverse oid evals worklog -->
+
+**Mission.** Give readers of the aidevme.com series **Custom MCP servers for Copilot Studio** (7 parts) working code
+that matches the posts: one Contoso order-and-returns agent, built with Logic Apps Standard, Azure API Management
+and a C# server on Azure Container Apps.
+
+**Owner:** Zsolt Zombik · **Last updated:** 2026-11-15 · **Repo:**
+[aidevme/copilot-studio-custom-mcp-samples](https://github.com/aidevme/copilot-studio-custom-mcp-samples)
+
+**Sources:** the gaps, inconsistencies and provisioning list come from the research run in
+`docs/copilot-studio-custom-mcp/2026-11-15_083032_sample-code-and-repo-plan/README.md`. Nothing has been deployed
+to Azure or tested in Copilot Studio yet.
+
+---
+
+## Built
+
+Legend: ✅ done · 🔄 in progress · ⬜ not started
+
+| Area | What exists | Status |
+| --- | --- | --- |
+| Repo | Public repo, MIT license, `main` and `dev` branches, README with the series map, social preview image, `.gitignore` | ✅ |
+| Guidance | `AGENTS.md` (code must match the posts, the two rules, no secrets) and `CLAUDE.md` pointing to it; PR template with the contract change classes | ✅ |
+| Extracted samples | All 85 code blocks from the drafts in `docs/…/samples/`, with `INDEX.md`; read-only reference | ✅ |
+| Contract (Parts 1, 6) | `contract/tools.json` (three tools) and `tools-before.json` | ✅ |
+| C# server (Part 4) | `dotnet-mcp-server/src/Contoso.OrdersMcp/`: tools, in-memory store with Part 4's demo data, return policy resource, Dockerfile, Container Apps deploy script, probes; builds locally | ✅ |
+| C# server (Parts 5, 6) | `dotnet-mcp-server/variants/part-5-customer-sign-in/` and `part-6-tool-design/`: the changed files only, not buildable on their own | ✅ |
+| API Management (Part 3) | Agent-facade OpenAPI, four policies, Bicep for the MCP server and passthrough, KQL query, import and smoke scripts | 🔄 |
+| Logic Apps (Part 2) | `create_return` workflow, `host.json`, `parameters.json`, `.vscode/mcp.json`, test scripts | 🔄 |
+| Identity (Part 5) | `identity/external-id/register-apps.sh` | ✅ |
+| Copilot Studio | Four connector definitions, `agent-instructions.md` | 🔄 |
+| Governance (Part 7) | DLP URL patterns script, `pac` export/import script, deployment settings, Agent 365 hunting query | ✅ |
+| Contract tests (Parts 6, 7) | `Test-McpToolContract.ps1`, `check-tool-contract.js`, protocol examples; `contract-test.yml` runs the PowerShell test against the C# server on pushes to `main`/`dev` and on PRs | ✅ |
+| Order Management API | Folder and README only | ⬜ |
+| Agent layer | `agent-src/` with 23 skills and 2 agents, synced to `.claude/` and `.github/` by `sync.ps1`; only 14 skills generated, not committed | 🔄 |
+
+---
+
+## Open
+
+### Decisions needed first
+
+- ⬜ **Code state per part:** `src/` = Part 4 plus `variants/` for Parts 5 and 6 is in place. Keep it, or move to
+  the final state on `main` with a tag per post (the research run's option A)?
+- ⬜ **Demo data:** the C# server uses Part 4's set (`CU-3001`: `SO-10019`, `SO-10023`, `SO-10031`, `SO-10035`;
+  `CU-3002`: `SO-10027`). Confirm it, then align Parts 2 (`SO-10099`), 3 (`SO-10024`) and 6 (`SO-10040`) to it.
+- ⬜ **Order Management API stack:** ASP.NET Core like the C# server, sharing the seed data?
+- ⬜ **CI and Azure:** build and test only, or deploy too (OIDC, no secrets)?
+
+### Missing code
+
+- ⬜ **Order Management API** (`order-api/`): the three operations, `GET /customers/by-identity/{oid}`, the
+  `Contoso-Customer-Id` header, Entra auth for managed identities, the full OpenAPI file, and
+  `data/seed.json` as the one demo data set. Parts 2 and 3 can't run end to end without it.
+- ⬜ **Logic Apps:** the `find_orders` and `get_order_status` workflows, a `local.settings.example.json`, and Bicep
+  for the Standard logic app and plan.
+- ⬜ **API Management:** `apim.bicep` (the `apim` resource the Part 3 Bicep depends on).
+- ⬜ **Infrastructure:** Bicep for the Container Apps environment, Key Vault, Log Analytics and Application Insights.
+- ⬜ **Unit tests:** `dotnet-mcp-server/tests/Contoso.OrdersMcp.Tests/` for ownership ("not found" for another
+  customer's order) and the 30-day return window.
+- ⬜ **Copilot Studio solutions:** unpack `ContosoOrderMcpConnector` and `ContosoCustomerServiceAgent` into
+  `copilot-studio/solutions/` once they're built in Dev.
+- ⬜ **CI:** add `dotnet test`, `az bicep build` for every Bicep file and markdown lint; Dependabot for NuGet, npm
+  and GitHub Actions.
+
+### Inconsistencies between posts and repo
+
+Fix the post or the file so they match; details in the research README.
+
+- ⬜ Part 6 says Part 4 calls the Order Management API; Part 4 keeps the in-memory store.
+- ⬜ API Management OAuth policy: Part 3 and Part 5 versions differ; keep one file, make the other an excerpt.
+- ⬜ Tool contract: `part-1/01` and `part-6/02` differ; regenerate the snippets from `contract/tools.json`.
+- ⬜ `host.json`: Part 2 sets the SSE-only `AllowCrossWorkerCommunication` the post says isn't needed.
+- ⬜ Resource names (`rg-contoso-mcp` / `rg-contoso-orders`, `kv-contoso-mcp` / `kv-contoso-demo`) and placeholder
+  names (`{{external-id-tenant-id}}` / `{{external-tenant-id}}`): pick one set and list it in the README.
+
+### Provisioning and testing
+
+- ⬜ Azure: resource group `rg-contoso-mcp`, Container Apps, Standard logic app (WS1, about $175 a month), API
+  Management Developer (about $48 a month). Deploy per test session and delete afterwards.
+- ⬜ Entra External ID tenant, the two app registrations, a user flow, demo customers mapped to `CU-3001` and
+  `CU-3002`.
+- ⬜ Power Platform: `contoso-dev`, `contoso-test`, `contoso-prod` with Copilot Studio; publisher prefix `cts`.
+- ⬜ Run each path end to end, then fill the `[ZSOLT: …]` markers in the posts and mark each part ready in the
+  README's Status column.
+
+### Repo
+
+- ⬜ GitHub settings: branch protection on `main` (PRs, `contract-test` check), secret scanning and push protection,
+  topics.
+- ⬜ Line endings: add `.gitattributes` with LF for `*.sh` and `Dockerfile`, so scripts run on Linux.
+- ⬜ Agent layer: decide which of the 9 blog-only skills (`aidevme-blog-writer`, `-seo-audit`, `-social`, …) belong
+  here, run `sync.ps1`, and commit `agent-src/`, `.claude/` and `.github/skills/` (not `settings.local.json`).
+- ⬜ Commit on `dev` and merge to `main`, as `AGENTS.md` asks; the first commits went straight to `main`.
+
+---
+
+## Decisions
+
+Newest first.
+
+| Date | Decision |
+| --- | --- |
+| 2026-11-15 | `dotnet-mcp-server/src/` is the Part 4 state; Parts 5 and 6 live in `variants/` as changed files only |
+| 2026-11-15 | `contract/tools.json` is the single tool contract; changes are classed BREAKING, REVIEW or ADDITIVE |
+| 2026-11-15 | The customer ID comes from the caller's identity, never a tool input; another customer's order is "not found" |
+| 2026-11-15 | The `Contoso-Demo-Customer` header is for local testing only and never enabled in a deployment |
+| 2026-11-15 | `docs/` is a read-only snapshot of the drafts' code; fixes go to the component folders |
+| 2026-11-15 | License MIT; demo data and placeholders only, no secrets or tenant IDs |
+| 2026-11-15 | Work on `dev`; `main` is the published branch |

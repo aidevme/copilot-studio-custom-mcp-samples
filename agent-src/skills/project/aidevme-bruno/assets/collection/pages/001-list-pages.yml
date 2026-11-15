@@ -1,0 +1,43 @@
+info:
+  name: List pages
+  type: http
+  seq: 1
+  tags:
+    - smoke
+
+http:
+  method: GET
+  url: "{{baseUrl}}/wp-json/wp/v2/pages?per_page=50&_fields=id,slug,link,title,status"
+  params:
+    - name: per_page
+      value: "50"
+      type: query
+    - name: _fields
+      value: id,slug,link,title,status
+      type: query
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+  scripts:
+    - type: tests
+      code: |-
+        test("returns an array of pages", function () {
+          const body = res.getBody();
+          expect(body).to.be.an("array");
+          body.forEach((page) => expect(page).to.have.property("slug"));
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 30000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Published pages (Start Here, About, Contact and the rest) with slug, link and status.
+
+  Auth: none. Expected: 200 with an array of pages.

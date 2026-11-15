@@ -1,0 +1,59 @@
+{
+  "skill_name": "aidevme-powershell-documenter",
+  "evals": [
+    {
+      "id": 1,
+      "should_trigger": true,
+      "prompt": "I added a -Since parameter to get-published-posts.ps1. Update the docs.",
+      "expected_output": "Runs get-script-facts.ps1 on scripts/wordpress-scripts, reads get-published-posts.ps1, its tests and its Bruno request in full, adds -Since to the script's parameter table with its default, values and description taken from the code, updates examples, the stop table and the test counts if they changed, keeps the rest of the README, runs test-readme.ps1 (OK) and markdownlint (only MD013), and reports the sections changed.",
+      "assertions": [
+        "Edits only scripts/wordpress-scripts/README.md",
+        "The -Since row comes from the param block and the code, not invented",
+        "Runs test-readme.ps1 and reports README check: OK",
+        "Does not run get-published-posts.ps1"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "should_trigger": true,
+      "prompt": "Create a README for the new scripts/github-scripts folder.",
+      "expected_output": "Collects the facts for every script in the folder, reads each script, test and request, writes scripts/github-scripts/README.md in the section order of references/readme-structure.md (at a glance, before you start, how it works, one section per script with every parameter and every throw, tests, troubleshooting, adding a script, related), with demo data in examples, and checks it with test-readme.ps1 and markdownlint.",
+      "assertions": [
+        "Follows the section order in references/readme-structure.md",
+        "Lists every parameter of every script",
+        "Uses demo values in examples and JSON samples",
+        "Marks unverified outside facts with [VERIFY: ...]"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "should_trigger": true,
+      "prompt": "Are the READMEs in scripts/ still up to date?",
+      "expected_output": "Runs the check workflow: test-readme.ps1 -Path scripts, then compares each script's facts (parameters, defaults, requests, messages, test counts) with its README section, lists the gaps per folder or says they're up to date, and changes nothing.",
+      "assertions": [
+        "Runs test-readme.ps1 -Path scripts",
+        "Edits no file",
+        "Offers the update workflow for folders with gaps"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "should_trigger": false,
+      "prompt": "Write Pester tests for get-wordpress-tags.ps1.",
+      "expected_output": "Not this skill: aidevme-powershell-test writes the tests.",
+      "assertions": ["Does not trigger aidevme-powershell-documenter"],
+      "files": []
+    },
+    {
+      "id": 5,
+      "should_trigger": false,
+      "prompt": "Add a request for the comments endpoint to the Bruno collection.",
+      "expected_output": "Not this skill: aidevme-bruno owns the collection.",
+      "assertions": ["Does not trigger aidevme-powershell-documenter"],
+      "files": []
+    }
+  ]
+}

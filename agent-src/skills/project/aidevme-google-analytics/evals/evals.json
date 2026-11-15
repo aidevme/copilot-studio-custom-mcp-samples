@@ -1,0 +1,126 @@
+{
+  "skill_name": "aidevme-google-analytics",
+  "evals": [
+    {
+      "id": 1,
+      "should_trigger": true,
+      "prompt": "Which Google Analytics property is aidevme.com and what time zone is it in?",
+      "expected_output": "The property is found with get_account_summaries by matching the aidevme.com display name, its details (time zone, currency) come from get_property_details, and no ID is guessed.",
+      "files": [],
+      "expectations": [
+        "Calls get_account_summaries (or get_property_details when the ID is configured) before naming a property",
+        "Matches the property by display name and lists candidates if there are zero or several matches",
+        "Reports the time zone from get_property_details",
+        "Does not invent a property ID"
+      ]
+    },
+    {
+      "id": 2,
+      "should_trigger": true,
+      "prompt": "What were my top posts on aidevme.com last month?",
+      "expected_output": "A run_report by pagePath and pageTitle ordered by engagedSessions for the previous calendar month, non-post paths removed, findings first with recommendations, then a compact table and caveats.",
+      "files": [],
+      "expectations": [
+        "Uses run_report with pagePath (and pageTitle) and a metric such as engagedSessions or screenPageViews",
+        "Interprets 'last month' as the previous calendar month with absolute dates and states the property time zone",
+        "Orders by the primary metric descending with a sensible limit (10-25)",
+        "Removes or groups non-post paths such as / and /category/",
+        "Leads with findings and a write-or-promote recommendation before the table"
+      ]
+    },
+    {
+      "id": 3,
+      "should_trigger": true,
+      "prompt": "How much traffic do I get from GitHub and LinkedIn, and which posts do they send people to?",
+      "expected_output": "Referral analysis with sessionSource (and landingPage) filtered to GitHub and LinkedIn sources including lnkd.in, compared with the previous period, with interpretation.",
+      "files": [],
+      "expectations": [
+        "Uses sessionSource (session scope), not firstUserSource, for visit-level referral questions",
+        "Includes LinkedIn variants such as lnkd.in and app sources, or explains they must be summed",
+        "Breaks results down by landingPage to name the posts",
+        "Uses the default 28-day comparison or states the chosen range"
+      ]
+    },
+    {
+      "id": 4,
+      "should_trigger": true,
+      "prompt": "Show me the funnel from visiting the blog to reading an article to signing up for the newsletter.",
+      "expected_output": "A run_funnel_report with three steps (session_start, scroll with percent_scrolled >= 90 or a read event, the newsletter event), explicit date_ranges, per-step and overall completion, and a note that the funnel is closed.",
+      "files": [],
+      "expectations": [
+        "Checks the newsletter event name (configured value or an eventName inventory) before building the funnel",
+        "Calls run_funnel_report with three named steps and explicit date_ranges",
+        "Reports per-step completion, overall completion and the largest drop-off",
+        "States that the tool builds closed funnels only"
+      ]
+    },
+    {
+      "id": 5,
+      "should_trigger": true,
+      "prompt": "How many people are on aidevme.com right now and what are they reading?",
+      "expected_output": "A run_realtime_report with unifiedScreenName and activeUsers, labelled as the last 30 minutes and not comparable to processed reports.",
+      "files": [],
+      "expectations": [
+        "Uses run_realtime_report, not run_report",
+        "Uses realtime fields only (unifiedScreenName, activeUsers), not pagePath",
+        "States the data covers the last 30 minutes and differs from processed data"
+      ]
+    },
+    {
+      "id": 6,
+      "should_trigger": true,
+      "prompt": "Break down page views by post category using my custom dimension.",
+      "expected_output": "get_custom_dimensions_and_metrics is called first, the exact customEvent:<name> API name is used in run_report, or the user is told no such dimension is registered.",
+      "files": [],
+      "expectations": [
+        "Calls get_custom_dimensions_and_metrics before using the custom field",
+        "Uses the returned api_name with its scope prefix (for example customEvent:category)",
+        "If no matching custom dimension exists, says so and explains registering it in GA4 Admin instead of guessing"
+      ]
+    },
+    {
+      "id": 7,
+      "should_trigger": true,
+      "prompt": "Give me realtime active users by page path and traffic source.",
+      "expected_output": "The skill recognises that pagePath and sessionSource are not realtime fields, explains why, and runs a valid realtime report with unifiedScreenName (offering a historical run_report for source).",
+      "files": [],
+      "expectations": [
+        "Does not send pagePath or sessionSource to run_realtime_report, or recovers correctly after the API rejects them",
+        "Substitutes unifiedScreenName for the page and explains realtime has no traffic-source fields",
+        "Offers a run_report for traffic sources over a recent processed range"
+      ]
+    },
+    {
+      "id": 8,
+      "should_trigger": true,
+      "prompt": "How did aidevme.com do this week? (The analytics-mcp server is not configured in this session.)",
+      "expected_output": "The skill detects the missing mcp__analytics-mcp__* tools, does not produce any numbers, and walks the user through references/setup.md.",
+      "files": [],
+      "expectations": [
+        "Detects that the analytics-mcp tools are unavailable before answering",
+        "Produces no traffic figures or estimates",
+        "Points to the setup steps: enable both APIs, gcloud application-default login with analytics.readonly, env vars, approve .mcp.json, verify with /mcp"
+      ]
+    },
+    {
+      "id": 9,
+      "should_trigger": false,
+      "prompt": "Set up Google Tag Manager on my WordPress blog and add a gtag snippet.",
+      "expected_output": "The skill does not trigger; Tag Manager and tag installation are out of scope.",
+      "files": [],
+      "expectations": [
+        "The aidevme-google-analytics skill is not invoked"
+      ]
+    },
+    {
+      "id": 10,
+      "should_trigger": false,
+      "prompt": "Migrate my Universal Analytics goals and pause my Google Ads campaigns.",
+      "expected_output": "The skill does not trigger; Universal Analytics and Google Ads management are out of scope.",
+      "files": [],
+      "expectations": [
+        "The aidevme-google-analytics skill is not invoked"
+      ]
+    }
+  ]
+}

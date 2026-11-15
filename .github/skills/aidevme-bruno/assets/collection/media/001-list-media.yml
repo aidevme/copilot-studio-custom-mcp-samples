@@ -1,0 +1,60 @@
+info:
+  name: List recent media
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/wp-json/wp/v2/media?per_page=20&_fields=id,date,date_gmt,guid,modified,modified_gmt,slug,status,type,link,title,author,featured_media,comment_status,ping_status,template,meta,description,caption,alt_text,media_type,mime_type,media_details,post,source_url,filename,filesize,wf_attachment_folders,class_list,acf,jetpack_sharing_enabled,jetpack_likes_enabled"
+  params:
+    - name: per_page
+      value: "20"
+      type: query
+    - name: _fields
+      value: id,date,date_gmt,guid,modified,modified_gmt,slug,status,type,link,title,author,featured_media,comment_status,ping_status,template,meta,description,caption,alt_text,media_type,mime_type,media_details,post,source_url,filename,filesize,wf_attachment_folders,class_list,acf,jetpack_sharing_enabled,jetpack_likes_enabled
+      type: query
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+  scripts:
+    - type: tests
+      code: |-
+        test("returns media items with a file URL", function () {
+          const body = res.getBody();
+          expect(body).to.be.an("array");
+          body.forEach((item) => expect(item.source_url).to.be.a("string"));
+        });
+
+        test("returns the requested fields and no _links", function () {
+          const body = res.getBody();
+          if (body.length > 0) {
+            ["guid", "title", "caption", "media_type", "media_details", "wf_attachment_folders"]
+              .forEach((field) => expect(body[0]).to.have.property(field));
+            expect(body[0]).to.not.have.property("_links");
+          }
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 30000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  The 20 newest media library items with every field the public (view) context returns: the WordPress media
+  schema (https://developer.wordpress.org/rest-api/reference/media/) - id, date, date_gmt, guid, modified,
+  modified_gmt, slug, status, type, link, title, author, comment_status, ping_status, template, meta,
+  description, caption, alt_text, media_type, mime_type, media_details (width, height, file, filesize, sizes,
+  image_meta), post, source_url - plus featured_media, filename and filesize, and the fields plugins on
+  aidevme.com add: wf_attachment_folders (Wicked Folders), acf, jetpack_sharing_enabled, jetpack_likes_enabled
+  and class_list. Left out: _links and the edit-context fields (permalink_template, generated_slug,
+  missing_image_sizes), which need credentials. WordPress ignores nested _fields such as
+  media_details.filesize.
+
+  An empty alt_text is a finding for aidevme-image; the full library audit is aidevme-image's audit_media.py.
+
+  Auth: none. Expected: 200 with an array of media items.

@@ -1,0 +1,51 @@
+{
+  "skill_name": "aidevme-image",
+  "evals": [
+    {
+      "id": 1,
+      "should_trigger": true,
+      "prompt": "Define an image generation prompt for .content/wordpress-posts/45-copilot-studio-agent-accounts-governance/. Start with the featured image and show the prompt, the png file name, alt text and description.",
+      "expected_output": "Reads the post and the context file, picks one visual metaphor for the post's main point (an agent with its own identity working with the team), writes a structured prompt in the aidevme palette with no text, logos or faces, gives a descriptive .png file name, 1200x630 size, alt text of at most 125 characters and a 3-5 sentence description, appends the entry to image-generation-prompts.md in the template format, shows the same fields in the reply, and does not generate the image unless asked.",
+      "assertions": [
+        "Prompt uses the aidevme hex colors and excludes text, logos and faces",
+        "File name is descriptive, lowercase, hyphenated and ends in .png",
+        "Size is 1200 x 630",
+        "Alt text is 125 characters or fewer and specific to the post",
+        "Entry is written to .content/wordpress-posts/<slug>/image-generation-prompts.md without removing earlier entries",
+        "Does not claim an image was generated when none was"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Generate an image of the Copilot Studio agent account settings page for the post.",
+      "should_trigger": true,
+      "expected_output": "Declines to generate product UI with AI because generators hallucinate interfaces and settings, and recommends a real screenshot from a demo tenant with demo data, plus alt text and a descriptive file name.",
+      "assertions": [
+        "Refuses AI generation for product UI and says why",
+        "Recommends a real screenshot with demo data"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "should_trigger": true,
+      "prompt": "Is the featured image for the agent accounts post OK for WordPress?",
+      "expected_output": "Runs check_image.py with --placement featured on the image in the post's images folder, reports format, dimensions, ratio and file size against the budget, and when the file is over 300 KB recommends converting to WebP or JPEG at quality 80-85; also checks the frontmatter points to the file.",
+      "assertions": [
+        "Runs scripts/check_image.py instead of guessing",
+        "Flags a file over the 300 KB budget with a conversion fix",
+        "Checks featured_image in the frontmatter matches the file"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "should_trigger": false,
+      "prompt": "Draw a sequence diagram of the agent trigger flow.",
+      "expected_output": "Does not trigger; diagrams belong to aidevme-diagram-mermaid.",
+      "assertions": [],
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+info:
+  name: List recent posts
+  type: http
+  seq: 1
+  tags:
+    - smoke
+
+http:
+  method: GET
+  url: "{{baseUrl}}/wp-json/wp/v2/posts?per_page=10&_fields=id,date,modified,slug,link,title,categories,tags"
+  params:
+    - name: per_page
+      value: "10"
+      type: query
+    - name: _fields
+      value: id,date,modified,slug,link,title,categories,tags
+      type: query
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+  scripts:
+    - type: after-response
+      code: |-
+        // Hand the newest post's slug to "Get post by slug" in the same run.
+        const posts = res.getBody();
+        if (Array.isArray(posts) && posts.length > 0) {
+          bru.setVar("postSlug", posts[0].slug);
+        }
+    - type: tests
+      code: |-
+        test("returns an array of posts", function () {
+          const body = res.getBody();
+          expect(body).to.be.an("array");
+          body.forEach((post) => {
+            expect(post).to.have.property("id");
+            expect(post).to.have.property("slug");
+            expect(post).to.have.property("link");
+          });
+        });
+
+        test("returns only the requested fields", function () {
+          const body = res.getBody();
+          if (body.length > 0) {
+            expect(body[0]).to.not.have.property("content");
+          }
+        });
+
+        test("sends pagination headers", function () {
+          expect(res.getHeader("x-wp-total")).to.not.be.undefined;
+          expect(res.getHeader("x-wp-totalpages")).to.not.be.undefined;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 30000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  The 10 newest published posts with their categories and tags (IDs).
+
+  X-WP-Total and X-WP-TotalPages in the response headers give the post count and the number of pages; add a
+  page query parameter to walk them (per_page is at most 100).
+
+  Sets the runtime variable postSlug to the newest post's slug for "Get post by slug".
+
+  Auth: none. Expected: 200 with an array of posts.
