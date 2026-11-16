@@ -98,12 +98,11 @@ copilot-studio-custom-mcp-samples/
 │   │   ├── queries/latest-tool-calls.kql
 │   │   └── test/smoke.sh
 │   ├── dotnet-mcp-server/                # Parts 4 to 6
-│   │   ├── src/AIDevMe.OrdersMcp/        # the Part 4 server: Program.cs, Tools/, Data/, Resources/
+│   │   ├── src/AIDevMe.OrdersMcp/        # the Part 4 server: Program.cs, Tools/, Data/, Resources/, Dockerfile
 │   │   ├── variants/                     # part-5-customer-sign-in/, part-6-tool-design/
 │   │   ├── tests/AIDevMe.OrdersMcp.Tests/  # unit tests (planned)
 │   │   ├── infra/                        # deploy-containerapp.sh, probes.yaml
-│   │   ├── test/                         # smoke.sh, inspector.sh
-│   │   └── Dockerfile
+│   │   └── test/                         # smoke.sh, inspector.sh
 │   ├── identity/
 │   │   └── external-id/register-apps.sh  # Part 5
 │   ├── copilot-studio/

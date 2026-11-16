@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Deploy the C# MCP server to Azure Container Apps (not run against a subscription in the post)
+# Deploy the C# MCP server to Azure Container Apps (run against a new subscription on 2026-11-15, in North Europe)
 # Commands from the post; replace the placeholders before running.
+# Run `az containerapp up` from src/dotnet-mcp-server/src/AIDevMe.OrdersMcp/, where the Dockerfile and .csproj are.
+# If West Europe refuses new resources, set LOCATION to another region, for example northeurope.
 
 # --- Part 4: https://aidevme.com/copilot-studio-custom-mcp-server-azure-pro-code/
 RESOURCE_GROUP="rg-aidevme-mcp"

@@ -56,16 +56,23 @@ Legend: ✅ done · 🔄 in progress · ⬜ not started
 
 ### Missing code
 
-- ✅ **Order Management API, Logic Apps workflows and Bicep, `apim.bicep`, shared base:** written and checked
-  locally (`dotnet build`, `az bicep build`, `bash -n`); none deployed yet.
-- ⬜ **API Management forwards tool calls without a token:** the OAuth policy uses `authentication-managed-identity`
-  only for the `by-identity` lookup, so with `Auth__Enabled=true` the Order Management API answers `401` to the
-  forwarded `find_orders`, `get_order_status` and `create_return` calls. Add `authentication-managed-identity` for
-  the backend to the policies (and the Part 3 post), or test Part 3 against the API with auth off.
-- ⬜ **Verify on the first deployment:** that importing the facade names the operations `find-orders`,
-  `get-order-status` and `create-return`, as `mcp-server.bicep` expects (the facade's operationIds use underscores).
-- ⬜ **Order Management API container image:** `docker build` wasn't run locally (no Docker); `az containerapp up`
-  builds it in Azure.
+- ✅ **Order Management API, Logic Apps workflows and Bicep, `apim.bicep`, shared base:** deployed on 2026-11-15
+  to the AIDevMe Samples subscription and tested end to end (Parts 2, 3 and 4). See the provisioning list in
+  `docs/copilot-studio-custom-mcp/2026-11-15_083032_sample-code-and-repo-plan/README.md`.
+- ✅ **API Management forwards tool calls without a token:** fixed with `src/apim/policies/order-api-backend.xml`
+  (API-scope `authentication-managed-identity`) and the facade in the `copilot-studio-agents` product. Part 3 post
+  updated.
+- ✅ **Operation names:** the Bicep import keeps the operationId (`find_orders`, not `find-orders`).
+  `mcp-server.bicep` uses the real names and creates the tools with `@batchSize(1)`. Part 3 post updated.
+- ✅ **Container images:** both built in Azure with `az containerapp up`. The Part 4 `Dockerfile` now sits next to
+  the `.csproj`, with a `.dockerignore`.
+- ⬜ **API Management in OAuth mode (Part 5):** the MCP server needs no key there, but the facade does, so tool
+  calls would fail with `401`. Also decide who may call the facade directly: with a key, a caller can set
+  `AIDevMe-Customer-Id` themselves. Fix both before Part 5 is tested.
+- ⬜ **Logic Apps demo header:** the workflows read `AIDevMe-Demo-Customer` ungated. Gate it with a parameter or
+  remove it before Copilot Studio uses the server with real sign-ins (AGENTS.md rule 4).
+- ⬜ **Error shape:** "not found" differs per path (Logic Apps `isError: true` with `error`, API Management
+  `isError: false` with `code` and `message`). Settle it with the contract decision.
 - ⬜ **Unit tests:** `src/dotnet-mcp-server/tests/AIDevMe.OrdersMcp.Tests/` for ownership ("not found" for another
   customer's order) and the 30-day return window.
 - ⬜ **Copilot Studio solutions:** unpack `AIDevMeOrderMcpConnector` and `AIDevMeCustomerServiceAgent` into
@@ -107,7 +114,8 @@ Fix the post or the file so they match; details in the research README.
 
 - ✅ GitHub settings: branch protection on `main` (PR required, `mcp-contract` check, applies to admins, no force
   pushes), secret scanning and push protection.
-- ⬜ GitHub settings: repository topics.
+- ✅ GitHub settings: repository topics (mcp, copilot-studio, azure-api-management, logic-apps, azure-container-apps,
+  entra-external-id).
 - ⬜ Line endings: add `.gitattributes` with LF for `*.sh` and `Dockerfile`, so scripts run on Linux.
 - ✅ Agent layer: the 9 blog-only skills are removed; 16 skills remain, synced with zero drift.
 - ⬜ Agent layer: `aidevme-bruno` and `aidevme-powershell-documenter` still mention the removed blog skills

@@ -1,4 +1,4 @@
-<!-- cspell:ignore aidevme AIDevMe APIM Entra ciamlogin Kusto Bicep RMA oid azd pac containerapp -->
+<!-- cspell:ignore aidevme AIDevMe APIM Entra ciamlogin Kusto Bicep RMA oid azd pac containerapp aidevmesamples aidevmesamplescustomers onmicrosoft -->
 
 # Research: sample code and repository plan for "Custom MCP servers for Copilot Studio"
 
@@ -157,6 +157,83 @@ descriptions). Three ways to keep posts and repo in step:
 
 ## What to provision
 
+### Provisioned so far
+
+Status 2026-11-15. The IDs aren't in this repo; they're in the local, ignored `.env/.env` under the variable
+names in the last column (see `.env/.env.example`).
+
+#### Tenants and subscriptions
+
+| What | Name | Detail | ID in `.env/.env` |
+| --- | --- | --- | --- |
+| Production tenant | AIDevMe (`aidevme.com`) | The blog and Microsoft 365. Not used for sample resources | — |
+| Workforce tenant for the samples | AIDevMe Samples (`aidevmesamples.onmicrosoft.com`) | Holds the Azure subscription. The custom domain `aidevme-samples.com` isn't verified yet | `SAMPLES_TENANT_ID` |
+| Azure subscription | AIDevMe Samples | Microsoft Azure Plan, billing profile of the individual billing account. Created in the production tenant and moved to AIDevMe Samples while empty. Monthly budget `budget-aidevme-samples-monthly`: 100 CHF, alerts to Owners at 50, 80, 100 % and on forecast | `AZURE_SUBSCRIPTION_ID` |
+| External ID tenant | AIDevMe Samples Customers (`aidevmesamplescustomers.onmicrosoft.com`, sign-in on `aidevmesamplescustomers.ciamlogin.com`) | Customer sign-in for Part 5. Location Europe. Billed through the AIDevMe Samples subscription, resource group `rg-aidevme-tenants` | `EXTERNAL_TENANT_ID` |
+
+The older subscription in the production tenant runs unrelated workloads, so it stays where it is and isn't used
+for the samples.
+
+#### App registrations in AIDevMe Samples Customers
+
+Created with the commands in `src/identity/external-id/register-apps.sh`, steps 1 to 3.
+
+| App | Setting | Value | ID in `.env/.env` |
+| --- | --- | --- | --- |
+| AIDevMe Orders MCP API | Supported accounts | This organization only (`AzureADMyOrg`) | `ORDERS_MCP_API_APP_ID` |
+| | Application ID URI | `api://<api-app-id>` | |
+| | Access token version | 2 | |
+| | Delegated scopes | `Orders.Read`, `Returns.Create` (admin consent only) | |
+| | Service principal | Created | |
+| AIDevMe Orders MCP Connector | Supported accounts | This organization only (`AzureADMyOrg`) | `ORDERS_MCP_CONNECTOR_APP_ID` |
+| | API permissions | `Orders.Read`, `Returns.Create` on AIDevMe Orders MCP API, delegated | |
+| | Admin consent | Granted for all users | |
+| | Service principal | Created | |
+| | Client secret | Created (step 4), display name `copilot-studio`, expires 2027-11-15. Stored only as secret `orders-connector-secret` in `kv-aidevme-mcp` | |
+| | Redirect URI | Not set yet (step 5): comes from the Copilot Studio wizard | |
+
+#### User flow in AIDevMe Samples Customers
+
+| Name | Identity provider | Attributes | Applications |
+| --- | --- | --- | --- |
+| `aidevme-signup-signin` | Email with password | Display Name | AIDevMe Orders MCP Connector |
+
+#### Demo customers in AIDevMe Samples Customers
+
+Created by an admin as local accounts with email and password, so no mailbox is needed. The Order API maps them
+through the app settings `Customers__Identities__<oid>`; `data/seed.json` keeps its placeholders.
+
+| Display name | Sign-in email | Customer | `oid` in `.env/.env` |
+| --- | --- | --- | --- |
+| Demo Customer CU-3001 | `cu-3001@aidevme-samples.com` | `CU-3001` | `DEMO_CUSTOMER_CU3001_OID` |
+| Demo Customer CU-3002 | `cu-3002@aidevme-samples.com` | `CU-3002` | `DEMO_CUSTOMER_CU3002_OID` |
+
+#### Azure resources in the AIDevMe Samples subscription
+
+Deployed with `LOCATION=northeurope bash src/infra/deploy-base.sh`. West Europe, the region in the posts, refused
+the new subscription (`RequestDisallowedByAzure`: the region isn't accepting new customers). North Europe, Sweden
+Central, Germany West Central, Switzerland North and France Central all passed a preflight validation.
+
+| Resource | Name | Region |
+| --- | --- | --- |
+| Resource group | `rg-aidevme-mcp` | North Europe |
+| Log Analytics workspace | `log-aidevme-mcp` | North Europe |
+| Application Insights | `appi-aidevme-mcp` | North Europe |
+| Key Vault (RBAC, deployer has Key Vault Secrets Officer) | `kv-aidevme-mcp`, secret `orders-connector-secret` | North Europe |
+| Container Apps environment | `cae-aidevme-mcp` | North Europe |
+| Container app (Order Management API), 1 replica, auth on | `aidevme-orders-api` (`ORDER_API_BASE_URL` in `.env/.env`) | North Europe |
+| Container registry, Basic, created by `az containerapp up` | generated name | East US |
+| Container app (Part 4 C# MCP server), 1 replica | `aidevme-orders-mcp` | North Europe |
+| API Management, Developer (Part 3), demo-mode policy | `apim-aidevme-orders`, MCP server `orders-mcp` | North Europe |
+| Standard logic app + WS1 plan + storage (Part 2), MCP server `AIDevMeOrderService`, key-based | `logic-aidevme-orders-mcp`, `asp-aidevme-logic` | Sweden Central (North Europe enforces a WS1 quota of 0) |
+| Workforce app registration "AIDevMe Order Management API" | App ID URI `api://<order-api-app-id>` (`ORDER_API_CLIENT_ID`) | — |
+| Billing resource of the external tenant | in `rg-aidevme-tenants` | — |
+
+#### Still to do
+
+- Verify `aidevme-samples.com` in the AIDevMe Samples tenant.
+- Gate or remove the `AIDevMe-Demo-Customer` header in the Logic Apps workflows before Copilot Studio uses the server with real sign-ins.
+
 ### GitHub
 
 | Item | Detail |
@@ -172,7 +249,7 @@ Suggested naming set, built from the names the posts already use. Region `westeu
 
 | Resource | Name | For | Cost note from the drafts |
 | --- | --- | --- | --- |
-| Subscription | (yours) | Everything below | Set a budget alert |
+| Subscription | AIDevMe Samples (in the AIDevMe Samples tenant, created) | Everything below | Set a budget alert |
 | Resource group | `rg-aidevme-mcp` | All demo resources, so one delete removes them | — |
 | Log Analytics workspace + Application Insights | `log-aidevme-mcp`, `appi-aidevme-mcp` | Telemetry for all three paths (Parts 2, 3, 4) | Pay per GB `[VERIFY]` |
 | Key Vault | `kv-aidevme-mcp` | Connector client secret (Part 5), Logic Apps MCP key | Small |
@@ -191,9 +268,9 @@ afterwards if you don't need them running; the Bicep files make that cheap to re
 
 | Item | Detail |
 | --- | --- |
-| External tenant | Its own tenant, `https://<tenant-subdomain>.ciamlogin.com`; linked to your subscription for billing `[VERIFY: External ID free tier for the demo's few users]` |
-| App registration "AIDevMe Orders MCP API" | Application ID URI, scopes `Orders.Read` and `Returns.Create`, `accessTokenAcceptedVersion` 2 |
-| App registration "AIDevMe Orders MCP Connector" | Client secret (into `kv-aidevme-mcp`), Copilot Studio redirect URL, delegated permissions with admin consent |
+| External tenant | Its own tenant, `https://<tenant-subdomain>.ciamlogin.com`; linked to your subscription for billing `[VERIFY: External ID free tier for the demo's few users]`. Created: AIDevMe Samples Customers |
+| App registration "AIDevMe Orders MCP API" | Application ID URI, scopes `Orders.Read` and `Returns.Create`, `accessTokenAcceptedVersion` 2. Created |
+| App registration "AIDevMe Orders MCP Connector" | Client secret (into `kv-aidevme-mcp`), Copilot Studio redirect URL, delegated permissions with admin consent. Created with permissions and consent; secret and redirect URL still open |
 | Sign-up and sign-in user flow | The connector app added to it (one user flow per app) |
 | Two demo customer accounts | Mapped to `CU-3001` and `CU-3002` through `oid` for the ownership test Part 5 asks for |
 

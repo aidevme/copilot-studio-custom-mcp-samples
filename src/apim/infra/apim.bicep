@@ -105,6 +105,23 @@ resource orderApi 'Microsoft.ApiManagement/service/apis@2025-09-01-preview' = {
   }
 }
 
+// Every call to the Order Management API carries API Management's managed identity token.
+resource orderApiPolicy 'Microsoft.ApiManagement/service/apis/policies@2025-09-01-preview' = {
+  parent: orderApi
+  name: 'policy'
+  properties: {
+    format: 'rawxml'
+    value: loadTextContent('../policies/order-api-backend.xml')
+  }
+  dependsOn: [ values ]
+}
+
+// MCP tool calls forward the caller's subscription key to this API, so the key's product must include it.
+resource orderApiInProduct 'Microsoft.ApiManagement/service/products/apis@2025-09-01-preview' = {
+  parent: product
+  name: orderApi.name
+}
+
 output serviceName string = apim.name
 output gatewayUrl string = apim.properties.gatewayUrl
 @description('Add this object ID to the Order Management API\'s allowed callers (ALLOWED_CALLERS).')

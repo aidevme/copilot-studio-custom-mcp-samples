@@ -13,20 +13,21 @@ param productId string = 'copilot-studio-agents'
 @description('true: customer tokens (validate-jwt). false: demo mode with a subscription key and one fixed demo customer, dev instance only.')
 param useOAuth bool = true
 
+// Operation names as an ARM/Bicep OpenAPI import creates them (apim.bicep): the operationId, unchanged.
 var tools = [
   {
     name: 'find_orders'
-    operation: 'find-orders'
+    operation: 'find_orders'
     description: 'Lists the signed-in customer\'s AIDevMe orders, newest first. Use it when the customer doesn\'t know the order number.'
   }
   {
     name: 'get_order_status'
-    operation: 'get-order-status'
+    operation: 'get_order_status'
     description: 'Returns the status of one AIDevMe order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.'
   }
   {
     name: 'create_return'
-    operation: 'create-return'
+    operation: 'create_return'
     description: 'Starts a return for one line of a delivered AIDevMe order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.'
   }
 ]
@@ -42,7 +43,7 @@ resource backingApi 'Microsoft.ApiManagement/service/apis@2025-09-01-preview' ex
 
 resource findOrdersOperation 'Microsoft.ApiManagement/service/apis/operations@2025-09-01-preview' existing = {
   parent: backingApi
-  name: 'find-orders'
+  name: 'find_orders'
 }
 
 // /me/orders -> /customers/{customerId}/orders, with the ID that the MCP-scope policy set.
@@ -68,6 +69,8 @@ resource mcpServer 'Microsoft.ApiManagement/service/apis@2025-09-01-preview' = {
   }
 }
 
+// One at a time: API Management rejects parallel changes to the same MCP server (PreconditionFailed).
+@batchSize(1)
 resource mcpTools 'Microsoft.ApiManagement/service/apis/tools@2025-09-01-preview' = [for tool in tools: {
   parent: mcpServer
   name: tool.name
