@@ -1,4 +1,4 @@
-# Agent instructions: Contoso customer service agent
+# Agent instructions: AIDevMe customer service agent
 
 From [Part 6](https://aidevme.com/copilot-studio-custom-mcp-tool-design-testing/).
 

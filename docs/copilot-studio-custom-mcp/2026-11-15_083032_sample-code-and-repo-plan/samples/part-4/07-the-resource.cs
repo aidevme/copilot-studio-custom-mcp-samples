@@ -1,15 +1,15 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
 
-namespace Contoso.OrdersMcp.Resources;
+namespace AIDevMe.OrdersMcp.Resources;
 
 [McpServerResourceType]
 public class PolicyResources
 {
-    public const string ReturnPolicyUri = "contoso://policies/returns";
+    public const string ReturnPolicyUri = "aidevme://policies/returns";
 
     private const string ReturnPolicy = """
-        # Contoso return policy (fictional demo)
+        # AIDevMe return policy (fictional demo)
 
         - Delivered orders can be returned within 30 days after the delivery date.
         - Each return covers one order line, up to the ordered quantity minus earlier returns.
@@ -19,7 +19,7 @@ public class PolicyResources
         """;
 
     [McpServerResource(UriTemplate = ReturnPolicyUri, Name = "return_policy",
-        Title = "Contoso return policy", MimeType = "text/markdown")]
-    [Description("Contoso's return rules: 30-day window after delivery, quantities, reasons, labels and refunds.")]
+        Title = "AIDevMe return policy", MimeType = "text/markdown")]
+    [Description("AIDevMe's return rules: 30-day window after delivery, quantities, reasons, labels and refunds.")]
     public static string GetReturnPolicy() => ReturnPolicy;
 }

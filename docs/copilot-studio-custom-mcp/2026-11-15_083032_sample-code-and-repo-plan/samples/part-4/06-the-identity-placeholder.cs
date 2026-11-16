@@ -1,6 +1,6 @@
 using ModelContextProtocol;
 
-namespace Contoso.OrdersMcp.Tools;
+namespace AIDevMe.OrdersMcp.Tools;
 
 /// <summary>
 /// Resolves the customer ID for the current request. PLACEHOLDER until Part 5:
@@ -8,7 +8,7 @@ namespace Contoso.OrdersMcp.Tools;
 /// </summary>
 public class CallerContext(IHttpContextAccessor httpContextAccessor, IConfiguration config, ILogger<CallerContext> logger)
 {
-    public const string DemoHeader = "Contoso-Demo-Customer";
+    public const string DemoHeader = "AIDevMe-Demo-Customer";
 
     public string GetCustomerId()
     {
@@ -30,6 +30,6 @@ public class CallerContext(IHttpContextAccessor httpContextAccessor, IConfigurat
             return demo.ToString().Trim();
         }
 
-        throw new McpException("The customer isn't signed in. Ask the customer to sign in on the Contoso website first.");
+        throw new McpException("The customer isn't signed in. Ask the customer to sign in on the AIDevMe website first.");
     }
 }

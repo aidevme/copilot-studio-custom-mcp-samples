@@ -1,0 +1,21 @@
+# Part 1: a custom connector with the MCP extension, in the shape Microsoft Learn shows.
+# https://aidevme.com/copilot-studio-custom-mcp-servers-when-you-need-one/
+# The host is a placeholder. The other files in this folder are the connectors for the servers in this repo.
+swagger: '2.0'
+info:
+  title: AIDevMe Order Service MCP
+  description: MCP server for AIDevMe order status and returns in Germany and the Netherlands
+  version: 1.0.0
+host: orders-mcp.aidevme-samples.com
+basePath: /
+schemes:
+  - https
+paths:
+  /mcp:
+    post:
+      summary: AIDevMe Order Service MCP server
+      x-ms-agentic-protocol: mcp-streamable-1.0
+      operationId: InvokeMCP
+      responses:
+        '200':
+          description: Success

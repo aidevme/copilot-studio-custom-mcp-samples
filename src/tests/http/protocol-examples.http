@@ -1,10 +1,12 @@
 # MCP requests from Part 1: https://aidevme.com/copilot-studio-custom-mcp-servers-when-you-need-one/
+# Real responses from the Part 4 C# server are in responses/. Start it with the demo header allowed:
+#   ASPNETCORE_ENVIRONMENT=Development dotnet run --project src/dotnet-mcp-server/src/AIDevMe.OrdersMcp --urls http://localhost:5288
 POST /mcp HTTP/1.1
 Host: localhost:5288
 Content-Type: application/json
 Accept: application/json, text/event-stream
 MCP-Protocol-Version: 2025-11-25
-Contoso-Demo-Customer: CU-3001
+AIDevMe-Demo-Customer: CU-3001
 
 {"jsonrpc":"2.0","id":1,"method":"tools/list"}
 
@@ -15,7 +17,7 @@ Host: localhost:5288
 Content-Type: application/json
 Accept: application/json, text/event-stream
 MCP-Protocol-Version: 2025-11-25
-Contoso-Demo-Customer: CU-3001
+AIDevMe-Demo-Customer: CU-3001
 
 {
   "jsonrpc": "2.0",

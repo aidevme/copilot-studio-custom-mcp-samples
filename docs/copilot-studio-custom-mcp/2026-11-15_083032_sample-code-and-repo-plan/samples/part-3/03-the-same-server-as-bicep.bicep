@@ -17,17 +17,17 @@ var tools = [
   {
     name: 'find_orders'
     operation: 'find-orders'
-    description: 'Lists the signed-in customer\'s Contoso orders, newest first. Use it when the customer doesn\'t know the order number.'
+    description: 'Lists the signed-in customer\'s AIDevMe orders, newest first. Use it when the customer doesn\'t know the order number.'
   }
   {
     name: 'get_order_status'
     operation: 'get-order-status'
-    description: 'Returns the status of one Contoso order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.'
+    description: 'Returns the status of one AIDevMe order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.'
   }
   {
     name: 'create_return'
     operation: 'create-return'
-    description: 'Starts a return for one line of a delivered Contoso order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.'
+    description: 'Starts a return for one line of a delivered AIDevMe order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.'
   }
 ]
 
@@ -60,8 +60,8 @@ resource mcpServer 'Microsoft.ApiManagement/service/apis@2025-09-01-preview' = {
   name: mcpServerId
   properties: {
     type: 'mcp'
-    displayName: 'Contoso Order Management MCP'
-    description: 'Look up the signed-in customer\'s Contoso orders, order status and tracking, and start returns.'
+    displayName: 'AIDevMe Order Management MCP'
+    description: 'Look up the signed-in customer\'s AIDevMe orders, order status and tracking, and start returns.'
     path: mcpServerId
     protocols: [ 'https' ]
     subscriptionRequired: !useOAuth

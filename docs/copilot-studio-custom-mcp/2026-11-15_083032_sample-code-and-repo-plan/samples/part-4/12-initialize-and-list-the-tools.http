@@ -2,4 +2,4 @@ HTTP/1.1 200 OK
 Content-Type: text/event-stream
 
 event: message
-data: {"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"resources":{},"tools":{}},"serverInfo":{"name":"contoso-orders","version":"1.0.0"},"instructions":"Contoso customer service tools for order status and returns. Only the signed-in customer's orders are visible. Confirm every return with the customer first."},"id":1,"jsonrpc":"2.0"}
+data: {"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"resources":{},"tools":{}},"serverInfo":{"name":"aidevme-orders","version":"1.0.0"},"instructions":"AIDevMe customer service tools for order status and returns. Only the signed-in customer's orders are visible. Confirm every return with the customer first."},"id":1,"jsonrpc":"2.0"}

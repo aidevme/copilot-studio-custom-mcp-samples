@@ -33,7 +33,7 @@ body:
     id: file
     attributes:
       label: File in the repo
-      placeholder: src/dotnet-mcp-server/src/Contoso.OrdersMcp/Program.cs
+      placeholder: src/dotnet-mcp-server/src/AIDevMe.OrdersMcp/Program.cs
     validations:
       required: true
   - type: textarea

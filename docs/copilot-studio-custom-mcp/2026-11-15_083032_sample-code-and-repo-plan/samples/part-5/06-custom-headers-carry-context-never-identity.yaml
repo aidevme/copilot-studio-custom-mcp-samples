@@ -1,11 +1,11 @@
 paths:
   /mcp:
     post:
-      summary: Contoso Orders MCP server
+      summary: AIDevMe Orders MCP server
       x-ms-agentic-protocol: mcp-streamable-1.0
       operationId: InvokeMCP
       parameters:
-        - name: Contoso-Market
+        - name: AIDevMe-Market
           in: header
           type: string
           required: false

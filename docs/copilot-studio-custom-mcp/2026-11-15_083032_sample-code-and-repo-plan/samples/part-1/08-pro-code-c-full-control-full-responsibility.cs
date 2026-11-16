@@ -1,5 +1,5 @@
 [McpServerTool(Name = "get_order_status", ReadOnly = true)]
-[Description("Returns the status of one Contoso order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.")]
+[Description("Returns the status of one AIDevMe order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.")]
 public static string GetOrderStatus(IHttpContextAccessor http,
     [Description("Order number, for example SO-10023.")] string orderId)
     => OwnOrder(http, orderId) is { } o

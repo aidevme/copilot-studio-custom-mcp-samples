@@ -1,0 +1,98 @@
+{
+  "comment": "AIDevMe demo data, shared by every build path. Dates are day offsets from the day the API starts (negative = in the past), so the 30-day return window behaves the same on any day. The same orders as the Part 4 C# server's in-memory store.",
+  "currency": "EUR",
+  "returnWindowDays": 30,
+  "nextReturnNumber": 5002,
+  "orders": [
+    {
+      "orderId": "SO-10023",
+      "customerId": "CU-3001",
+      "status": "Delivered",
+      "orderedOffsetDays": -10,
+      "warehouse": "Hamburg",
+      "carrier": "DHL",
+      "trackingNumber": "DEMO-DHL-0010023",
+      "expectedDeliveryOffsetDays": -7,
+      "deliveredOffsetDays": -7,
+      "lines": [
+        { "lineNumber": 1, "product": "AIDevMe Kettle 1.7 l", "quantity": 1, "unitPrice": 39.99, "returnedQuantity": 0 },
+        { "lineNumber": 2, "product": "AIDevMe Toaster 2-slice", "quantity": 1, "unitPrice": 34.99, "returnedQuantity": 0 },
+        { "lineNumber": 3, "product": "AIDevMe Glass Set, 6 pcs", "quantity": 2, "unitPrice": 14.99, "returnedQuantity": 1 }
+      ]
+    },
+    {
+      "orderId": "SO-10019",
+      "customerId": "CU-3001",
+      "status": "Delivered",
+      "orderedOffsetDays": -48,
+      "warehouse": "Hamburg",
+      "carrier": "DHL",
+      "trackingNumber": "DEMO-DHL-0010019",
+      "expectedDeliveryOffsetDays": -45,
+      "deliveredOffsetDays": -45,
+      "lines": [
+        { "lineNumber": 1, "product": "AIDevMe Blender 1.5 l", "quantity": 1, "unitPrice": 59.99, "returnedQuantity": 0 }
+      ]
+    },
+    {
+      "orderId": "SO-10031",
+      "customerId": "CU-3001",
+      "status": "Shipped",
+      "orderedOffsetDays": -2,
+      "warehouse": "Utrecht",
+      "carrier": "PostNL",
+      "trackingNumber": "DEMO-PNL-0010031",
+      "expectedDeliveryOffsetDays": 2,
+      "deliveredOffsetDays": null,
+      "lines": [
+        { "lineNumber": 1, "product": "AIDevMe Espresso Machine", "quantity": 1, "unitPrice": 249.0, "returnedQuantity": 0 }
+      ]
+    },
+    {
+      "orderId": "SO-10035",
+      "customerId": "CU-3001",
+      "status": "Open",
+      "orderedOffsetDays": -1,
+      "warehouse": "Hamburg",
+      "carrier": "",
+      "trackingNumber": "",
+      "expectedDeliveryOffsetDays": 5,
+      "deliveredOffsetDays": null,
+      "lines": [
+        { "lineNumber": 1, "product": "AIDevMe Stand Mixer", "quantity": 1, "unitPrice": 179.0, "returnedQuantity": 0 }
+      ]
+    },
+    {
+      "orderId": "SO-10027",
+      "customerId": "CU-3002",
+      "status": "Delivered",
+      "orderedOffsetDays": -6,
+      "warehouse": "Utrecht",
+      "carrier": "PostNL",
+      "trackingNumber": "DEMO-PNL-0010027",
+      "expectedDeliveryOffsetDays": -3,
+      "deliveredOffsetDays": -3,
+      "lines": [
+        { "lineNumber": 1, "product": "AIDevMe Dishwasher 60 cm", "quantity": 1, "unitPrice": 449.0, "returnedQuantity": 0 }
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "returnId": "RMA-5001",
+      "orderId": "SO-10023",
+      "lineNumber": 3,
+      "product": "AIDevMe Glass Set, 6 pcs",
+      "quantity": 1,
+      "reason": "Damaged",
+      "comment": "One glass broken",
+      "status": "Approved",
+      "createdOffsetDays": -5
+    }
+  ],
+  "identities": {
+    "comment": "Entra External ID oid -> customer ID, for GET /customers/by-identity/{oid} (Part 3) and the AIDevMe-Customer-Oid header (Part 5). Placeholders: set the real oids of your two demo customers in the Customers__Identities__<oid> app settings.",
+    "00000000-0000-0000-0000-000000003001": "CU-3001",
+    "00000000-0000-0000-0000-000000003002": "CU-3002"
+  }
+}

@@ -2,7 +2,7 @@
     <inbound>
         <base />
         <!-- Demo mode: dev instance with demo data only. Every caller acts as one fixed demo customer. -->
-        <set-header name="Contoso-Customer-Id" exists-action="override">
+        <set-header name="AIDevMe-Customer-Id" exists-action="override">
             <value>{{demo-customer-id}}</value>
         </set-header>
         <!-- One counter per subscription (per agent), not per IP address. -->

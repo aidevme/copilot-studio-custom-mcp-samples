@@ -3,8 +3,8 @@
 # Commands from the post; replace the placeholders before running.
 
 # --- Part 3: https://aidevme.com/copilot-studio-custom-mcp-server-api-management/
-MCP_URL="https://apim-contoso-orders.azure-api.net/orders-mcp/mcp"   # copy from the MCP Servers list
-KEY="$(az keyvault secret show --vault-name kv-contoso-demo --name orders-mcp-demo-key --query value -o tsv)"
+MCP_URL="https://apim-aidevme-orders.azure-api.net/orders-mcp/mcp"   # copy from the MCP Servers list
+KEY="$(az keyvault secret show --vault-name kv-aidevme-demo --name orders-mcp-demo-key --query value -o tsv)"
 
 # 1. initialize: note the Mcp-Session-Id response header, if there is one
 curl -si "$MCP_URL" \

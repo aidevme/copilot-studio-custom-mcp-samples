@@ -16,8 +16,19 @@ jobs:
           dotnet-version: '10.0.x'
       - name: Start the MCP server
         run: |
-          dotnet run --project src/dotnet-mcp-server/src/Contoso.OrdersMcp --urls http://localhost:5080 &
+          dotnet run --project src/dotnet-mcp-server/src/AIDevMe.OrdersMcp --urls http://localhost:5080 &
           for i in $(seq 1 30); do curl -s -o /dev/null http://localhost:5080/mcp && break; sleep 2; done
       - name: Check the tool contract
         shell: pwsh
         run: ./src/tests/contract/Test-McpToolContract.ps1 -Endpoint http://localhost:5080/mcp
+      # Strict check: the server's tools/list must match src/contract/tools.json exactly.
+      # Non-blocking until the one contract is chosen (see PLAN.md); then remove continue-on-error.
+      - name: Compare tools/list with the contract
+        continue-on-error: true
+        run: |
+          curl -s -X POST http://localhost:5080/mcp \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            -H 'MCP-Protocol-Version: 2025-11-25' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' > tools-list.txt
+          node src/tests/contract/compare-with-contract.mjs src/contract/tools.json tools-list.txt

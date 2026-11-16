@@ -3,7 +3,7 @@ resource proxiedServer 'Microsoft.ApiManagement/service/apis@2025-09-01-preview'
   name: 'orders-mcp-pro-code'
   properties: {
     type: 'mcp'
-    displayName: 'Contoso Order Management MCP (pro-code)'
+    displayName: 'AIDevMe Order Management MCP (pro-code)'
     description: 'Passthrough to the C# MCP server from Part 4.'
     path: 'orders-mcp-pro-code'
     protocols: [ 'https' ]

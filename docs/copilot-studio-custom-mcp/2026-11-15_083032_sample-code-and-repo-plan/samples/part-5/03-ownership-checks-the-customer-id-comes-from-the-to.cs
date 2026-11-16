@@ -6,16 +6,16 @@ using ModelContextProtocol.Server;
 public sealed class OrderTools(
     IHttpContextAccessor http, ICustomerDirectory customers, IOrderStore orders, ILogger<OrderTools> logger)
 {
-    // The customer ID never comes from a tool input: oid from the validated token -> Contoso customer ID.
+    // The customer ID never comes from a tool input: oid from the validated token -> AIDevMe customer ID.
     private string CurrentCustomerId()
     {
         var user = http.HttpContext?.User ?? throw new UnauthorizedAccessException("No authenticated user.");
         return customers.FindCustomerId(user.GetObjectId())
-            ?? throw new UnauthorizedAccessException("No Contoso customer account is linked to this sign-in.");
+            ?? throw new UnauthorizedAccessException("No AIDevMe customer account is linked to this sign-in.");
     }
 
     [McpServerTool(Name = "find_orders", ReadOnly = true)]
-    [Description("Lists the signed-in customer's Contoso orders, newest first. Use it when the customer doesn't know the order number.")]
+    [Description("Lists the signed-in customer's AIDevMe orders, newest first. Use it when the customer doesn't know the order number.")]
     [Authorize(Policy = OrderPolicies.Read)]
     public IReadOnlyList<OrderSummary> FindOrders(
         [Description("Open, Shipped, Delivered, Cancelled or Any.")] string status = "Any",
@@ -24,7 +24,7 @@ public sealed class OrderTools(
         => orders.FindForCustomer(CurrentCustomerId(), status, from, to);
 
     [McpServerTool(Name = "get_order_status", ReadOnly = true)]
-    [Description("Returns the status of one Contoso order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.")]
+    [Description("Returns the status of one AIDevMe order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.")]
     [Authorize(Policy = OrderPolicies.Read)]
     public OrderStatus GetOrderStatus(
         [Description("Order number, for example SO-10023.")] string orderId)
@@ -37,7 +37,7 @@ public sealed class OrderTools(
     }
 
     [McpServerTool(Name = "create_return", ReadOnly = false, Destructive = false)]
-    [Description("Starts a return for one line of a delivered Contoso order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.")]
+    [Description("Starts a return for one line of a delivered AIDevMe order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.")]
     [Authorize(Policy = OrderPolicies.CreateReturn)]
     public ReturnResult CreateReturn(
         [Description("Order number, for example SO-10023.")] string orderId,

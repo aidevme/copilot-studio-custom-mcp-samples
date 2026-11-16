@@ -1,0 +1,324 @@
+openapi: 3.0.3
+info:
+  title: AIDevMe Order Management API
+  version: 1.0.0
+  description: >-
+    The backend REST API of the AIDevMe demo, in this series a fictional retailer of home and kitchen appliances.
+    Demo data only. The Logic Apps workflows (Part 2) and API Management (Part 3) call it with a managed identity
+    token. API Management imports a narrower agent facade (src/apim/openapi/orders-agent-facade.yaml) that maps
+    /me/orders to /customers/{customerId}/orders.
+
+    Ownership: when a gateway sends AIDevMe-Customer-Id or AIDevMe-Customer-Oid, the API returns 404 for another
+    customer's order. Without either header (Logic Apps), it returns the order with its customerId and the caller
+    checks ownership.
+servers:
+  - url: https://orders-api.aidevme-samples.com
+security:
+  - entra: []
+paths:
+  /customers/{customerId}/orders:
+    get:
+      operationId: find_orders
+      summary: Find a customer's orders
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - $ref: '#/components/parameters/CallerCustomerId'
+        - $ref: '#/components/parameters/CallerCustomerOid'
+        - name: status
+          in: query
+          required: false
+          description: Any, Open, Shipped, Delivered or Cancelled. Empty or Any means no filter.
+          schema:
+            type: string
+            enum: [Any, Open, Shipped, Delivered, Cancelled]
+            default: Any
+        - name: from
+          in: query
+          required: false
+          description: Earliest order date, ISO 8601. Empty means no lower limit.
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          description: Latest order date, ISO 8601. Empty means no upper limit.
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: The customer's orders, newest first.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderList'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          description: No valid token.
+        '404':
+          $ref: '#/components/responses/Error'
+  /orders/{orderId}:
+    get:
+      operationId: get_order_status
+      summary: Get one order
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+        - $ref: '#/components/parameters/CallerCustomerId'
+        - $ref: '#/components/parameters/CallerCustomerOid'
+      responses:
+        '200':
+          description: The order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          description: No valid token.
+        '404':
+          $ref: '#/components/responses/Error'
+  /orders/{orderId}/returns:
+    post:
+      operationId: create_return
+      summary: Start a return for one order line
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+        - $ref: '#/components/parameters/CallerCustomerId'
+        - $ref: '#/components/parameters/CallerCustomerOid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReturnRequest'
+      responses:
+        '201':
+          description: The return was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Return'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          description: No valid token.
+        '404':
+          $ref: '#/components/responses/Error'
+        '422':
+          description: >-
+            The return policy refuses it. Codes: not_delivered, return_window_closed, line_not_found,
+            invalid_quantity, invalid_reason, comment_too_long.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customers/by-identity/{oid}:
+    get:
+      operationId: get_customer_by_identity
+      summary: Map an Entra External ID oid to a customer ID (internal, for API Management)
+      parameters:
+        - name: oid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The customer linked to this sign-in.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [customerId]
+                properties:
+                  customerId:
+                    type: string
+                    example: CU-3001
+        '401':
+          description: No valid token.
+        '404':
+          $ref: '#/components/responses/Error'
+  /health:
+    get:
+      operationId: health
+      summary: Health probe, no authentication
+      security: []
+      responses:
+        '200':
+          description: The API is running.
+components:
+  securitySchemes:
+    entra:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: A Microsoft Entra token for this API's App ID URI, requested by an allowed managed identity.
+  parameters:
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^CU-[0-9]{4}$'
+    OrderId:
+      name: orderId
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^SO-[0-9]{5}$'
+    CallerCustomerId:
+      name: AIDevMe-Customer-Id
+      in: header
+      required: false
+      description: The caller's customer ID, set by API Management from the caller's identity (Part 3).
+      schema:
+        type: string
+    CallerCustomerOid:
+      name: AIDevMe-Customer-Oid
+      in: header
+      required: false
+      description: The caller's External ID oid, mapped to a customer by the API (Part 5).
+      schema:
+        type: string
+  responses:
+    Error:
+      description: An error with a code and a sentence the agent can show to the customer.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    OrderSummary:
+      type: object
+      required: [orderId, orderDate, status, total, items]
+      properties:
+        orderId:
+          type: string
+          example: SO-10023
+        orderDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [Open, Shipped, Delivered, Cancelled]
+        total:
+          type: string
+          example: 104.96 EUR
+        items:
+          type: array
+          items:
+            type: string
+    OrderList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderSummary'
+    OrderLine:
+      type: object
+      required: [lineNumber, product, quantity, returnedQuantity]
+      properties:
+        lineNumber:
+          type: integer
+          minimum: 1
+        product:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+        returnedQuantity:
+          type: integer
+          minimum: 0
+    Order:
+      type: object
+      required: [orderId, customerId, orderDate, status, warehouse, total, lines]
+      properties:
+        orderId:
+          type: string
+        customerId:
+          type: string
+          description: The owner. Logic Apps compares it with the caller (Part 2).
+        orderDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [Open, Shipped, Delivered, Cancelled]
+        warehouse:
+          type: string
+          enum: [Hamburg, Utrecht]
+        carrier:
+          type: string
+          description: Empty until the order ships.
+        trackingNumber:
+          type: string
+          description: Empty until the order ships.
+        expectedDelivery:
+          type: string
+          description: ISO 8601 date, or empty.
+        deliveredOn:
+          type: string
+          description: ISO 8601 date, empty until the order is delivered.
+        total:
+          type: string
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderLine'
+    CreateReturnRequest:
+      type: object
+      required: [lineNumber, quantity, reason]
+      properties:
+        lineNumber:
+          type: integer
+          minimum: 1
+        quantity:
+          type: integer
+          minimum: 1
+        reason:
+          type: string
+          enum: [Damaged, WrongItem, NotAsDescribed, NoLongerNeeded]
+        comment:
+          type: string
+          maxLength: 500
+          default: ''
+    Return:
+      type: object
+      required: [returnId, orderId, lineNumber, product, quantity, reason, status, createdAt]
+      properties:
+        returnId:
+          type: string
+          example: RMA-5002
+        orderId:
+          type: string
+        lineNumber:
+          type: integer
+        product:
+          type: string
+        quantity:
+          type: integer
+        reason:
+          type: string
+          enum: [Damaged, WrongItem, NotAsDescribed, NoLongerNeeded]
+        comment:
+          type: string
+        status:
+          type: string
+          enum: [Requested, Approved, Rejected]
+        createdAt:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          example: order_not_found
+        message:
+          type: string

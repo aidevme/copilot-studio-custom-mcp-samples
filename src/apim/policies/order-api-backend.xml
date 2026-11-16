@@ -1,0 +1,17 @@
+<policies>
+    <inbound>
+        <base />
+        <!-- MCP tool calls reach this API from the MCP server. The Order Management API accepts only Entra tokens
+             from allowed managed identities, so attach API Management's token for every call. -->
+        <authentication-managed-identity resource="{{orders-api-app-id-uri}}" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

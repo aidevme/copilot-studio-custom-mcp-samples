@@ -2,18 +2,18 @@
   "inputs": [
     {
       "type": "promptString",
-      "id": "contoso-mcp-key",
+      "id": "aidevme-mcp-key",
       "description": "Logic Apps MCP API key",
       "password": true
     }
   ],
   "servers": {
-    "contoso-orders": {
+    "aidevme-orders": {
       "type": "http",
       "url": "https://<copied-mcp-server-url>",
       "headers": {
-        "X-API-KEY": "${input:contoso-mcp-key}",
-        "Contoso-Demo-Customer": "CU-3001"
+        "X-API-KEY": "${input:aidevme-mcp-key}",
+        "AIDevMe-Demo-Customer": "CU-3001"
       }
     }
   }

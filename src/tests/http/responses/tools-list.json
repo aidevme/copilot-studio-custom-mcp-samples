@@ -1,0 +1,106 @@
+{
+  "result": {
+    "tools": [
+      {
+        "name": "find_orders",
+        "title": "Find orders",
+        "description": "Lists the signed-in customer's AIDevMe orders, newest first. Use it when the customer doesn't know the order number.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Order status filter: Any, Open, Shipped, Delivered or Cancelled.",
+              "type": "string",
+              "default": "Any"
+            },
+            "from": {
+              "description": "Optional. Only orders placed on or after this date, ISO 8601, for example 2026-10-01.",
+              "type": "string",
+              "default": ""
+            },
+            "to": {
+              "description": "Optional. Only orders placed on or before this date, ISO 8601.",
+              "type": "string",
+              "default": ""
+            }
+          }
+        },
+        "annotations": {
+          "title": "Find orders",
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true
+        }
+      },
+      {
+        "name": "get_order_status",
+        "title": "Get order status",
+        "description": "Returns the status of one AIDevMe order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "orderId": {
+              "description": "Order number, for example SO-10023.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "orderId"
+          ]
+        },
+        "annotations": {
+          "title": "Get order status",
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true
+        }
+      },
+      {
+        "name": "create_return",
+        "title": "Create return",
+        "description": "Starts a return for one line of a delivered AIDevMe order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "orderId": {
+              "description": "Order number, for example SO-10023.",
+              "type": "string"
+            },
+            "lineNumber": {
+              "description": "Line number of the item on the order (1, 2, 3...), from get_order_status.",
+              "type": "integer"
+            },
+            "quantity": {
+              "description": "How many units to return, at least 1.",
+              "type": "integer"
+            },
+            "reason": {
+              "description": "Return reason: Damaged, WrongItem, NotAsDescribed or NoLongerNeeded.",
+              "type": "string"
+            },
+            "comment": {
+              "description": "Optional. The customer's own words about the problem.",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "required": [
+            "orderId",
+            "lineNumber",
+            "quantity",
+            "reason"
+          ]
+        },
+        "annotations": {
+          "title": "Create return",
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false
+        }
+      }
+    ]
+  },
+  "id": 1,
+  "jsonrpc": "2.0"
+}

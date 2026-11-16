@@ -1,4 +1,4 @@
-namespace Contoso.OrdersMcp.Data;
+namespace AIDevMe.OrdersMcp.Data;
 
 public record OrderLine(int LineNumber, string Product, int Quantity, int ReturnedQuantity);
 
@@ -29,23 +29,23 @@ public class OrderStore
         [
             new("SO-10023", "CU-3001", "Delivered", today.AddDays(-10), "Hamburg", "DHL", "DEMO-DHL-0010023",
                 today.AddDays(-7), today.AddDays(-7),
-                [new(1, "Contoso Kettle 1.7 l", 1, 0), new(2, "Contoso Toaster 2-slice", 1, 0),
-                 new(3, "Contoso Glass Set, 6 pcs", 2, 1)]),
+                [new(1, "AIDevMe Kettle 1.7 l", 1, 0), new(2, "AIDevMe Toaster 2-slice", 1, 0),
+                 new(3, "AIDevMe Glass Set, 6 pcs", 2, 1)]),
             new("SO-10019", "CU-3001", "Delivered", today.AddDays(-48), "Hamburg", "DHL", "DEMO-DHL-0010019",
                 today.AddDays(-45), today.AddDays(-45),
-                [new(1, "Contoso Blender 1.5 l", 1, 0)]),
+                [new(1, "AIDevMe Blender 1.5 l", 1, 0)]),
             new("SO-10031", "CU-3001", "Shipped", today.AddDays(-2), "Utrecht", "PostNL", "DEMO-PNL-0010031",
                 today.AddDays(2), null,
-                [new(1, "Contoso Espresso Machine", 1, 0)]),
+                [new(1, "AIDevMe Espresso Machine", 1, 0)]),
             new("SO-10035", "CU-3001", "Open", today.AddDays(-1), "Hamburg", "", "", today.AddDays(5), null,
-                [new(1, "Contoso Stand Mixer", 1, 0)]),
+                [new(1, "AIDevMe Stand Mixer", 1, 0)]),
             new("SO-10027", "CU-3002", "Delivered", today.AddDays(-6), "Utrecht", "PostNL", "DEMO-PNL-0010027",
                 today.AddDays(-3), today.AddDays(-3),
-                [new(1, "Contoso Dishwasher 60 cm", 1, 0)]),
+                [new(1, "AIDevMe Dishwasher 60 cm", 1, 0)]),
         ];
         _returns =
         [
-            new("RMA-5001", "SO-10023", 3, "Contoso Glass Set, 6 pcs", 1, "Damaged", "One glass broken",
+            new("RMA-5001", "SO-10023", 3, "AIDevMe Glass Set, 6 pcs", 1, "Damaged", "One glass broken",
                 "Approved", today.AddDays(-5)),
         ];
     }

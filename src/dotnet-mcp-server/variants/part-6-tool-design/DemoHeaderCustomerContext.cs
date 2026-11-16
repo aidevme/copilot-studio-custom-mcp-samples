@@ -1,4 +1,4 @@
-using Contoso.OrdersMcp;
+using AIDevMe.OrdersMcp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,5 +20,5 @@ app.Run();
 public sealed class DemoHeaderCustomerContext(IHttpContextAccessor accessor) : ICustomerContext
 {
     public string? CustomerId =>
-        accessor.HttpContext?.Request.Headers["Contoso-Demo-Customer"].FirstOrDefault();
+        accessor.HttpContext?.Request.Headers["AIDevMe-Demo-Customer"].FirstOrDefault();
 }

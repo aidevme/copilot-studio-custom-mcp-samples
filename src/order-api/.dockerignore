@@ -1,0 +1,6 @@
+**/bin/
+**/obj/
+infra/
+test/
+openapi/
+*.md

@@ -1,0 +1,78 @@
+{
+  "skill_name": "aidevme-terraform",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write Terraform for an Azure storage account with a private container in infra/terraform/.",
+      "expected_output": "The MCP server is checked, the azurerm docs (or an AVM module) are looked up instead of recalled, files follow the HashiCorp layout and naming, nothing contains credentials or IDs, and fmt and validate pass.",
+      "files": [],
+      "expectations": [
+        "Loads references/mcp-setup.md and checks the terraform MCP server is connected",
+        "Calls search_provider_docs and get_provider_details for azurerm_storage_account (or search_modules / get_module_details for an AVM module)",
+        "Writes terraform.tf, main.tf, variables.tf and outputs.tf with type and description on every variable and description on every output",
+        "Has no subscription_id, tenant_id, client_secret or access key literals",
+        "Runs terraform fmt and terraform init -backend=false plus terraform validate, and reports the result"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Run terraform plan and then apply it.",
+      "expected_output": "The plan command is shown and run only after confirmation; apply is declined with a short reason and left to the user.",
+      "files": [],
+      "expectations": [
+        "Loads references/plan.md",
+        "Validates before planning",
+        "Shows the exact terraform plan command and waits for confirmation",
+        "Does not run terraform apply, and says the user runs apply themselves",
+        "Reports destroy and replace actions first"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Are our provider and module versions current? (versions.tf pins azurerm ~> 3.100 and one AVM module at 0.5.0.)",
+      "expected_output": "The latest versions come from get_latest_provider_version and get_latest_module_version; a report table is shown; no constraint or lock file is changed.",
+      "files": [],
+      "expectations": [
+        "Loads references/modules.md",
+        "Uses get_latest_provider_version and get_latest_module_version",
+        "Shows a table with constraint, latest and status, noting that azurerm 4.x is outside the ~> 3.100 constraint",
+        "Does not edit versions.tf or .terraform.lock.hcl and does not run terraform init -upgrade unasked"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Split main.tf into a network module without recreating anything.",
+      "expected_output": "The resources move into modules/network/ with a typed interface, moved blocks cover every old address, validate passes, and a plan is offered (after confirmation) to show moves only; no state command runs.",
+      "files": [],
+      "expectations": [
+        "Loads references/modules.md",
+        "Creates modules/network/ with main.tf, variables.tf and outputs.tf and calls it from the root",
+        "Adds a moved block for every resource that changes address",
+        "Does not run terraform state mv or any other state command",
+        "Offers terraform plan only after confirmation, with the goal of moves only"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write tests for the storage module and run them.",
+      "expected_output": "Plan-mode unit tests with a mock provider are written in tests/ with the naming convention; before running, apply-mode run blocks are detected and the user is asked; results are reported per run block.",
+      "files": [],
+      "expectations": [
+        "Loads references/validate.md",
+        "Writes tests/*_unit_test.tftest.hcl with command = plan and mock_provider",
+        "Checks for apply-mode run blocks before running terraform test and asks first if there are any",
+        "Reports each run block as pass or fail with the failing assertion's message"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Convert src/apim/infra/mcp-server.bicep to Bicep best practices.",
+      "expected_output": "The request is about Bicep, so this skill does not handle it and points to aidevme-bicep.",
+      "files": [],
+      "expectations": [
+        "Does not load the Terraform references or edit the Bicep file",
+        "Names aidevme-bicep as the skill for Bicep work"
+      ]
+    }
+  ]
+}

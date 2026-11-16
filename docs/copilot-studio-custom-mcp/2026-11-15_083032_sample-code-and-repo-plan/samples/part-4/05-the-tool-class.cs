@@ -1,13 +1,13 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Text.Json;
-using Contoso.OrdersMcp.Data;
-using Contoso.OrdersMcp.Resources;
+using AIDevMe.OrdersMcp.Data;
+using AIDevMe.OrdersMcp.Resources;
 using ModelContextProtocol;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 
-namespace Contoso.OrdersMcp.Tools;
+namespace AIDevMe.OrdersMcp.Tools;
 
 [McpServerToolType]
 public class OrderTools(OrderStore store, CallerContext caller, ILogger<OrderTools> logger)
@@ -22,7 +22,7 @@ public class OrderTools(OrderStore store, CallerContext caller, ILogger<OrderToo
 
     [McpServerTool(Name = "find_orders", Title = "Find orders",
         ReadOnly = true, Idempotent = true, OpenWorld = false)]
-    [Description("Lists the signed-in customer's Contoso orders, newest first. Use it when the customer doesn't know the order number.")]
+    [Description("Lists the signed-in customer's AIDevMe orders, newest first. Use it when the customer doesn't know the order number.")]
     public object FindOrders(
         [Description("Order status filter: Any, Open, Shipped, Delivered or Cancelled.")] string status = "Any",
         [Description("Optional. Only orders placed on or after this date, ISO 8601, for example 2026-10-01.")] string from = "",
@@ -45,7 +45,7 @@ public class OrderTools(OrderStore store, CallerContext caller, ILogger<OrderToo
 
     [McpServerTool(Name = "get_order_status", Title = "Get order status",
         ReadOnly = true, Idempotent = true, OpenWorld = false)]
-    [Description("Returns the status of one Contoso order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.")]
+    [Description("Returns the status of one AIDevMe order by its number (for example SO-10023): order lines, carrier, tracking number and expected delivery date.")]
     public object GetOrderStatus(
         [Description("Order number, for example SO-10023.")] string orderId)
     {
@@ -68,7 +68,7 @@ public class OrderTools(OrderStore store, CallerContext caller, ILogger<OrderToo
 
     [McpServerTool(Name = "create_return", Title = "Create return",
         ReadOnly = false, Destructive = false, Idempotent = false, OpenWorld = false)]
-    [Description("Starts a return for one line of a delivered Contoso order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.")]
+    [Description("Starts a return for one line of a delivered AIDevMe order and returns the return number (RMA). Confirm the item, quantity and reason with the customer before calling it.")]
     public IEnumerable<ContentBlock> CreateReturn(
         [Description("Order number, for example SO-10023.")] string orderId,
         [Description("Line number of the item on the order (1, 2, 3...), from get_order_status.")] int lineNumber,
@@ -79,7 +79,7 @@ public class OrderTools(OrderStore store, CallerContext caller, ILogger<OrderToo
         var order = store.GetOrder(caller.GetCustomerId(), orderId) ?? throw NotFound(orderId);
         var returnReason = OneOf(reason, Reasons, "reason");
 
-        // Contoso's fictional policy: delivered orders only, within 30 days after delivery.
+        // AIDevMe's fictional policy: delivered orders only, within 30 days after delivery.
         if (order.Status != "Delivered" || order.DeliveredAt is null)
         {
             throw new McpException(
