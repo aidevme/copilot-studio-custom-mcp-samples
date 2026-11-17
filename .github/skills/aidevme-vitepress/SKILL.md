@@ -87,9 +87,16 @@ MCP files yourself unless they ask.
 
 ## Workflow
 
-1. **Find the site.** The docs scripts in `package.json` (for example `docs:dev`, `docs:build`, `docs:preview`) name
-   the source folder; the config is `<folder>/.vitepress/config.(mts|ts|js)`. Read the repository's documentation
-   rules (`AGENTS.md`, `CONTRIBUTING.md`): which pages need sidebar entries, link style, required checks.
+1. **Find the site.** The default folder for the VitePress site is **`github-pages/`**:
+   - **Existing site:** the docs scripts in `package.json` (for example `docs:dev`, `docs:build`, `docs:preview`) name
+     the source folder. When they name another folder, follow the scripts. Otherwise look in `github-pages/`.
+   - **New site:** create it in `github-pages/`, with the config at `github-pages/.vitepress/config.mts` and the
+     scripts `vitepress dev github-pages`, `vitepress build github-pages` and `vitepress preview github-pages`. The
+     build output then goes to `github-pages/.vitepress/dist`. Use another folder only when the user asks.
+   - **Config:** `<folder>/.vitepress/config.(mts|ts|js)`.
+
+   Read the repository's documentation rules (`AGENTS.md`, `CONTRIBUTING.md`): which pages need sidebar entries,
+   link style, required checks.
 2. **Look up VitePress behavior** with the Vue Docs MCP server before changing config or relying on a feature
    (sidebar shape, `srcExclude`, `rewrites`, frontmatter, `cleanUrls`, `base`).
 3. **Make the change.**

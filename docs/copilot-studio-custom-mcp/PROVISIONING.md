@@ -1,4 +1,4 @@
-<!-- cspell:ignore aidevme aidevmesamples aidevmesamplescustomers onmicrosoft ciamlogin containerapp apim keyvault westeurope northeurope swedencentral germanywestcentral switzerlandnorth francecentral MSYS PATHCONV logicapp azurecr appi addPassword oid oids Consumption Precondition uuidgen SPID pipefail ASPNETCORE mktemp serverfarms deletedservice -->
+<!-- cspell:ignore aidevme aidevmesamples aidevmesamplescustomers onmicrosoft ciamlogin containerapp apim keyvault westeurope northeurope swedencentral germanywestcentral switzerlandnorth francecentral MSYS PATHCONV logicapp azurecr appi addPassword oid oids Consumption Precondition uuidgen SPID pipefail ASPNETCORE mktemp serverfarms deletedservice apikey mcpservers authsettings -->
 
 # Azure provisioning guide
 
@@ -778,6 +778,24 @@ test session, and don't connect Copilot Studio with real sign-ins until the head
 
 ---
 
+## Phase 10: Part 2, OAuth with Easy Auth
+
+The step-by-step task, its commands and the results of the run on 16 November 2026 are in
+[tasks/TASK-part-2-oauth-easy-auth.md](tasks/TASK-part-2-oauth-easy-auth.md). In short:
+
+- Two app registrations in the workforce tenant: `AIDevMe Logic Apps MCP Server` (`api://<id>`, scope
+  `user_impersonation`) and `AIDevMe Logic Apps MCP Copilot Studio` (client, admin consent, secret
+  `logic-mcp-client-secret` in `kv-aidevme-mcp`).
+- Easy Auth on `logic-aidevme-orders-mcp`, written through `authsettingsV2`: issuer
+  `https://login.microsoftonline.com/<tenant>/v2.0`, audience `api://<server-app-id>/`, the client as the only allowed
+  application, unauthenticated requests allowed.
+- The MCP server's method lives in the deployed `host.json` (`McpServerEndpoints.authentication`), and the server
+  registration in a deployed `mcpservers.json`. The repo has neither, so `deploy.sh` can reset both.
+- Workflows receive the caller as `X-MS-CLIENT-PRINCIPAL-ID` (the object ID) when Easy Auth is on.
+- The logic app was left in **Key-based** mode. The value that **Method → OAuth** writes is still open.
+
+---
+
 ## Values to record
 
 All in `.env/.env`, with placeholders in `.env/.env.example`.
@@ -793,6 +811,7 @@ All in `.env/.env`, with placeholders in `.env/.env.example`.
 | `ORDER_API_BASE_URL` | 5.2 | Logic Apps and API Management deployments |
 | `DEMO_CUSTOMER_CU3001_OID`, `DEMO_CUSTOMER_CU3002_OID` | 6.2 | The `Customers__Identities__<oid>` mappings |
 | `AIDEVME_MCP_KEY` | 9.5 | Tests of the Logic Apps MCP server |
+| `LOGIC_MCP_SERVER_APP_ID`, `LOGIC_MCP_SCOPE_ID`, `LOGIC_MCP_CLIENT_APP_ID` | 10 | Easy Auth, the Copilot Studio OAuth 2.0 manual wizard |
 
 The managed identity object IDs (Phases 8 and 9) only go into the Order Management API's app settings.
 
@@ -809,6 +828,7 @@ The managed identity object IDs (Phases 8 and 9) only go into the Order Manageme
 | Part 4 C# MCP server, 1 replica | `aidevme-orders-mcp` | North Europe | Contract test passes |
 | Part 3 API Management (Developer), demo mode | `apim-aidevme-orders`, MCP server `orders-mcp` | North Europe | All three tools end to end |
 | Part 2 Logic Apps (WS1), key-based | `logic-aidevme-orders-mcp`, `asp-aidevme-logic`, MCP server `AIDevMeOrderService` | Sweden Central | All three tools end to end |
+| Part 2 Easy Auth, two app registrations, client secret `logic-mcp-client-secret` | `AIDevMe Logic Apps MCP Server`, `AIDevMe Logic Apps MCP Copilot Studio` | — | Bearer token accepted, caller headers reach the workflows |
 | Workforce app registration | AIDevMe Order Management API | — | Tokens accepted |
 | External ID tenant, two apps, user flow, two customers | AIDevMe Samples Customers | Europe | Consent and mappings checked; no sign-in yet |
 | External tenant billing resource | in `rg-aidevme-tenants` | — | — |
@@ -844,6 +864,7 @@ Delete the expensive parts after a test session, and everything when you're done
 | Key Vault name, to reuse it sooner than 7 days | `az keyvault purge --name kv-aidevme-mcp` |
 | API Management name, to reuse it | `az apim deletedservice purge --service-name apim-aidevme-orders --location <region>` |
 | Workforce app registration | `az ad app delete --id "$ORDER_API_CLIENT_ID"` |
+| Part 2 OAuth app registrations and secret | `az ad app delete --id "$LOGIC_MCP_CLIENT_APP_ID"`, `az ad app delete --id "$LOGIC_MCP_SERVER_APP_ID"`, `az keyvault secret delete --vault-name kv-aidevme-mcp --name logic-mcp-client-secret` |
 | External ID tenant | Delete its users and apps, then **Manage tenants → Delete** in the Entra admin center. Its billing resource in `rg-aidevme-tenants` goes with it |
 | Budget | Cost Management → Budgets, or `az rest --method delete` on the budget URL |
 
@@ -860,3 +881,5 @@ identity can't get tokens.
 | Customer sign-in | Not tested end to end yet; needs the redirect URI |
 | Custom domain | Not verified in the workforce tenant |
 | Error shape | "Not found" differs between Logic Apps (`isError: true`) and API Management (`isError: false`) |
+| Logic Apps OAuth-only mode | The `host.json` value for **Method → OAuth** is unknown. Without an `authentication` block the server accepts both key and token |
+| Logic Apps `host.json` and `mcpservers.json` | The portal writes both on the logic app; the repo has neither, so a redeploy with `deploy.sh` may reset the MCP server's method and registration |

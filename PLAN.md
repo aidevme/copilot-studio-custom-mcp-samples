@@ -45,8 +45,10 @@ Legend: ✅ done · 🔄 in progress · ⬜ not started
 
 - ⬜ **Code state per part:** `src/` = Part 4 plus `variants/` for Parts 5 and 6 is in place. Keep it, or move to
   the final state on `main` with a tag per post (the research run's option A)?
-- ⬜ **Demo data:** the C# server uses Part 4's set (`CU-3001`: `SO-10019`, `SO-10023`, `SO-10031`, `SO-10035`;
-  `CU-3002`: `SO-10027`). Confirm it, then align Parts 2 (`SO-10099`), 3 (`SO-10024`) and 6 (`SO-10040`) to it.
+- ✅ **Demo data:** Part 4's set, confirmed on 2026-11-16 (`CU-3001`: `SO-10019`, `SO-10023`, `SO-10031`,
+  `SO-10035`; `CU-3002`: `SO-10027`), from `src/order-api/data/seed.json` and the C# server's `OrderStore`. Parts 2
+  and 3 now use `SO-10027` as the other customer's order. Part 6 uses the same set: `SO-10027` in the negative test,
+  the Part 4 products, and dates for a run on 13 November.
 - ✅ **Order Management API stack:** ASP.NET Core minimal API on .NET 10, demo data in `src/order-api/data/seed.json`.
 - ⬜ **CI and Azure:** build and test only, or deploy too (OIDC, no secrets)?
 - ⬜ **The one tool contract:** `src/contract/tools.json` is Part 1's version; the C# server differs in 14 places

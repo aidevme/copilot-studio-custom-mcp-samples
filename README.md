@@ -117,6 +117,7 @@ copilot-studio-custom-mcp-samples/
 │       ├── contract/                     # Test-McpToolContract.ps1 (Part 6), check-tool-contract.js (Part 7)
 │       └── http/protocol-examples.http   # raw MCP requests (Part 1)
 ├── docs/                                 # the code blocks from the posts, as a read-only reference
+├── github-pages/                         # the VitePress site (npm run docs:dev / docs:build)
 └── .github/                              # contract test workflow, issue forms, pull request template
 ```
 

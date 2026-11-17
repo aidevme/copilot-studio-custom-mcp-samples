@@ -17,4 +17,4 @@ npx -y @modelcontextprotocol/inspector@2.15.0 --cli http://localhost:5080/mcp --
 # Negative test: another customer's order must look like a missing one
 npx -y @modelcontextprotocol/inspector@2.15.0 --cli http://localhost:5080/mcp --transport http \
   --header "AIDevMe-Demo-Customer: CU-3001" \
-  --method tools/call --tool-name get_order_status --tool-arg orderId=SO-10040
+  --method tools/call --tool-name get_order_status --tool-arg orderId=SO-10027

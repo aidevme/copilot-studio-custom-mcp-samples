@@ -7,6 +7,14 @@ All notable changes to the **aidevme-vitepress** skill: changes to the VitePress
 it matters to you; the commit has the detail. The source is `agent-src/skills/core/delivery/aidevme-vitepress/`, synced to
 `.claude/skills/` and `.github/skills/`.
 
+## 2026-11-16
+
+### Changed
+
+- **Default site folder `github-pages/`.** The skill now looks for the VitePress site in `github-pages/` when the
+  `package.json` scripts don't name another folder, and creates new sites there, with the matching `vitepress dev`,
+  `build` and `preview` scripts.
+
 ## 2026-10-27
 
 ### Added
