@@ -18,3 +18,8 @@ Thumbs.db
 
 # Logic Apps local settings (use local.settings.example.json)
 local.settings.json
+
+# Node and the VitePress site (github-pages/)
+node_modules/
+github-pages/.vitepress/cache/
+github-pages/.vitepress/dist/
